@@ -65,23 +65,23 @@
 
 #![allow(clippy::all)]
 
-pub mod types;
 mod bot;
-mod error;
 mod chat_id;
+mod error;
 mod input_file;
-mod reply_markup;
 mod polling;
+mod reply_markup;
+pub mod types;
 
-mod gen_types;
 pub mod gen_methods;
+mod gen_types;
 
 pub use bot::Bot;
-pub use error::BotError;
 pub use chat_id::ChatId;
+pub use error::BotError;
 pub use input_file::{InputFile, InputFileOrString};
-pub use reply_markup::ReplyMarkup;
 pub use polling::{Poller, UpdateHandler};
+pub use reply_markup::ReplyMarkup;
 pub use types::*;
 
 /// The `InputMedia` enum — used for `sendMediaGroup` and related methods.
@@ -96,19 +96,29 @@ pub enum InputMedia {
 }
 
 impl From<types::InputMediaPhoto> for InputMedia {
-    fn from(v: types::InputMediaPhoto) -> Self { InputMedia::Photo(v) }
+    fn from(v: types::InputMediaPhoto) -> Self {
+        InputMedia::Photo(v)
+    }
 }
 impl From<types::InputMediaVideo> for InputMedia {
-    fn from(v: types::InputMediaVideo) -> Self { InputMedia::Video(v) }
+    fn from(v: types::InputMediaVideo) -> Self {
+        InputMedia::Video(v)
+    }
 }
 impl From<types::InputMediaAudio> for InputMedia {
-    fn from(v: types::InputMediaAudio) -> Self { InputMedia::Audio(v) }
+    fn from(v: types::InputMediaAudio) -> Self {
+        InputMedia::Audio(v)
+    }
 }
 impl From<types::InputMediaDocument> for InputMedia {
-    fn from(v: types::InputMediaDocument) -> Self { InputMedia::Document(v) }
+    fn from(v: types::InputMediaDocument) -> Self {
+        InputMedia::Document(v)
+    }
 }
 impl From<types::InputMediaAnimation> for InputMedia {
-    fn from(v: types::InputMediaAnimation) -> Self { InputMedia::Animation(v) }
+    fn from(v: types::InputMediaAnimation) -> Self {
+        InputMedia::Animation(v)
+    }
 }
 
 /// Default impl for `InlineKeyboardButton` — only `text` is required.

@@ -1,6 +1,6 @@
+use crate::{types::User, BotError};
 use reqwest::Client;
 use serde::Deserialize;
-use crate::{BotError, types::User};
 
 const DEFAULT_API_URL: &str = "https://api.telegram.org";
 
@@ -49,7 +49,10 @@ impl Bot {
     }
 
     /// Create a Bot with a custom API server URL (e.g., for local Bot API server).
-    pub async fn with_api_url(token: impl Into<String>, api_url: impl Into<String>) -> Result<Self, BotError> {
+    pub async fn with_api_url(
+        token: impl Into<String>,
+        api_url: impl Into<String>,
+    ) -> Result<Self, BotError> {
         let token = token.into();
         let api_url = api_url.into();
 
@@ -139,10 +142,7 @@ impl Bot {
             .await
             .map_err(BotError::Http)?;
 
-        let tg_response: TelegramResponse<T> = response
-            .json()
-            .await
-            .map_err(BotError::Http)?;
+        let tg_response: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
 
         if tg_response.ok {
             tg_response
@@ -151,9 +151,14 @@ impl Bot {
         } else {
             Err(BotError::Api {
                 code: tg_response.error_code.unwrap_or(0),
-                description: tg_response.description.unwrap_or_else(|| "Unknown error".into()),
+                description: tg_response
+                    .description
+                    .unwrap_or_else(|| "Unknown error".into()),
                 retry_after: tg_response.parameters.as_ref().and_then(|p| p.retry_after),
-                migrate_to_chat_id: tg_response.parameters.as_ref().and_then(|p| p.migrate_to_chat_id),
+                migrate_to_chat_id: tg_response
+                    .parameters
+                    .as_ref()
+                    .and_then(|p| p.migrate_to_chat_id),
             })
         }
     }
@@ -177,10 +182,7 @@ impl Bot {
             .await
             .map_err(BotError::Http)?;
 
-        let tg_response: TelegramResponse<T> = response
-            .json()
-            .await
-            .map_err(BotError::Http)?;
+        let tg_response: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
 
         if tg_response.ok {
             tg_response
@@ -189,9 +191,14 @@ impl Bot {
         } else {
             Err(BotError::Api {
                 code: tg_response.error_code.unwrap_or(0),
-                description: tg_response.description.unwrap_or_else(|| "Unknown error".into()),
+                description: tg_response
+                    .description
+                    .unwrap_or_else(|| "Unknown error".into()),
                 retry_after: tg_response.parameters.as_ref().and_then(|p| p.retry_after),
-                migrate_to_chat_id: tg_response.parameters.as_ref().and_then(|p| p.migrate_to_chat_id),
+                migrate_to_chat_id: tg_response
+                    .parameters
+                    .as_ref()
+                    .and_then(|p| p.migrate_to_chat_id),
             })
         }
     }

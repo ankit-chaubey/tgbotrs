@@ -14,23 +14,33 @@ pub enum ChatId {
 }
 
 impl From<i64> for ChatId {
-    fn from(id: i64) -> Self { ChatId::Id(id) }
+    fn from(id: i64) -> Self {
+        ChatId::Id(id)
+    }
 }
 
 impl From<i32> for ChatId {
-    fn from(id: i32) -> Self { ChatId::Id(id as i64) }
+    fn from(id: i32) -> Self {
+        ChatId::Id(id as i64)
+    }
 }
 
 impl From<u64> for ChatId {
-    fn from(id: u64) -> Self { ChatId::Id(id as i64) }
+    fn from(id: u64) -> Self {
+        ChatId::Id(id as i64)
+    }
 }
 
 impl From<String> for ChatId {
-    fn from(s: String) -> Self { ChatId::Username(s) }
+    fn from(s: String) -> Self {
+        ChatId::Username(s)
+    }
 }
 
 impl From<&str> for ChatId {
-    fn from(s: &str) -> Self { ChatId::Username(s.to_string()) }
+    fn from(s: &str) -> Self {
+        ChatId::Username(s.to_string())
+    }
 }
 
 impl std::fmt::Display for ChatId {

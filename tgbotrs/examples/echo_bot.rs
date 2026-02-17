@@ -10,7 +10,10 @@ async fn main() {
 
     println!("Starting bot...");
     let bot = Bot::new(token).await.expect("Failed to create bot");
-    println!("Running as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
+    println!(
+        "Running as @{}",
+        bot.me.username.as_deref().unwrap_or("unknown")
+    );
 
     let handler: UpdateHandler = Box::new(|bot, update| {
         Box::pin(async move {

@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize, Serializer};
 use bytes::Bytes;
+use serde::{Deserialize, Serialize, Serializer};
 
 /// Represents a file to be sent.
 ///
@@ -63,10 +63,14 @@ impl<'de> Deserialize<'de> for InputFile {
 }
 
 impl From<String> for InputFile {
-    fn from(s: String) -> Self { InputFile::FileId(s) }
+    fn from(s: String) -> Self {
+        InputFile::FileId(s)
+    }
 }
 impl From<&str> for InputFile {
-    fn from(s: &str) -> Self { InputFile::FileId(s.to_string()) }
+    fn from(s: &str) -> Self {
+        InputFile::FileId(s.to_string())
+    }
 }
 
 // ─────────────────────────────────────────────────
@@ -82,11 +86,17 @@ pub enum InputFileOrString {
 }
 
 impl From<InputFile> for InputFileOrString {
-    fn from(f: InputFile) -> Self { InputFileOrString::File(f) }
+    fn from(f: InputFile) -> Self {
+        InputFileOrString::File(f)
+    }
 }
 impl From<String> for InputFileOrString {
-    fn from(s: String) -> Self { InputFileOrString::String(s) }
+    fn from(s: String) -> Self {
+        InputFileOrString::String(s)
+    }
 }
 impl From<&str> for InputFileOrString {
-    fn from(s: &str) -> Self { InputFileOrString::String(s.to_string()) }
+    fn from(s: &str) -> Self {
+        InputFileOrString::String(s.to_string())
+    }
 }

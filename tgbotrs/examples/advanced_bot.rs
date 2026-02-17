@@ -2,9 +2,9 @@
 //!
 //! Run: BOT_TOKEN=your_token cargo run --example advanced_bot
 
-use tgbotrs::{Bot, Poller, ReplyMarkup, UpdateHandler};
 use tgbotrs::gen_methods::{SendMessageParams, SendPhotoParams};
 use tgbotrs::types::{InlineKeyboardButton, InlineKeyboardMarkup};
+use tgbotrs::{Bot, Poller, ReplyMarkup, UpdateHandler};
 
 #[tokio::main]
 async fn main() {
@@ -22,42 +22,43 @@ async fn main() {
                         "/start" => {
                             // Send a formatted message with an inline keyboard
                             let keyboard = InlineKeyboardMarkup {
-                                inline_keyboard: vec![
-                                    vec![
-                                        InlineKeyboardButton {
-                                            text: "🦀 Rust".into(),
-                                            callback_data: Some("rust".into()),
-                                            ..Default::default()
-                                        },
-                                        InlineKeyboardButton {
-                                            text: "📘 Docs".into(),
-                                            url: Some("https://core.telegram.org/bots/api".into()),
-                                            ..Default::default()
-                                        },
-                                    ],
-                                ],
+                                inline_keyboard: vec![vec![
+                                    InlineKeyboardButton {
+                                        text: "🦀 Rust".into(),
+                                        callback_data: Some("rust".into()),
+                                        ..Default::default()
+                                    },
+                                    InlineKeyboardButton {
+                                        text: "📘 Docs".into(),
+                                        url: Some("https://core.telegram.org/bots/api".into()),
+                                        ..Default::default()
+                                    },
+                                ]],
                             };
 
                             let params = SendMessageParams::new()
                                 .parse_mode("HTML".to_string())
                                 .reply_markup(ReplyMarkup::InlineKeyboard(keyboard));
 
-                            let _ = bot.send_message(
-                                chat_id,
-                                "<b>Welcome to tgbotrs!</b>\n\nChoose an option below:",
-                                Some(params),
-                            ).await;
+                            let _ = bot
+                                .send_message(
+                                    chat_id,
+                                    "<b>Welcome to tgbotrs!</b>\n\nChoose an option below:",
+                                    Some(params),
+                                )
+                                .await;
                         }
                         "/photo" => {
                             // Send a photo by URL
-                            let params = SendPhotoParams::new()
-                                .caption("A Ferris! 🦀".to_string());
+                            let params = SendPhotoParams::new().caption("A Ferris! 🦀".to_string());
 
-                            let _ = bot.send_photo(
-                                chat_id,
-                                "https://www.rust-lang.org/logos/rust-logo-512x512.png",
-                                Some(params),
-                            ).await;
+                            let _ = bot
+                                .send_photo(
+                                    chat_id,
+                                    "https://www.rust-lang.org/logos/rust-logo-512x512.png",
+                                    Some(params),
+                                )
+                                .await;
                         }
                         _ => {
                             // Echo back
@@ -70,10 +71,14 @@ async fn main() {
             } else if let Some(cq) = update.callback_query {
                 if let Some(data) = &cq.data {
                     let reply = format!("You clicked: {}", data);
-                    let _ = bot.answer_callback_query(cq.id.clone(), Some(
-                        tgbotrs::gen_methods::AnswerCallbackQueryParams::new()
-                            .text(reply)
-                    )).await;
+                    let _ = bot
+                        .answer_callback_query(
+                            cq.id.clone(),
+                            Some(
+                                tgbotrs::gen_methods::AnswerCallbackQueryParams::new().text(reply),
+                            ),
+                        )
+                        .await;
                 }
             }
         })
