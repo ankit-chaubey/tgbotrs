@@ -255,28 +255,33 @@ jobs:
 Auto-generated from Telegram Bot API spec commit ${{ needs.check-for-updates.outputs.new_commit }}
 
 Changes:
-- Added types: ${{ needs.check-for-updates.outputs.added_types || 0 }}
-- Removed types: ${{ needs.check-for-updates.outputs.removed_types || 0 }}
-- Added methods: ${{ needs.check-for-updates.outputs.added_methods || 0 }}
-- Removed methods: ${{ needs.check-for-updates.outputs.removed_methods || 0 }}
+- Added types: ${{ steps.diff.outputs.added_types || 0 }}
+- Removed types: ${{ steps.diff.outputs.removed_types || 0 }}
+- Added methods: ${{ steps.diff.outputs.added_methods || 0 }}
+- Removed methods: ${{ steps.diff.outputs.removed_methods || 0 }}
 "
           
           git push origin "$BRANCH" --force
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.push.outputs.branch }}
-          base: main
-          title: ${{ steps.pr-info.outputs.title }}
-          body-path: /tmp/pr_body.md
-          labels: |
-            bot-api-update
-            auto-generated
-          assignees: ankit-chaubey
-          draft: false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ steps.push.outputs.branch }}"
+          TITLE="${{ steps.pr-info.outputs.title }}"
+          # Try to create; if PR already exists, update it instead
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "$TITLE" \
+            --body-file /tmp/pr_body.md \
+            --label "bot-api-update" \
+            --label "auto-generated" \
+            --assignee ankit-chaubey \
+          || gh pr edit "$BRANCH" \
+            --title "$TITLE" \
+            --body-file /tmp/pr_body.md
 
       - name: Upload diff report artifact
         uses: actions/upload-artifact@v4

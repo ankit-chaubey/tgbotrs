@@ -30,9 +30,9 @@ jobs:
     name: 📦 Version Bump & Publish
     runs-on: ubuntu-latest
     # Only proceed if it's an auto-generated PR being merged, or manual dispatch
-    if: |
-      github.event_name == 'workflow_dispatch' || 
-      (github.event.pull_request.merged == true && 
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
        contains(github.event.pull_request.labels.*.name, 'bot-api-update'))
 
     steps:
