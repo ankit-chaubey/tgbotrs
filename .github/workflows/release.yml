@@ -117,8 +117,8 @@ jobs:
 
       - name: Commit version bump
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Ankit Chaubey"
+          git config user.email "ankitchaubey.dev@gmail.com"
           git add tgbotrs/Cargo.toml CHANGELOG.md
           printf 'chore(release): bump version to %s\n\nTelegram Bot API: %s\nCrate version: %s\n' \
             "${{ steps.new-ver.outputs.version }}" \
