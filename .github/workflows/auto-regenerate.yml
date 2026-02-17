@@ -250,16 +250,15 @@ jobs:
             ${{ env.OUT_DIR }}/gen_types.rs \
             ${{ env.OUT_DIR }}/gen_methods.rs
           
-          git commit -m "chore(codegen): update to ${{ needs.check-for-updates.outputs.new_version }}
-
-Auto-generated from Telegram Bot API spec commit ${{ needs.check-for-updates.outputs.new_commit }}
-
-Changes:
-- Added types: ${{ steps.diff.outputs.added_types || 0 }}
-- Removed types: ${{ steps.diff.outputs.removed_types || 0 }}
-- Added methods: ${{ steps.diff.outputs.added_methods || 0 }}
-- Removed methods: ${{ steps.diff.outputs.removed_methods || 0 }}
-"
+          printf 'chore(codegen): update to %s\n\nAuto-generated from Telegram Bot API spec commit %s\n\nChanges:\n- Added types: %s\n- Removed types: %s\n- Added methods: %s\n- Removed methods: %s\n' \
+            "${{ needs.check-for-updates.outputs.new_version }}" \
+            "${{ needs.check-for-updates.outputs.new_commit }}" \
+            "${{ steps.diff.outputs.added_types || 0 }}" \
+            "${{ steps.diff.outputs.removed_types || 0 }}" \
+            "${{ steps.diff.outputs.added_methods || 0 }}" \
+            "${{ steps.diff.outputs.removed_methods || 0 }}" \
+            > /tmp/commit_msg.txt
+          git commit -F /tmp/commit_msg.txt
           
           git push origin "$BRANCH" --force
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT

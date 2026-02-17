@@ -120,11 +120,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add tgbotrs/Cargo.toml CHANGELOG.md
-          git commit -m "chore(release): bump version to ${{ steps.new-ver.outputs.version }}
-
-Telegram Bot API: ${{ steps.api-ver.outputs.version }}
-Crate version: ${{ steps.new-ver.outputs.version }}
-"
+          printf 'chore(release): bump version to %s\n\nTelegram Bot API: %s\nCrate version: %s\n' \
+            "${{ steps.new-ver.outputs.version }}" \
+            "${{ steps.api-ver.outputs.version }}" \
+            "${{ steps.new-ver.outputs.version }}" \
+            > /tmp/commit_msg.txt
+          git commit -F /tmp/commit_msg.txt
           git push origin main
 
       - name: Create git tag
