@@ -331,7 +331,8 @@ def generate_methods(spec):
         lines.append(f'impl Bot {{')
         lines.append(doc_comment(docs, '    '))
         lines.append(f'    /// See: {href}')
-        lines.append(f'    pub async fn {fn_name}(&self, {sig}) -> Result<{ret}, BotError> {{')
+        args = f'&self, {sig}' if sig else '&self'
+        lines.append(f'    pub async fn {fn_name}({args}) -> Result<{ret}, BotError> {{')
 
         # Build body
         lines.append(f'        let mut req = serde_json::Map::new();')

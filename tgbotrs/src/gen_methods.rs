@@ -273,7 +273,7 @@ impl Bot {
 impl Bot {
     /// Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns True on success. Requires no parameters.
     /// See: https://core.telegram.org/bots/api#close
-    pub async fn close(&self, ) -> Result<bool, BotError> {
+    pub async fn close(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("close", &serde_json::Value::Object(req)).await
     }
@@ -1469,7 +1469,7 @@ impl Bot {
 impl Bot {
     /// Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no parameters. Returns a Gifts object.
     /// See: https://core.telegram.org/bots/api#getavailablegifts
-    pub async fn get_available_gifts(&self, ) -> Result<Gifts, BotError> {
+    pub async fn get_available_gifts(&self) -> Result<Gifts, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("getAvailableGifts", &serde_json::Value::Object(req)).await
     }
@@ -1718,7 +1718,7 @@ impl Bot {
 impl Bot {
     /// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
     /// See: https://core.telegram.org/bots/api#getforumtopiciconstickers
-    pub async fn get_forum_topic_icon_stickers(&self, ) -> Result<Vec<Sticker>, BotError> {
+    pub async fn get_forum_topic_icon_stickers(&self) -> Result<Vec<Sticker>, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("getForumTopicIconStickers", &serde_json::Value::Object(req)).await
     }
@@ -1764,7 +1764,7 @@ impl Bot {
 impl Bot {
     /// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a User object.
     /// See: https://core.telegram.org/bots/api#getme
-    pub async fn get_me(&self, ) -> Result<User, BotError> {
+    pub async fn get_me(&self) -> Result<User, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("getMe", &serde_json::Value::Object(req)).await
     }
@@ -1917,7 +1917,7 @@ impl Bot {
 impl Bot {
     /// A method to get the current Telegram Stars balance of the bot. Requires no parameters. On success, returns a StarAmount object.
     /// See: https://core.telegram.org/bots/api#getmystarbalance
-    pub async fn get_my_star_balance(&self, ) -> Result<StarAmount, BotError> {
+    pub async fn get_my_star_balance(&self) -> Result<StarAmount, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("getMyStarBalance", &serde_json::Value::Object(req)).await
     }
@@ -2142,7 +2142,7 @@ impl Bot {
 impl Bot {
     /// Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
     /// See: https://core.telegram.org/bots/api#getwebhookinfo
-    pub async fn get_webhook_info(&self, ) -> Result<WebhookInfo, BotError> {
+    pub async fn get_webhook_info(&self) -> Result<WebhookInfo, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("getWebhookInfo", &serde_json::Value::Object(req)).await
     }
@@ -2210,7 +2210,7 @@ impl Bot {
 impl Bot {
     /// Use this method to log out from the cloud Bot API server before launching the bot locally. You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns True on success. Requires no parameters.
     /// See: https://core.telegram.org/bots/api#logout
-    pub async fn log_out(&self, ) -> Result<bool, BotError> {
+    pub async fn log_out(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("logOut", &serde_json::Value::Object(req)).await
     }
@@ -2456,7 +2456,7 @@ impl Bot {
 impl Bot {
     /// Removes the profile photo of the bot. Requires no parameters. Returns True on success.
     /// See: https://core.telegram.org/bots/api#removemyprofilephoto
-    pub async fn remove_my_profile_photo(&self, ) -> Result<bool, BotError> {
+    pub async fn remove_my_profile_photo(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
         self.call_api("removeMyProfilePhoto", &serde_json::Value::Object(req)).await
     }
