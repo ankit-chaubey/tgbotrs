@@ -1,13 +1,12 @@
+use crate::gen_methods::GetUpdatesParams;
+use crate::types::Update;
+use crate::{Bot, BotError};
 use std::future::Future;
 use std::pin::Pin;
-use crate::{Bot, BotError};
-use crate::types::Update;
-use crate::gen_methods::GetUpdatesParams;
 
 /// A function type that handles incoming updates.
-pub type UpdateHandler = Box<
-    dyn Fn(Bot, Update) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync,
->;
+pub type UpdateHandler =
+    Box<dyn Fn(Bot, Update) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
 
 /// Long-polling update dispatcher.
 pub struct Poller {

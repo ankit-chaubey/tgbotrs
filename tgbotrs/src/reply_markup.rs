@@ -1,5 +1,5 @@
+use crate::types::{ForceReply, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove};
 use serde::{Deserialize, Serialize};
-use crate::types::{InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply};
 
 /// The reply_markup field can be one of four types.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -12,14 +12,22 @@ pub enum ReplyMarkup {
 }
 
 impl From<InlineKeyboardMarkup> for ReplyMarkup {
-    fn from(v: InlineKeyboardMarkup) -> Self { ReplyMarkup::InlineKeyboard(v) }
+    fn from(v: InlineKeyboardMarkup) -> Self {
+        ReplyMarkup::InlineKeyboard(v)
+    }
 }
 impl From<ReplyKeyboardMarkup> for ReplyMarkup {
-    fn from(v: ReplyKeyboardMarkup) -> Self { ReplyMarkup::ReplyKeyboard(v) }
+    fn from(v: ReplyKeyboardMarkup) -> Self {
+        ReplyMarkup::ReplyKeyboard(v)
+    }
 }
 impl From<ReplyKeyboardRemove> for ReplyMarkup {
-    fn from(v: ReplyKeyboardRemove) -> Self { ReplyMarkup::ReplyKeyboardRemove(v) }
+    fn from(v: ReplyKeyboardRemove) -> Self {
+        ReplyMarkup::ReplyKeyboardRemove(v)
+    }
 }
 impl From<ForceReply> for ReplyMarkup {
-    fn from(v: ForceReply) -> Self { ReplyMarkup::ForceReply(v) }
+    fn from(v: ForceReply) -> Self {
+        ReplyMarkup::ForceReply(v)
+    }
 }
