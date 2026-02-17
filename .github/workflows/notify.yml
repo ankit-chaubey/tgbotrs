@@ -141,10 +141,14 @@ jobs:
               });
             }
 
+      - name: Read issue title
+        id: read-title
+        run: echo "title=$(cat /tmp/issue_title.txt)" >> $GITHUB_OUTPUT
+
       - name: Create notification issue
         uses: peter-evans/create-issue-from-file@v5
         with:
-          title-from-file: /tmp/issue_title.txt
+          title: ${{ steps.read-title.outputs.title }}
           content-filepath: /tmp/issue_body.md
           labels: |
             bot-api-notification

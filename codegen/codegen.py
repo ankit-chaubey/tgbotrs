@@ -28,16 +28,12 @@ import sys
 import os
 from pathlib import Path
 
-# Load hand-crafted types from the shared config so both codegen and
-# validate_generated.py stay in sync automatically.
-_scripts_dir = Path(__file__).resolve().parent.parent / ".github" / "scripts"
-sys.path.insert(0, str(_scripts_dir))
-try:
-    from hand_crafted_types import HAND_CRAFTED_TYPES as _HAND_CRAFTED
-    SKIP_TYPES = set(_HAND_CRAFTED.keys())
-except ImportError:
-    # Fallback if running outside the repo tree
-    SKIP_TYPES = {"InputFile", "InputMedia"}
+# Types that are hand-crafted in the library and must NOT be generated.
+# Keep this in sync with HAND_CRAFTED_TYPES in .github/scripts/validate_generated.py
+SKIP_TYPES = {
+    "InputFile",   # rich enum in tgbotrs/src/input_file.rs
+    "InputMedia",  # ergonomic wrapper enum in tgbotrs/src/lib.rs
+}
 
 # ─────────────────────────────────────────────────
 # Load spec
@@ -185,8 +181,8 @@ def generate_types(spec):
 
     for type_name in sorted(types_map.keys()):
         # Skip types that are hand-crafted in the library (not auto-generated).
-        # This list is shared with .github/scripts/validate_generated.py via
-        # .github/scripts/hand_crafted_types.py — add new hand-crafted types there.
+        # Add new hand-crafted types to SKIP_TYPES above AND to HAND_CRAFTED_TYPES
+        # in .github/scripts/validate_generated.py.
         if type_name in SKIP_TYPES:
             continue
         tg_type = types_map[type_name]
