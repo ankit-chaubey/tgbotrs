@@ -416,6 +416,12 @@ def main():
         f.write(methods_code)
     print(f'Written: {out_dir}/gen_methods.rs')
 
+    # Format generated files so output is always consistent with cargo fmt.
+    # This ensures the validate-generated-code CI check never diffs on formatting.
+    import subprocess
+    for fname in ['gen_types.rs', 'gen_methods.rs']:
+        subprocess.run(['rustfmt', f'{out_dir}/{fname}'], check=True)
+
     print('Done ✅')
 
 if __name__ == '__main__':
