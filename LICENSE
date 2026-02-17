@@ -1,7 +1,6 @@
 MIT License
 
-Copyright (c) 2024-present Ankit Chaubey <ankitchaubey.dev@gmail.com>
-https://github.com/ankit-chaubey
+Copyright (c) 2026 Ankit Chaubey
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -18,16 +17,5 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
----
-
-Acknowledgements:
-
-- Telegram Bot API spec concept and gotgbot library design inspiration:
-  PaulSonOfLars (https://github.com/PaulSonOfLars/gotgbot)
-  Licensed under GPL-3.0 (separate license, this project independently implemented)
-
-- Machine-readable Telegram Bot API spec used for code generation:
-  https://github.com/ankit-chaubey/api-spec
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

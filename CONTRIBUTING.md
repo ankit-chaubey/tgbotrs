@@ -43,7 +43,7 @@ The handwritten files are:
 
 ```sh
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/tgbotrs
+git clone https://github.com/ankit-chaubey/tgbotrs
 cd tgbotrs
 
 # Verify everything builds

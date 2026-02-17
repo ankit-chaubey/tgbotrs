@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/ferris/rustacean-orig-noshadow.svg" width="120" alt="Ferris the Crab"/>
+<img src="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/ferris/rustacean-orig-noshadow.svg" width="110" alt="Ferris the Crab"/>
 
 <h1>tgbotrs</h1>
 
@@ -9,26 +9,24 @@
 [![Crates.io](https://img.shields.io/crates/v/tgbotrs?style=for-the-badge&logo=rust&color=f74c00&labelColor=1a1a2e)](https://crates.io/crates/tgbotrs)
 [![docs.rs](https://img.shields.io/docsrs/tgbotrs?style=for-the-badge&logo=docs.rs&color=4a90d9&labelColor=1a1a2e)](https://docs.rs/tgbotrs)
 [![CI](https://img.shields.io/github/actions/workflow/status/ankit-chaubey/tgbotrs/ci.yml?branch=main&style=for-the-badge&logo=github-actions&label=CI&color=2ea44f&labelColor=1a1a2e)](https://github.com/ankit-chaubey/tgbotrs/actions/workflows/ci.yml)
-[![Auto-Regen](https://img.shields.io/github/actions/workflow/status/ankit-chaubey/tgbotrs/auto-regenerate.yml?style=for-the-badge&logo=telegram&label=API+SYNC&color=0088cc&labelColor=1a1a2e)](https://github.com/ankit-chaubey/tgbotrs/actions/workflows/auto-regenerate.yml)
+[![API Sync](https://img.shields.io/github/actions/workflow/status/ankit-chaubey/tgbotrs/auto-regenerate.yml?style=for-the-badge&logo=telegram&label=API+SYNC&color=0088cc&labelColor=1a1a2e)](https://github.com/ankit-chaubey/tgbotrs/actions/workflows/auto-regenerate.yml)
 
-[![Telegram Bot API](https://img.shields.io/badge/Telegram%20Bot%20API-9.4-0088cc?style=for-the-badge&logo=telegram&logoColor=white&labelColor=1a1a2e)](https://core.telegram.org/bots/api)
-[![Rust](https://img.shields.io/badge/Rust-1.75%2B-f74c00?style=for-the-badge&logo=rust&logoColor=white&labelColor=1a1a2e)](https://www.rust-lang.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=1a1a2e)](LICENSE)
-[![Crates.io Downloads](https://img.shields.io/crates/d/tgbotrs?style=for-the-badge&color=ff6b6b&labelColor=1a1a2e&label=Downloads)](https://crates.io/crates/tgbotrs)
-
-[![Types](https://img.shields.io/badge/Types-285-blueviolet?style=flat-square)](https://docs.rs/tgbotrs)
-[![Methods](https://img.shields.io/badge/Methods-165-success?style=flat-square)](https://docs.rs/tgbotrs)
-[![Coverage](https://img.shields.io/badge/API%20Coverage-100%25-brightgreen?style=flat-square)](https://github.com/ankit-chaubey/tgbotrs/actions)
-[![Async](https://img.shields.io/badge/Async-Tokio-orange?style=flat-square)](https://tokio.rs)
-[![Serde](https://img.shields.io/badge/Serde-JSON-lightgrey?style=flat-square)](https://serde.rs)
+[![Bot API](https://img.shields.io/badge/Telegram%20Bot%20API-9.4-0088cc?style=flat-square&logo=telegram&logoColor=white)](https://core.telegram.org/bots/api)
+[![Rust](https://img.shields.io/badge/Rust-1.75%2B-f74c00?style=flat-square&logo=rust)](https://www.rust-lang.org)
+[![Types](https://img.shields.io/badge/Types-285-7c3aed?style=flat-square)](https://docs.rs/tgbotrs)
+[![Methods](https://img.shields.io/badge/Methods-165-16a34a?style=flat-square)](https://docs.rs/tgbotrs)
+[![Coverage](https://img.shields.io/badge/API%20Coverage-100%25-22c55e?style=flat-square)](https://github.com/ankit-chaubey/tgbotrs/actions)
+[![Downloads](https://img.shields.io/crates/d/tgbotrs?style=flat-square&color=f97316&label=Downloads)](https://crates.io/crates/tgbotrs)
+[![License](https://img.shields.io/badge/License-MIT-eab308?style=flat-square)](LICENSE)
 
 <br/>
 
-> **All 285 types and 165 methods** of the Telegram Bot API — strongly typed, fully async, automatically kept up-to-date.
+> All **285 types** and **165 methods** of the Telegram Bot API —  
+> strongly typed, fully async, automatically kept in sync with every official release.
 
 <br/>
 
-[📦 Install](#-installation) • [🚀 Quick Start](#-quick-start) • [📖 Examples](#-examples) • [🔧 API Reference](#-api-reference) • [🔄 Auto-Codegen](#-auto-codegen) • [🤝 Contributing](#-contributing)
+[📦 Install](#-installation) · [🚀 Quick Start](#-quick-start) · [📖 Examples](#-examples) · [🔧 API Reference](#-api-reference) · [🔄 Auto-Codegen](#-auto-codegen) · [📚 docs.rs](https://docs.rs/tgbotrs)
 
 </div>
 
@@ -38,7 +36,7 @@
 
 <table>
 <tr>
-<td>
+<td width="50%">
 
 **🤖 Complete API Coverage**
 - All **285 types** — structs, enums, markers
@@ -47,7 +45,7 @@
 - **100 optional params structs** with builder pattern
 
 </td>
-<td>
+<td width="50%">
 
 **🔄 Auto-Generated & Always Fresh**
 - Generated from the [official spec](https://github.com/ankit-chaubey/api-spec)
@@ -70,12 +68,12 @@
 </td>
 <td>
 
-**🛡️ Type Safe**
+**🛡️ Fully Type-Safe**
 - `ChatId` — integer or username, no stringly typing
 - `InputFile` — file_id / URL / raw bytes
 - `ReplyMarkup` — unified enum for all 4 keyboard types
 - `InputMedia` — typed enum for media groups
-- Compile-time guarantees on all API calls
+- Compile-time guarantees on every API call
 
 </td>
 </tr>
@@ -84,7 +82,7 @@
 
 **📡 Flexible HTTP Layer**
 - Custom API server support (local Bot API)
-- Multipart file uploads
+- Multipart file uploads built-in
 - Configurable timeout
 - Flood-wait aware error handling
 - `reqwest` backend
@@ -95,7 +93,7 @@
 **📬 Built-in Polling**
 - Long-polling dispatcher included
 - Spawns a Tokio task per update
-- Configurable timeout, limit, allowed_updates
+- Configurable timeout, limit, allowed\_updates
 - Clean concurrent update processing
 
 </td>
@@ -114,7 +112,7 @@ tgbotrs = "0.1"
 tokio   = { version = "1", features = ["full"] }
 ```
 
-**Requirements:** Rust `1.75+` · Tokio async runtime
+> **Requirements:** Rust `1.75+` · Tokio async runtime
 
 ---
 
@@ -130,7 +128,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("✅ Running as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
     println!("   ID: {}", bot.me.id);
 
-    // Send a message — chat_id accepts i64 or "@username"
+    // chat_id accepts i64, negative group IDs, or "@username"
     let msg = bot.send_message(123456789i64, "Hello from tgbotrs! 🦀", None).await?;
     println!("📨 Sent message #{}", msg.message_id);
 
@@ -144,13 +142,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ### 🔁 Echo Bot — Long Polling
 
+The simplest possible bot. Receives every message and echoes it back.
+
 ```rust
 use tgbotrs::{Bot, Poller, UpdateHandler};
 
 #[tokio::main]
 async fn main() {
     let bot = Bot::new(std::env::var("BOT_TOKEN").unwrap())
-        .await.expect("Invalid token");
+        .await
+        .expect("Invalid token");
 
     println!("🤖 @{} is running...", bot.me.username.as_deref().unwrap_or(""));
 
@@ -162,13 +163,20 @@ async fn main() {
         })
     });
 
-    Poller::new(bot, handler).timeout(30).limit(100).start().await.unwrap();
+    Poller::new(bot, handler)
+        .timeout(30)
+        .limit(100)
+        .start()
+        .await
+        .unwrap();
 }
 ```
 
 ---
 
 ### 💬 Formatted Messages
+
+Send HTML or MarkdownV2 formatted messages with optional settings.
 
 ```rust
 use tgbotrs::gen_methods::SendMessageParams;
@@ -179,7 +187,7 @@ let params = SendMessageParams::new()
 
 bot.send_message(
     "@mychannel",
-    "<b>Bold</b>, <i>italic</i>, <code>code</code>",
+    "<b>Bold</b> · <i>Italic</i> · <code>code</code> · <a href='https://example.com'>Link</a>",
     Some(params),
 ).await?;
 ```
@@ -188,44 +196,150 @@ bot.send_message(
 
 ### 🎹 Inline Keyboards
 
+Buttons embedded inside messages. Perfect for interactive menus.
+
 ```rust
 use tgbotrs::{ReplyMarkup, gen_methods::SendMessageParams};
-use tgbotrs::types::{InlineKeyboardMarkup, InlineKeyboardButton};
+use tgbotrs::types::{InlineKeyboardButton, InlineKeyboardMarkup};
 
 let keyboard = InlineKeyboardMarkup {
     inline_keyboard: vec![
         vec![
-            InlineKeyboardButton { text: "✅ Accept".into(),  callback_data: Some("accept".into()),  ..Default::default() },
-            InlineKeyboardButton { text: "❌ Decline".into(), callback_data: Some("decline".into()), ..Default::default() },
+            InlineKeyboardButton {
+                text: "✅ Accept".into(),
+                callback_data: Some("accept".into()),
+                ..Default::default()
+            },
+            InlineKeyboardButton {
+                text: "❌ Decline".into(),
+                callback_data: Some("decline".into()),
+                ..Default::default()
+            },
         ],
         vec![
-            InlineKeyboardButton { text: "🌐 Visit".into(), url: Some("https://example.com".into()), ..Default::default() },
+            InlineKeyboardButton {
+                text: "🌐 Visit Website".into(),
+                url: Some("https://ankitchaubey.in".into()),
+                ..Default::default()
+            },
         ],
     ],
 };
 
 let params = SendMessageParams::new()
+    .parse_mode("HTML".to_string())
     .reply_markup(ReplyMarkup::InlineKeyboard(keyboard));
 
-bot.send_message(chat_id, "Choose an option:", Some(params)).await?;
+bot.send_message(chat_id, "<b>Make a choice:</b>", Some(params)).await?;
 ```
 
 ---
 
-### 📸 Send Photos
+### ⚡ Callback Queries
+
+Handle button taps from inline keyboards. Always acknowledge with `answer_callback_query`.
+
+```rust
+use tgbotrs::gen_methods::{AnswerCallbackQueryParams, EditMessageTextParams};
+use tgbotrs::types::MaybeInaccessibleMessage;
+
+let handler: UpdateHandler = Box::new(|bot, update| {
+    Box::pin(async move {
+        let Some(cq) = update.callback_query else { return };
+        let data = cq.data.as_deref().unwrap_or("");
+
+        // Always acknowledge — dismisses the loading spinner
+        let _ = bot
+            .answer_callback_query(
+                cq.id.clone(),
+                Some(
+                    AnswerCallbackQueryParams::new()
+                        .text(format!("You chose: {}", data))
+                        .show_alert(false),
+                ),
+            )
+            .await;
+
+        // Edit the original message in-place
+        if let Some(msg) = &cq.message {
+            if let MaybeInaccessibleMessage::Message(m) = msg.as_ref() {
+                let edit_params = EditMessageTextParams::new()
+                    .chat_id(m.chat.id)
+                    .message_id(m.message_id)
+                    .parse_mode("HTML".to_string());
+
+                let _ = bot
+                    .edit_message_text(
+                        format!("✅ You selected: <b>{}</b>", data),
+                        Some(edit_params),
+                    )
+                    .await;
+            }
+        }
+    })
+});
+```
+
+---
+
+### ⌨️ Reply Keyboards
+
+Custom keyboard shown at the bottom of the screen. Great for persistent menu buttons.
+
+```rust
+use tgbotrs::{ReplyMarkup, gen_methods::SendMessageParams};
+use tgbotrs::types::{KeyboardButton, ReplyKeyboardMarkup};
+
+let keyboard = ReplyKeyboardMarkup {
+    keyboard: vec![
+        vec![
+            KeyboardButton {
+                text: "📍 Share Location".into(),
+                request_location: Some(true),
+                ..Default::default()
+            },
+            KeyboardButton {
+                text: "📱 Share Contact".into(),
+                request_contact: Some(true),
+                ..Default::default()
+            },
+        ],
+        vec![
+            KeyboardButton { text: "🏠 Home".into(), ..Default::default() },
+            KeyboardButton { text: "⚙️ Settings".into(), ..Default::default() },
+        ],
+    ],
+    resize_keyboard: Some(true),
+    one_time_keyboard: Some(true),
+    ..Default::default()
+};
+
+let params = SendMessageParams::new()
+    .reply_markup(ReplyMarkup::ReplyKeyboard(keyboard));
+
+bot.send_message(chat_id, "Use the keyboard below 👇", Some(params)).await?;
+```
+
+---
+
+### 📸 Send Photos & Files
+
+Send files by file\_id, URL, or raw bytes from disk.
 
 ```rust
 use tgbotrs::{InputFile, gen_methods::SendPhotoParams};
 
-let params = SendPhotoParams::new().caption("Nice photo! 📷".to_string());
+let params = SendPhotoParams::new()
+    .caption("Look at this! 📷".to_string())
+    .parse_mode("HTML".to_string());
 
-// By file_id (fastest — already on Telegram's servers)
+// Fastest — already on Telegram's servers
 bot.send_photo(chat_id, "AgACAgIAAxkBAAI...", Some(params.clone())).await?;
 
-// By URL
+// Let Telegram download from a URL
 bot.send_photo(chat_id, "https://example.com/photo.jpg", Some(params.clone())).await?;
 
-// Upload raw bytes
+// Upload raw bytes from disk
 let data = tokio::fs::read("photo.jpg").await?;
 bot.send_photo(chat_id, InputFile::memory("photo.jpg", data), Some(params)).await?;
 ```
@@ -234,8 +348,10 @@ bot.send_photo(chat_id, InputFile::memory("photo.jpg", data), Some(params)).awai
 
 ### 🎬 Media Groups
 
+Send multiple photos or videos as an album in a single message.
+
 ```rust
-use tgbotrs::{InputMedia};
+use tgbotrs::InputMedia;
 use tgbotrs::types::{InputMediaPhoto, InputMediaVideo};
 
 let media = vec![
@@ -258,36 +374,12 @@ bot.send_media_group(chat_id, media, None).await?;
 
 ---
 
-### ⌨️ Reply Keyboards
-
-```rust
-use tgbotrs::{ReplyMarkup, gen_methods::SendMessageParams};
-use tgbotrs::types::{ReplyKeyboardMarkup, KeyboardButton};
-
-let keyboard = ReplyKeyboardMarkup {
-    keyboard: vec![
-        vec![
-            KeyboardButton { text: "📍 Location".into(), request_location: Some(true), ..Default::default() },
-            KeyboardButton { text: "📱 Contact".into(),  request_contact: Some(true),  ..Default::default() },
-        ],
-    ],
-    resize_keyboard: Some(true),
-    one_time_keyboard: Some(true),
-    ..Default::default()
-};
-
-let params = SendMessageParams::new()
-    .reply_markup(ReplyMarkup::ReplyKeyboard(keyboard));
-
-bot.send_message(chat_id, "Use the keyboard below:", Some(params)).await?;
-```
-
----
-
 ### 📊 Polls
 
+Send polls — regular or quiz style.
+
 ```rust
-use tgbotrs::{gen_methods::SendPollParams};
+use tgbotrs::gen_methods::SendPollParams;
 use tgbotrs::types::InputPollOption;
 
 let options = vec![
@@ -303,44 +395,15 @@ bot.send_poll(chat_id, "Best language for bots?", options, Some(params)).await?;
 
 ---
 
-### ⚡ Callback Queries
-
-```rust
-use tgbotrs::gen_methods::AnswerCallbackQueryParams;
-use tgbotrs::types::MaybeInaccessibleMessage;
-
-let handler: UpdateHandler = Box::new(|bot, update| {
-    Box::pin(async move {
-        let Some(cq) = update.callback_query else { return };
-        let data = cq.data.as_deref().unwrap_or("");
-
-        // Dismiss the loading spinner
-        let _ = bot.answer_callback_query(
-            cq.id.clone(),
-            Some(AnswerCallbackQueryParams::new()
-                .text(format!("You chose: {}", data))
-                .show_alert(false)),
-        ).await;
-
-        // Edit original message
-        if let Some(MaybeInaccessibleMessage::Message(m)) = cq.message {
-            let _ = bot.edit_message_text(
-                m.chat.id, m.message_id,
-                format!("✅ Selected: <b>{}</b>", data),
-                Some(tgbotrs::gen_methods::EditMessageTextParams::new()
-                    .parse_mode("HTML".to_string())),
-            ).await;
-        }
-    })
-});
-```
-
----
-
 ### 🏪 Inline Queries
 
+Handle `@yourbot query` inline mode from any chat.
+
 ```rust
-use tgbotrs::types::{InlineQueryResult, InlineQueryResultArticle, InputMessageContent, InputTextMessageContent};
+use tgbotrs::types::{
+    InlineQueryResult, InlineQueryResultArticle,
+    InputMessageContent, InputTextMessageContent,
+};
 
 let results = vec![
     InlineQueryResult::Article(InlineQueryResultArticle {
@@ -361,10 +424,12 @@ bot.answer_inline_query(query.id.clone(), results, None).await?;
 
 ---
 
-### 🛒 Payments
+### 🛒 Payments & Telegram Stars
+
+Send invoices using Telegram Stars (`XTR`) or payment providers.
 
 ```rust
-use tgbotrs::{gen_methods::SendInvoiceParams};
+use tgbotrs::gen_methods::SendInvoiceParams;
 use tgbotrs::types::LabeledPrice;
 
 let prices = vec![
@@ -386,9 +451,12 @@ bot.send_invoice(
 
 ### 🔔 Webhooks
 
+Register a webhook URL so Telegram pushes updates to your server instead of you polling.
+
 ```rust
 use tgbotrs::gen_methods::SetWebhookParams;
 
+// Register webhook
 let params = SetWebhookParams::new()
     .max_connections(100i64)
     .allowed_updates(vec!["message".into(), "callback_query".into()])
@@ -397,9 +465,64 @@ let params = SetWebhookParams::new()
 bot.set_webhook("https://mybot.example.com/webhook", Some(params)).await?;
 ```
 
+**Full webhook server with [axum](https://github.com/tokio-rs/axum):**
+
+```toml
+# Cargo.toml
+[dev-dependencies]
+axum = "0.7"
+```
+
+```rust
+use axum::{extract::State, http::StatusCode, routing::post, Json, Router};
+use std::sync::Arc;
+use tgbotrs::{gen_methods::SetWebhookParams, types::Update, Bot};
+
+struct AppState { bot: Bot }
+
+#[tokio::main]
+async fn main() {
+    let bot = Bot::new("YOUR_BOT_TOKEN").await.unwrap();
+
+    bot.set_webhook(
+        "https://yourdomain.com/webhook",
+        Some(SetWebhookParams::new()),
+    )
+    .await
+    .unwrap();
+
+    let app = Router::new()
+        .route("/webhook", post(handle_update))
+        .with_state(Arc::new(AppState { bot }));
+
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+
+async fn handle_update(
+    State(state): State<Arc<AppState>>,
+    Json(update): Json<Update>,
+) -> StatusCode {
+    let bot = state.bot.clone();
+    // Spawn immediately — return 200 fast or Telegram will retry
+    tokio::spawn(async move {
+        if let Some(msg) = update.message {
+            let _ = bot
+                .send_message(msg.chat.id, "Received via webhook! 🚀", None)
+                .await;
+        }
+    });
+    StatusCode::OK
+}
+```
+
+> For local testing: `ngrok http 8080` → use the ngrok URL as your webhook
+
 ---
 
 ### 🌐 Local Bot API Server
+
+Point the bot at a self-hosted [Telegram Bot API server](https://github.com/tdlib/telegram-bot-api) for higher file size limits and faster speeds.
 
 ```rust
 let bot = Bot::with_api_url("YOUR_TOKEN", "http://localhost:8081").await?;
@@ -409,6 +532,8 @@ let bot = Bot::with_api_url("YOUR_TOKEN", "http://localhost:8081").await?;
 
 ### 🛠️ Error Handling
 
+Structured errors with helpers for flood-wait and common API errors.
+
 ```rust
 use tgbotrs::BotError;
 
@@ -416,7 +541,7 @@ match bot.send_message(chat_id, "Hello!", None).await {
     Ok(msg) => println!("✅ Sent: #{}", msg.message_id),
 
     Err(BotError::Api { code: 403, .. }) => {
-        eprintln!("🚫 Bot was blocked by the user");
+        eprintln!("🚫 Bot was blocked by user");
     }
     Err(BotError::Api { code: 400, description, .. }) => {
         eprintln!("⚠️  Bad request: {}", description);
@@ -427,7 +552,7 @@ match bot.send_message(chat_id, "Hello!", None).await {
             tokio::time::sleep(std::time::Duration::from_secs(secs as u64)).await;
         }
     }
-    Err(e) => eprintln!("❌ Error: {}", e),
+    Err(e) => eprintln!("❌ Unexpected error: {}", e),
 }
 ```
 
@@ -441,32 +566,27 @@ match bot.send_message(chat_id, "Hello!", None).await {
 pub struct Bot {
     pub token:   String,  // Bot token from @BotFather
     pub me:      User,    // Populated via getMe on creation
-    pub api_url: String,  // API base URL (default: api.telegram.org)
+    pub api_url: String,  // Default: https://api.telegram.org
 }
 ```
 
 | Constructor | Description |
 |---|---|
-| `Bot::new(token)` | Create bot, calls getMe, verifies token |
+| `Bot::new(token)` | Create bot, calls `getMe`, verifies token |
 | `Bot::with_api_url(token, url)` | Create with a custom/local API server |
-| `Bot::new_unverified(token)` | Create without calling getMe |
-
-| Method | Description |
-|---|---|
-| `bot.call_api(method, body)` | Raw JSON POST API call |
-| `bot.call_api_multipart(method, form)` | Multipart POST (for file uploads) |
-| `bot.endpoint(method)` | Returns full URL for a method |
+| `Bot::new_unverified(token)` | Create without calling `getMe` |
 
 ---
 
 ### `ChatId` — Flexible Chat Identifier
 
+Anywhere `ChatId` is expected, you can pass any of these:
+
 ```rust
-// All of these work wherever ChatId is expected:
-bot.send_message(123456789i64,    "by integer id", None).await?;
-bot.send_message(-100123456789i64, "group/channel", None).await?;
-bot.send_message("@channelname",  "by username",   None).await?;
-bot.send_message(ChatId::Id(123), "explicit",      None).await?;
+bot.send_message(123456789i64,     "user by numeric id", None).await?;
+bot.send_message(-100123456789i64, "group or channel",   None).await?;
+bot.send_message("@channelname",   "by username",        None).await?;
+bot.send_message(ChatId::Id(123),  "explicit wrapper",   None).await?;
 ```
 
 ---
@@ -474,7 +594,7 @@ bot.send_message(ChatId::Id(123), "explicit",      None).await?;
 ### `InputFile` — File Sending
 
 ```rust
-// Reference an already-uploaded file by file_id
+// Reference a file already on Telegram's servers (fastest)
 InputFile::file_id("AgACAgIAAxkBAAI...")
 
 // Let Telegram download from a URL
@@ -490,16 +610,16 @@ InputFile::memory("photo.jpg", data)
 ### `ReplyMarkup` — All Keyboard Types
 
 ```rust
-// Inline keyboard (buttons inside messages)
+// Inline keyboard — buttons inside messages
 ReplyMarkup::InlineKeyboard(InlineKeyboardMarkup { .. })
 
-// Reply keyboard (custom keyboard at bottom of screen)
+// Reply keyboard — custom keyboard at bottom of screen
 ReplyMarkup::ReplyKeyboard(ReplyKeyboardMarkup { .. })
 
 // Remove the reply keyboard
 ReplyMarkup::ReplyKeyboardRemove(ReplyKeyboardRemove { remove_keyboard: true, .. })
 
-// Force the user to reply
+// Force the user to reply to a message
 ReplyMarkup::ForceReply(ForceReply { force_reply: true, .. })
 ```
 
@@ -509,15 +629,12 @@ ReplyMarkup::ForceReply(ForceReply { force_reply: true, .. })
 
 ```rust
 Poller::new(bot, handler)
-    .timeout(30)                                // Seconds to long-poll (0 = short poll)
-    .limit(100)                                 // Max updates per request (1-100)
-    .allowed_updates(vec![                      // Only receive these update types
+    .timeout(30)           // Seconds to long-poll (0 = short poll)
+    .limit(100)            // Max updates per request (1–100)
+    .allowed_updates(vec![ // Filter which update types to receive
         "message".into(),
         "callback_query".into(),
         "inline_query".into(),
-        "chosen_inline_result".into(),
-        "shipping_query".into(),
-        "pre_checkout_query".into(),
     ])
     .start()
     .await?;
@@ -525,43 +642,44 @@ Poller::new(bot, handler)
 
 ---
 
-### `BotError` — Error Handling
+### `BotError` — Error Variants
 
 ```rust
 pub enum BotError {
-    Http(reqwest::Error),   // Network or HTTP transport error
-    Json(serde_json::Error),// Serialization/deserialization error
+    Http(reqwest::Error),       // Network / HTTP transport error
+    Json(serde_json::Error),    // Serialization error
     Api {
-        code: i64,                      // Telegram error code (e.g. 400, 403, 429)
-        description: String,            // Human-readable error message
-        retry_after: Option<i64>,       // Seconds to wait (flood-wait, code 429)
-        migrate_to_chat_id: Option<i64>,// New chat ID (migration error, code 400)
+        code: i64,                       // Telegram error code (400, 403, 429…)
+        description: String,             // Human-readable message
+        retry_after: Option<i64>,        // Flood-wait seconds (code 429)
+        migrate_to_chat_id: Option<i64>, // Migration target (code 400)
     },
-    InvalidToken,           // Token does not contain ':'
-    Other(String),          // Catch-all
+    InvalidToken,               // Token missing ':'
+    Other(String),              // Catch-all
 }
 
-// Helper methods:
-error.is_api_error_code(429)  // → bool
-error.flood_wait_seconds()    // → Option<i64>
+// Helper methods
+error.is_api_error_code(429)   // → bool
+error.flood_wait_seconds()     // → Option<i64>
 ```
 
 ---
 
 ### Builder Pattern for Optional Params
 
-Every method with optional parameters has a `*Params` struct with a builder API:
+Every method with optional parameters has a `*Params` struct with a fluent builder API:
 
 ```rust
 // Pattern: MethodNameParams::new().field(value).field(value)
 let params = SendMessageParams::new()
-    .parse_mode("MarkdownV2".to_string())
+    .parse_mode("HTML".to_string())
     .disable_notification(true)
     .protect_content(false)
     .message_thread_id(123i64)
     .reply_parameters(ReplyParameters { message_id: 42, ..Default::default() })
     .reply_markup(ReplyMarkup::ForceReply(ForceReply {
-        force_reply: true, ..Default::default()
+        force_reply: true,
+        ..Default::default()
     }));
 ```
 
@@ -570,10 +688,10 @@ let params = SendMessageParams::new()
 ## 📊 Coverage Statistics
 
 | Category | Count | Status |
-|---|:---:|:---:|
+|:---|:---:|:---:|
 | **Total Types** | **285** | ✅ 100% |
 | ↳ Struct types | 257 | ✅ |
-| ↳ Union/Enum types | 21 | ✅ |
+| ↳ Union / Enum types | 21 | ✅ |
 | ↳ Marker types | 7 | ✅ |
 | **Total Methods** | **165** | ✅ 100% |
 | ↳ `set*` methods | 30 | ✅ |
@@ -582,23 +700,23 @@ let params = SendMessageParams::new()
 | ↳ `edit*` methods | 12 | ✅ |
 | ↳ `delete*` methods | 11 | ✅ |
 | ↳ Other methods | 61 | ✅ |
-| **Params structs** | 100 | ✅ |
-| **Lines generated** | ~11,258 | — |
+| **Optional params structs** | 100 | ✅ |
+| **Lines auto-generated** | ~11,258 | — |
 
 ---
 
 ## 🔄 Auto-Codegen
 
-tgbotrs is the only Rust Telegram library that **automatically stays in sync** with the official API spec via GitHub Actions.
+tgbotrs is the only Rust Telegram library that **automatically stays in sync** with the official API spec via GitHub Actions — no manual updates, no lag.
 
-### Architecture
+### How It Works
 
 ```
 Every Day at 08:00 UTC
         │
         ▼
   ┌─────────────────┐
-  │  Fetch latest   │  ←── github.com/ankit-chaubey/api-spec
+  │  Fetch latest   │  ← github.com/ankit-chaubey/api-spec
   │  api.json spec  │
   └────────┬────────┘
            │
@@ -610,39 +728,24 @@ Every Day at 08:00 UTC
            │ Changed!
            ▼
   ┌─────────────────┐
-  │  diff_spec.py   │  ←── Full semantic diff
-  │                 │       • Added/removed types
-  │                 │       • Added/removed methods
-  │                 │       • Per-field changes
+  │  diff_spec.py   │  ← Semantic diff (added/removed types & methods)
   └────────┬────────┘
            │
            ▼
   ┌─────────────────┐
-  │  codegen.py     │  ←── Pure Python, zero dependencies
-  │                 │       Generates:
-  │                 │       • gen_types.rs  (5,821 lines)
-  │                 │       • gen_methods.rs (5,437 lines)
+  │  codegen.py     │  ← Pure Python, zero pip dependencies
+  │                 │    Generates gen_types.rs + gen_methods.rs
   └────────┬────────┘
            │
            ▼
   ┌─────────────────┐
-  │  validate.py    │  ←── Verify 100% coverage
-  │                 │       All types & methods present
+  │  validate.py    │  ← Verify 100% coverage
   └────────┬────────┘
            │
            ▼
   ┌─────────────────┐
-  │  Open PR with   │  ←── Rich description:
-  │  full report    │       • Summary table
-  │                 │       • New/removed items
-  │                 │       • Per-field diff (collapsible)
-  │                 │       • Checklist
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  GitHub Issue   │  ←── Notification with full changelog
-  │  notification   │
+  │  Open PR with   │  ← Rich report: summary table, per-field diff
+  │  full report    │    New/removed items, checklist
   └────────┬────────┘
            │
            ▼
@@ -658,35 +761,35 @@ Every Day at 08:00 UTC
 ### Regenerate Manually
 
 ```sh
-# 1. Download latest spec
+# 1. Pull latest spec
 curl -o api.json \
   https://raw.githubusercontent.com/ankit-chaubey/api-spec/main/api.json
 
-# 2. Run codegen (pure Python, no pip installs needed)
+# 2. Run codegen (no pip installs needed)
 python3 codegen/codegen.py api.json tgbotrs/src/
 
-# 3. Rebuild your project
+# 3. Rebuild
 cargo build
 ```
 
 ### GitHub Actions Workflows
 
 | Workflow | Trigger | Purpose |
-|---|---|---|
-| `auto-regenerate.yml` | ⏰ Daily 08:00 UTC + manual | Fetch spec → diff → codegen → PR |
-| `ci.yml` | Every push/PR | Build, test, lint, validate sync |
-| `release.yml` | PR merged → main | Version bump + crates.io publish |
-| `notify.yml` | After regen | GitHub Issue with change summary |
+|:---|:---|:---|
+| `auto-regenerate.yml` | ⏰ Daily 08:00 UTC + manual | Spec sync → diff → codegen → PR |
+| `ci.yml` | Every push / PR | Build, test, lint on 3 OS × 2 Rust versions |
+| `release.yml` | PR merged → main | Semver bump → tag → crates.io publish |
+| `notify.yml` | After regen | GitHub Issue with full change summary |
 
 ### Setting Up in Your Fork
 
-Add these secrets in **Settings → Secrets → Actions**:
+Add this secret in **Settings → Secrets → Actions**:
 
 | Secret | Purpose |
-|---|---|
+|:---|:---|
 | `CRATES_IO_TOKEN` | API token from [crates.io/settings/tokens](https://crates.io/settings/tokens) |
 
-Enable PR creation in **Settings → Actions → General → Workflow permissions**.
+Enable PR creation under **Settings → Actions → General → Workflow permissions**.
 
 ---
 
@@ -695,96 +798,79 @@ Enable PR creation in **Settings → Actions → General → Workflow permission
 ```
 tgbotrs/
 │
-├── 📄 README.md                 ← You are here
-├── 📄 CHANGELOG.md              ← Auto-updated on each release
-├── 📄 LICENSE                   ← MIT — Ankit Chaubey 2024-present
-├── 📄 api.json                  ← Pinned Telegram Bot API spec
-├── 📄 spec_commit               ← Pinned spec commit SHA
-├── 📄 Cargo.toml                ← Workspace root
+├── 📄 api.json                   ← Pinned Telegram Bot API spec
+├── 📄 spec_commit                ← Pinned spec commit SHA
+├── 📄 Cargo.toml                 ← Workspace root
 │
 ├── 🗂️  .github/
 │   ├── workflows/
-│   │   ├── auto-regenerate.yml  ← Daily spec sync + codegen + PR opener
-│   │   ├── ci.yml               ← Build/test on 3 OSes × 2 Rust versions
-│   │   ├── release.yml          ← Semver bump + tag + publish
-│   │   └── notify.yml           ← Issue creation on API updates
+│   │   ├── auto-regenerate.yml   ← Daily spec sync + codegen + PR opener
+│   │   ├── ci.yml                ← Build/test on 3 OS × 2 Rust channels
+│   │   ├── release.yml           ← Semver bump + tag + publish
+│   │   └── notify.yml            ← Issue notification on API updates
 │   └── scripts/
-│       ├── diff_spec.py         ← Semantic diff: added/removed/changed
-│       ├── validate_generated.py← Verifies 100% type + method coverage
-│       ├── build_pr_body.py     ← Generates rich PR descriptions
-│       ├── coverage_report.py   ← Markdown coverage table for CI
-│       └── update_changelog.py  ← Auto-prepends entries to CHANGELOG.md
+│       ├── diff_spec.py          ← Semantic diff: added/removed/changed
+│       ├── validate_generated.py ← Verifies 100% type + method coverage
+│       ├── build_pr_body.py      ← Generates rich PR descriptions
+│       ├── coverage_report.py    ← Markdown coverage table for CI
+│       └── update_changelog.py   ← Auto-prepends entries to CHANGELOG.md
 │
 ├── 🗂️  codegen/
-│   ├── Cargo.toml
-│   ├── codegen.py               ← Main codegen: Python, zero deps
-│   └── src/main.rs              ← Rust codegen binary (alternative)
+│   ├── codegen.py                ← Main codegen — pure Python, zero deps
+│   └── src/main.rs               ← Rust codegen binary (alternative)
 │
-└── 🗂️  tgbotrs/                 ← The library crate
+└── 🗂️  tgbotrs/                  ← The library crate
     ├── Cargo.toml
     ├── examples/
-    │   ├── echo_bot.rs          ← Basic echo bot
-    │   └── advanced_bot.rs      ← Keyboards, photos, callbacks
+    │   ├── echo_bot.rs           ← Basic echo bot
+    │   ├── advanced_bot.rs       ← Keyboards, photos, callbacks
+    │   └── webhook_bot.rs        ← Webhook server with axum
     └── src/
-        ├── lib.rs               ← Crate root + public API + re-exports
-        ├── bot.rs               ← Bot struct + HTTP + JSON API layer
-        ├── error.rs             ← BotError with all error variants
-        ├── chat_id.rs           ← ChatId (i64 | @username)
-        ├── input_file.rs        ← InputFile + InputFileOrString
-        ├── reply_markup.rs      ← ReplyMarkup (4-variant enum)
-        ├── polling.rs           ← Poller (long-polling dispatcher)
-        ├── types.rs             ← Re-exports gen_types
-        ├── gen_types.rs         ← ⚡ AUTO-GENERATED — 5,821 lines
-        └── gen_methods.rs       ← ⚡ AUTO-GENERATED — 5,437 lines
+        ├── lib.rs                ← Crate root + public API
+        ├── bot.rs                ← Bot struct + HTTP layer
+        ├── error.rs              ← BotError variants
+        ├── chat_id.rs            ← ChatId (i64 | @username)
+        ├── input_file.rs         ← InputFile + InputFileOrString
+        ├── reply_markup.rs       ← ReplyMarkup (4-variant enum)
+        ├── polling.rs            ← Long-polling dispatcher
+        ├── gen_types.rs          ← ⚡ AUTO-GENERATED — 285 types
+        └── gen_methods.rs        ← ⚡ AUTO-GENERATED — 165 methods
 ```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are very welcome!
+Contributions are welcome!
 
-### Report Issues
+**Report issues:**
+- 🐛 Bug → [open a bug report](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=bug_report.md)
+- 💡 Feature → [open a feature request](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=feature_request.md)
+- 🔒 Security → email [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com) directly
 
-- 🐛 **Bug?** → [Open a bug report](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=bug_report.md)
-- 💡 **Feature request?** → [Open a feature request](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=feature_request.md)
-- 🔒 **Security issue?** → Email [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com) directly
-
-### Development
+**Development workflow:**
 
 ```sh
-# Clone the repo
-git clone https://github.com/ankit-chaubey/tgbotrs
-cd tgbotrs
+git clone https://github.com/ankit-chaubey/tgbotrs && cd tgbotrs
 
-# Build everything
-cargo build --workspace
-
-# Run tests
-cargo test --workspace
+cargo build --workspace                    # Build everything
+cargo test --workspace                     # Run tests
+cargo clippy --workspace -- -D warnings    # Lint
+cargo fmt --all                            # Format
 
 # Regenerate from latest spec
 python3 codegen/codegen.py api.json tgbotrs/src/
 
 # Validate 100% coverage
 python3 .github/scripts/validate_generated.py \
-  api.json \
-  tgbotrs/src/gen_types.rs \
-  tgbotrs/src/gen_methods.rs
-
-# Lint
-cargo clippy --workspace --all-targets -- -D warnings
-
-# Format
-cargo fmt --all
+  api.json tgbotrs/src/gen_types.rs tgbotrs/src/gen_methods.rs
 ```
 
-### PR Guidelines
-
+**PR guidelines:**
 - One concern per PR
-- Run `cargo fmt` and `cargo clippy` before submitting
-- Add examples for new helpers
-- Keep generated files (`gen_*.rs`) untouched — edit `codegen.py` instead
+- Always run `cargo fmt` and `cargo clippy` before submitting
+- Never edit `gen_types.rs` or `gen_methods.rs` directly — edit `codegen.py` instead
+- Add examples for any new helpers
 
 ---
 
@@ -794,70 +880,42 @@ See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
 ---
 
-## 🙏 Credits
+## 🙏 Thanks & Credits
+
+Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach at the heart of this library was directly inspired by his excellent Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**. Seeing how clean and maintainable a fully-generated, strongly-typed Telegram library can be was the spark for building tgbotrs.
 
 | | |
-|---|---|
-| **[Telegram](https://core.telegram.org/bots/api)** | The official Bot API this library implements |
-| **[PaulSonOfLars / gotgbot](https://github.com/PaulSonOfLars/gotgbot)** | Design inspiration for the auto-generation approach and code structure |
-| **[ankit-chaubey / api-spec](https://github.com/ankit-chaubey/api-spec)** | Machine-readable Telegram Bot API spec used as the codegen source |
-
----
-
-## 📬 Contact
-
-<div align="center">
-
-| | |
-|:---:|:---:|
-| 📧 **Email** | [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com) |
-| 💬 **Telegram** | [@ankify](https://t.me/ankify) |
-| 🐙 **GitHub** | [github.com/ankit-chaubey](https://github.com/ankit-chaubey) |
-| 📦 **crates.io** | [crates.io/crates/tgbotrs](https://crates.io/crates/tgbotrs) |
-| 📖 **docs.rs** | [docs.rs/tgbotrs](https://docs.rs/tgbotrs) |
-
-</div>
+|:---|:---|
+| [**Telegram**](https://core.telegram.org/bots/api) | The Bot API this library implements |
+| [**PaulSonOfLars / gotgbot**](https://github.com/PaulSonOfLars/gotgbot) | Inspiration for the codegen-first approach |
+| [**ankit-chaubey / api-spec**](https://github.com/ankit-chaubey/api-spec) | Machine-readable spec used as the codegen source |
 
 ---
 
 ## 📄 License
 
-```
-MIT License
-
-Copyright (c) 2024-present Ankit Chaubey
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
+MIT License © 2026 [Ankit Chaubey](https://github.com/ankit-chaubey)
 
 ---
 
 <div align="center">
 
-**Created and developed by [Ankit Chaubey](https://github.com/ankit-chaubey)**
+### Developed by Ankit Chaubey
 
-*If tgbotrs saved you time, a ⭐ on GitHub means a lot!*
+[![GitHub](https://img.shields.io/badge/GitHub-ankit--chaubey-181717?style=for-the-badge&logo=github)](https://github.com/ankit-chaubey)
+[![Telegram](https://img.shields.io/badge/Telegram-@ankify-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/ankify)
+[![Email](https://img.shields.io/badge/Email-ankitchaubey.dev@gmail.com-ea4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ankitchaubey.dev@gmail.com)
+[![Website](https://img.shields.io/badge/Website-ankitchaubey.in-4a90d9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://ankitchaubey.in)
 
 <br/>
 
+[![docs.rs](https://img.shields.io/badge/docs.rs-tgbotrs-4a90d9?style=flat-square&logo=docs.rs)](https://docs.rs/tgbotrs)
+[![crates.io](https://img.shields.io/badge/crates.io-tgbotrs-f74c00?style=flat-square&logo=rust)](https://crates.io/crates/tgbotrs)
 [![GitHub stars](https://img.shields.io/github/stars/ankit-chaubey/tgbotrs?style=social)](https://github.com/ankit-chaubey/tgbotrs/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ankit-chaubey/tgbotrs?style=social)](https://github.com/ankit-chaubey/tgbotrs/network/members)
-[![Telegram](https://img.shields.io/badge/Telegram-@ankify-0088cc?style=social&logo=telegram)](https://t.me/ankify)
+
+<br/>
+
+*If tgbotrs saved you time, a ⭐ on GitHub means a lot!*
 
 </div>
