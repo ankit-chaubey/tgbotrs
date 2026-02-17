@@ -2752,11 +2752,6 @@ pub struct InputContactMessageContent {
     pub vcard: Option<String>,
 }
 
-/// This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.
-/// https://core.telegram.org/bots/api#inputfile
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
-pub struct InputFile {}
-
 /// Represents the content of an invoice message to be sent as the result of an inline query.
 /// https://core.telegram.org/bots/api#inputinvoicemessagecontent
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -2838,23 +2833,6 @@ pub struct InputLocationMessageContent {
     /// Optional. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub proximity_alert_radius: Option<i64>,
-}
-
-/// This object represents the content of a media message to be sent. It should be one of
-/// - InputMediaAnimation
-/// - InputMediaDocument
-/// - InputMediaAudio
-/// - InputMediaPhoto
-/// - InputMediaVideo
-/// https://core.telegram.org/bots/api#inputmedia
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(untagged)]
-pub enum InputMedia {
-    InputMediaAnimation(InputMediaAnimation),
-    InputMediaDocument(InputMediaDocument),
-    InputMediaAudio(InputMediaAudio),
-    InputMediaPhoto(InputMediaPhoto),
-    InputMediaVideo(InputMediaVideo),
 }
 
 /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.

@@ -173,6 +173,9 @@ def generate_types(spec):
     lines.append(f'')
 
     for type_name in sorted(types_map.keys()):
+        # Skip types that are hand-crafted in the library (not auto-generated)
+        if type_name in ('InputFile', 'InputMedia'):
+            continue
         tg_type = types_map[type_name]
         docs = tg_type.get('description', [])
         href = tg_type.get('href', '')
