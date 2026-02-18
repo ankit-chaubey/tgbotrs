@@ -1,0 +1,9 @@
+[package]
+name    = "mybot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tgbotrs = { version = "0.1.4", features = ["webhook"] }
+tokio   = { version = "1",     features = ["full"] }
+dotenvy = "0.15"
