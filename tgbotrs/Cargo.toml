@@ -1,6 +1,6 @@
 [package]
 name = "tgbotrs"
-version = "0.1.3"
+version = "0.1.0"
 edition = "2021"
 description = "A fully-featured, auto-generated Telegram Bot API library for Rust. All 285 types and 165 methods — strongly typed, fully async."
 license = "MIT"
@@ -12,12 +12,21 @@ keywords = ["telegram", "bot", "api", "async", "tokio"]
 categories = ["api-bindings", "asynchronous", "network-programming"]
 readme = "../README.md"
 
+[features]
+## Enable the built-in webhook server (pulls in axum + http).
+webhook = ["dep:axum", "dep:http"]
+
 [dependencies]
-reqwest   = { version = "0.12", features = ["json", "multipart"] }
-serde     = { version = "1",    features = ["derive"] }
+reqwest    = { version = "0.12", features = ["json", "multipart"] }
+serde      = { version = "1",    features = ["derive"] }
 serde_json = "1"
-tokio     = { version = "1",    features = ["full"] }
-thiserror = "1"
+tokio      = { version = "1",    features = ["full"] }
+thiserror  = "1"
 async-trait = "0.1"
-bytes     = "1"
-mime      = "0.3"
+bytes      = "1"
+mime       = "0.3"
+axum       = { version = "0.7", optional = true }
+http       = { version = "1",   optional = true }
+
+[dev-dependencies]
+axum = "0.7"

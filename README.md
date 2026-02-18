@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/rust-lang/www.rust-lang.org/master/static/images/ferris/rustacean-orig-noshadow.svg" width="110" alt="Ferris the Crab"/>
+<img src="https://rustacean.net/assets/rustacean-orig-noshadow.svg" width="110" alt="Ferris the Crab"/>
 
 <h1>tgbotrs</h1>
 

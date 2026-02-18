@@ -51,6 +51,35 @@
 //! }
 //! ```
 //!
+//! ## Webhook Server
+//!
+//! Enable the `webhook` feature for a built-in webhook server:
+//!
+//! ```toml
+//! tgbotrs = { version = "0.1", features = ["webhook"] }
+//! ```
+//!
+//! ```rust,no_run
+//! use tgbotrs::{Bot, UpdateHandler, WebhookServer};
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!     let bot = Bot::new("YOUR_TOKEN").await.unwrap();
+//!     let handler: UpdateHandler = Box::new(|bot, upd| {
+//!         Box::pin(async move {
+//!             if let Some(msg) = upd.message {
+//!                 let _ = bot.send_message(msg.chat.id, "pong!", None).await;
+//!             }
+//!         })
+//!     });
+//!     WebhookServer::new(bot, handler)
+//!         .port(8080)
+//!         .secret_token("my_secret")
+//!         .start("https://yourdomain.com")
+//!         .await.unwrap();
+//! }
+//! ```
+//!
 //! ## Regenerating from the Latest API Spec
 //!
 //! ```sh
@@ -76,6 +105,9 @@ pub mod types;
 pub mod gen_methods;
 mod gen_types;
 
+#[cfg(feature = "webhook")]
+mod webhook;
+
 pub use bot::Bot;
 pub use chat_id::ChatId;
 pub use error::BotError;
@@ -83,6 +115,9 @@ pub use input_file::{InputFile, InputFileOrString};
 pub use polling::{Poller, UpdateHandler};
 pub use reply_markup::ReplyMarkup;
 pub use types::*;
+
+#[cfg(feature = "webhook")]
+pub use webhook::WebhookServer;
 
 /// The `InputMedia` enum — used for `sendMediaGroup` and related methods.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, PartialEq)]
