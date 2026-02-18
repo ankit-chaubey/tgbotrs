@@ -44,10 +44,10 @@
 //! }
 //! ```
 
-use crate::{Bot, BotError};
 use crate::gen_methods::SetWebhookParams;
 use crate::polling::UpdateHandler;
 use crate::types::Update;
+use crate::{Bot, BotError};
 
 use axum::{
     extract::State,
@@ -193,11 +193,7 @@ impl WebhookServer {
     /// This call blocks until the server shuts down.
     pub async fn start(self, webhook_url: &str) -> Result<(), BotError> {
         // ── 1. Build the full URL ─────────────────────────────────────────
-        let full_url = format!(
-            "{}{}",
-            webhook_url.trim_end_matches('/'),
-            self.path
-        );
+        let full_url = format!("{}{}", webhook_url.trim_end_matches('/'), self.path);
 
         // ── 2. Register with Telegram ─────────────────────────────────────
         let mut params = SetWebhookParams::new();
@@ -215,14 +211,9 @@ impl WebhookServer {
             params = params.drop_pending_updates(true);
         }
 
-        self.bot
-            .set_webhook(full_url.clone(), Some(params))
-            .await?;
+        self.bot.set_webhook(full_url.clone(), Some(params)).await?;
 
-        println!(
-            "[tgbotrs] ✅ Webhook registered: {}",
-            full_url
-        );
+        println!("[tgbotrs] ✅ Webhook registered: {}", full_url);
 
         // ── 3. Build axum app ─────────────────────────────────────────────
         let state = Arc::new(AppState {
