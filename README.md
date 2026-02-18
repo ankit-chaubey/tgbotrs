@@ -781,62 +781,6 @@ cargo build
 | `release.yml` | PR merged → main | Semver bump → tag → crates.io publish |
 | `notify.yml` | After regen | GitHub Issue with full change summary |
 
-### Setting Up in Your Fork
-
-Add this secret in **Settings → Secrets → Actions**:
-
-| Secret | Purpose |
-|:---|:---|
-| `CRATES_IO_TOKEN` | API token from [crates.io/settings/tokens](https://crates.io/settings/tokens) |
-
-Enable PR creation under **Settings → Actions → General → Workflow permissions**.
-
----
-
-## 🏗️ Project Structure
-
-```
-tgbotrs/
-│
-├── 📄 api.json                   ← Pinned Telegram Bot API spec
-├── 📄 spec_commit                ← Pinned spec commit SHA
-├── 📄 Cargo.toml                 ← Workspace root
-│
-├── 🗂️  .github/
-│   ├── workflows/
-│   │   ├── auto-regenerate.yml   ← Daily spec sync + codegen + PR opener
-│   │   ├── ci.yml                ← Build/test on 3 OS × 2 Rust channels
-│   │   ├── release.yml           ← Semver bump + tag + publish
-│   │   └── notify.yml            ← Issue notification on API updates
-│   └── scripts/
-│       ├── diff_spec.py          ← Semantic diff: added/removed/changed
-│       ├── validate_generated.py ← Verifies 100% type + method coverage
-│       ├── build_pr_body.py      ← Generates rich PR descriptions
-│       ├── coverage_report.py    ← Markdown coverage table for CI
-│       └── update_changelog.py   ← Auto-prepends entries to CHANGELOG.md
-│
-├── 🗂️  codegen/
-│   ├── codegen.py                ← Main codegen — pure Python, zero deps
-│   └── src/main.rs               ← Rust codegen binary (alternative)
-│
-└── 🗂️  tgbotrs/                  ← The library crate
-    ├── Cargo.toml
-    ├── examples/
-    │   ├── echo_bot.rs           ← Basic echo bot
-    │   ├── advanced_bot.rs       ← Keyboards, photos, callbacks
-    │   └── webhook_bot.rs        ← Webhook server with axum
-    └── src/
-        ├── lib.rs                ← Crate root + public API
-        ├── bot.rs                ← Bot struct + HTTP layer
-        ├── error.rs              ← BotError variants
-        ├── chat_id.rs            ← ChatId (i64 | @username)
-        ├── input_file.rs         ← InputFile + InputFileOrString
-        ├── reply_markup.rs       ← ReplyMarkup (4-variant enum)
-        ├── polling.rs            ← Long-polling dispatcher
-        ├── gen_types.rs          ← ⚡ AUTO-GENERATED — 285 types
-        └── gen_methods.rs        ← ⚡ AUTO-GENERATED — 165 methods
-```
-
 ---
 
 ## 🤝 Contributing
@@ -880,9 +824,62 @@ See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
 ---
 
+### Developed by [Ankit Chaubey](https://github.com/ankit-chaubey)
+
+**tgbotrs** started as a personal tool.  
+I was constantly running into limitations, missing features, and unsupported things,  
+so in 2024 I decided to build my own solution.
+
+After using **tgbotrs** for a long time (2024-26) and refining it along the way,  
+I felt it could be useful for others too — so I made it public.
+
+If this helps you in any way, feel free to ⭐ star it or 🍴 fork it 😁
+
+Developed and maintained by Ankit Chaubey [(@ankit-chaubey)](https://github.com/ankit-chaubey)
+
+<p align="center">
+  <sub>
+    Rust engineer · Open-source builder · Telegram & systems enthusiast
+  </sub>
+</p>
+
+<p align="center">
+  <a href="https://github.com/ankit-chaubey">
+    <img src="https://img.shields.io/badge/GitHub-ankit--chaubey-181717?style=flat&logo=github" />
+  </a>
+  <a href="https://t.me/ankify">
+    <img src="https://img.shields.io/badge/Telegram-@ankify-0088cc?style=flat&logo=telegram&logoColor=white" />
+  </a>
+  <a href="mailto:ankitchaubey.dev@gmail.com">
+    <img src="https://img.shields.io/badge/Email-Contact-ea4335?style=flat&logo=gmail&logoColor=white" />
+  </a>
+  <a href="https://ankitchaubey.in">
+    <img src="https://img.shields.io/badge/Website-ankitchaubey.in-4a90d9?style=flat&logo=google-chrome&logoColor=white" />
+  </a>
+</p>
+
+<hr />
+
+<p align="center">
+  <a href="https://docs.rs/tgbotrs">
+    <img src="https://img.shields.io/badge/docs.rs-tgbotrs-4a90d9?style=flat-square&logo=docs.rs" />
+  </a>
+  <a href="https://crates.io/crates/tgbotrs">
+    <img src="https://img.shields.io/badge/crates.io-tgbotrs-f74c00?style=flat-square&logo=rust" />
+  </a>
+  <a href="https://github.com/ankit-chaubey/tgbotrs/stargazers">
+    <img src="https://img.shields.io/github/stars/ankit-chaubey/tgbotrs?style=social" />
+  </a>
+  <a href="https://github.com/ankit-chaubey/tgbotrs/network/members">
+    <img src="https://img.shields.io/github/forks/ankit-chaubey/tgbotrs?style=social" />
+  </a>
+</p>
+
+---
+
 ## 🙏 Thanks & Credits
 
-Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach at the heart of this library was directly inspired by his excellent Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**. Seeing how clean and maintainable a fully-generated, strongly-typed Telegram library can be was the spark for building tgbotrs.
+Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach at the heart of this library was directly inspired by his excellent Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)** and api-spec gen. Seeing how clean and maintainable a fully-generated, strongly-typed Telegram library can be was the spark for building tgbotrs.
 
 | | |
 |:---|:---|
@@ -900,22 +897,4 @@ MIT License © 2026 [Ankit Chaubey](https://github.com/ankit-chaubey)
 
 <div align="center">
 
-### Developed by Ankit Chaubey
-
-[![GitHub](https://img.shields.io/badge/GitHub-ankit--chaubey-181717?style=for-the-badge&logo=github)](https://github.com/ankit-chaubey)
-[![Telegram](https://img.shields.io/badge/Telegram-@ankify-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/ankify)
-[![Email](https://img.shields.io/badge/Email-ankitchaubey.dev@gmail.com-ea4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ankitchaubey.dev@gmail.com)
-[![Website](https://img.shields.io/badge/Website-ankitchaubey.in-4a90d9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://ankitchaubey.in)
-
-<br/>
-
-[![docs.rs](https://img.shields.io/badge/docs.rs-tgbotrs-4a90d9?style=flat-square&logo=docs.rs)](https://docs.rs/tgbotrs)
-[![crates.io](https://img.shields.io/badge/crates.io-tgbotrs-f74c00?style=flat-square&logo=rust)](https://crates.io/crates/tgbotrs)
-[![GitHub stars](https://img.shields.io/github/stars/ankit-chaubey/tgbotrs?style=social)](https://github.com/ankit-chaubey/tgbotrs/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/ankit-chaubey/tgbotrs?style=social)](https://github.com/ankit-chaubey/tgbotrs/network/members)
-
-<br/>
-
 *If tgbotrs saved you time, a ⭐ on GitHub means a lot!*
-
-</div>
