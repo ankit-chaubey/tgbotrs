@@ -48,9 +48,9 @@
 <td width="50%">
 
 **🔄 Auto-Generated & Always Fresh**
-- Generated from the [official spec](https://github.com/ankit-chaubey/api-spec)
-- Daily automated check for API updates
-- PR auto-opened on every new API version
+- Spec sourced from [tgapis/x](https://github.com/tgapis/x/tree/data) — auto-updated every 6 hours
+- Pipeline dispatches regeneration on every new API version
+- PR auto-opened with full semantic diff on every change
 - Zero manual work to stay up-to-date
 
 </td>
@@ -707,63 +707,74 @@ let params = SendMessageParams::new()
 
 ## 🔄 Auto-Codegen
 
-tgbotrs is the only Rust Telegram library that **automatically stays in sync** with the official API spec via GitHub Actions — no manual updates, no lag.
+tgbotrs is the only Rust Telegram library that **automatically stays in sync** with the official API — no manual updates, no lag.
+
+The spec is sourced from **[tgapis/x](https://github.com/tgapis/x/tree/data)** (`data` branch, `botapi.json`), which scrapes and parses the official Telegram Bot API page and auto-updates every **6 hours**. When a new API version is detected, the `tgapis/x` pipeline dispatches a trigger to this repo — regeneration kicks off immediately, no cron required.
 
 ### How It Works
 
 ```
-Every Day at 08:00 UTC
+tgapis/x scrapes Telegram Bot API
+every 6 hours → pushes botapi.json
+to the data branch
         │
         ▼
-  ┌─────────────────┐
-  │  Fetch latest   │  ← github.com/ankit-chaubey/api-spec
-  │  api.json spec  │
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  Compare with   │── No change? ──► Stop ✅
-  │  pinned version │
-  └────────┬────────┘
-           │ Changed!
-           ▼
-  ┌─────────────────┐
-  │  diff_spec.py   │  ← Semantic diff (added/removed types & methods)
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  codegen.py     │  ← Pure Python, zero pip dependencies
-  │                 │    Generates gen_types.rs + gen_methods.rs
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  validate.py    │  ← Verify 100% coverage
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  Open PR with   │  ← Rich report: summary table, per-field diff
-  │  full report    │    New/removed items, checklist
-  └────────┬────────┘
-           │
-           ▼
-  ┌─────────────────┐
-  │  On PR merge:   │
-  │  • Bump semver  │
-  │  • Git tag      │
-  │  • GitHub Release│
-  │  • crates.io    │
-  └─────────────────┘
+  ┌─────────────────────┐
+  │  tgapis/x pipeline  │── No change? ──► Stop ✅
+  │  detects new version│
+  └──────────┬──────────┘
+             │ Changed!
+             │ repository_dispatch →
+             │ event: x-data-updated
+             ▼
+  ┌─────────────────────┐
+  │  Fetch botapi.json  │  ← raw.githubusercontent.com/tgapis/x/data/botapi.json
+  │  (always latest)    │
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  Compare with       │── No change? ──► Stop ✅
+  │  pinned api.json    │
+  └──────────┬──────────┘
+             │ Changed!
+             ▼
+  ┌─────────────────────┐
+  │  diff_spec.py       │  ← Semantic diff (added/removed types & methods)
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  codegen.py         │  ← Pure Python, zero pip dependencies
+  │                     │    Generates gen_types.rs + gen_methods.rs
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  validate.py        │  ← Verify 100% coverage
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  Open PR with       │  ← Rich report: summary table, per-field diff
+  │  full report        │    New/removed items, checklist
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  On PR merge:       │
+  │  • Bump semver      │
+  │  • Git tag          │
+  │  • GitHub Release   │
+  │  • crates.io        │
+  └─────────────────────┘
 ```
 
 ### Regenerate Manually
 
 ```sh
-# 1. Pull latest spec
-curl -o api.json \
-  https://raw.githubusercontent.com/ankit-chaubey/api-spec/main/api.json
+# 1. Pull latest spec from tgapis/x data branch into repo root
+curl -sSf https://raw.githubusercontent.com/tgapis/x/data/botapi.json -o api.json
 
 # 2. Run codegen (no pip installs needed)
 python3 codegen/codegen.py api.json tgbotrs/src/
@@ -776,8 +787,8 @@ cargo build
 
 | Workflow | Trigger | Purpose |
 |:---|:---|:---|
-| `auto-regenerate.yml` | ⏰ Daily 08:00 UTC + manual | Spec sync → diff → codegen → PR |
-| `ci.yml` | Every push / PR | Build, test, lint on 3 OS × 2 Rust versions |
+| `auto-regenerate.yml` | 📡 Pipeline dispatch from `tgapis/x` + manual | Spec sync → diff → codegen → PR |
+| `ci.yml` | Every push / PR | Build, test, lint on 3 OS × 2 Rust versions (spec fetched live from `tgapis/x`) |
 | `release.yml` | PR merged → main | Semver bump → tag → crates.io publish |
 | `notify.yml` | After regen | GitHub Issue with full change summary |
 
@@ -802,7 +813,8 @@ cargo test --workspace                     # Run tests
 cargo clippy --workspace -- -D warnings    # Lint
 cargo fmt --all                            # Format
 
-# Regenerate from latest spec
+# Pull the latest spec from tgapis/x into repo root and regenerate
+curl -sSf https://raw.githubusercontent.com/tgapis/x/data/botapi.json -o api.json
 python3 codegen/codegen.py api.json tgbotrs/src/
 
 # Validate 100% coverage
@@ -885,7 +897,7 @@ Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** �
 |:---|:---|
 | [**Telegram**](https://core.telegram.org/bots/api) | The Bot API this library implements |
 | [**PaulSonOfLars / gotgbot**](https://github.com/PaulSonOfLars/gotgbot) | Inspiration for the codegen-first approach |
-| [**ankit-chaubey / api-spec**](https://github.com/ankit-chaubey/api-spec) | Machine-readable spec used as the codegen source |
+| [**tgapis/x**](https://github.com/tgapis/x/tree/data) | Machine-readable spec source — auto-updated every 6 hours |
 
 ---
 

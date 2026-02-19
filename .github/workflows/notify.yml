@@ -3,7 +3,7 @@ name: 🔔 Notify — New Telegram API Version
 on:
   # Runs after auto-regenerate succeeds
   workflow_run:
-    workflows: ["🔄 Auto-Regenerate from Telegram API Spec"]
+    workflows: ["🔄 Auto-Regenerate from Telegram Bot API Spec"]
     types: [completed]
 
   # Also manually triggerable

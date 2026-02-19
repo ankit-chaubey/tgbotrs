@@ -1,11 +1,12 @@
-name: 🔄 Auto-Regenerate from Telegram API Spec
+name: 🔄 Auto-Regenerate from Telegram Bot API Spec
 
 on:
-  # Run daily at 08:00 UTC to check for new API releases
-  schedule:
-    - cron: '0 8 * * *'
+  # Triggered externally via repository_dispatch (e.g. from tgapis/x pipeline)
+  repository_dispatch:
+    types:
+      - x-data-updated
 
-  # Allow manual trigger with optional version override
+  # Manual trigger — optionally pin a specific tgbotrs repo commit to run codegen from
   workflow_dispatch:
     inputs:
       force_regenerate:
@@ -13,15 +14,10 @@ on:
         required: false
         default: 'false'
         type: boolean
-      spec_commit:
-        description: 'Specific spec commit SHA to use (leave empty for latest)'
+      repo_commit:
+        description: 'tgbotrs commit SHA to run codegen from (leave empty for latest HEAD)'
         required: false
         default: ''
-
-  # Also run on pushes to the spec pin file
-  push:
-    paths:
-      - 'spec_commit'
 
 permissions:
   contents: write
@@ -29,14 +25,15 @@ permissions:
   issues: write
 
 env:
-  SPEC_REPO: ankit-chaubey/api-spec
-  SPEC_FILE: api.json
+  SPEC_URL: https://raw.githubusercontent.com/tgapis/x/data/botapi.json
   CODEGEN_SCRIPT: codegen/codegen.py
   OUT_DIR: tgbotrs/src
 
 jobs:
   # ─────────────────────────────────────────────────────────
-  # Step 1: Check if the spec has changed since last run
+  # Step 1: Resolve which tgbotrs commit to run codegen from,
+  #         fetch latest spec from tgapis/x, compare against
+  #         api.json already committed in repo root
   # ─────────────────────────────────────────────────────────
   check-for-updates:
     name: 🔍 Check for API Updates
@@ -48,6 +45,7 @@ jobs:
       new_commit: ${{ steps.fetch-spec.outputs.commit }}
       old_version: ${{ steps.compare.outputs.old_version }}
       spec_changed: ${{ steps.compare.outputs.spec_changed }}
+      repo_sha: ${{ steps.resolve-repo-commit.outputs.sha }}
 
     steps:
       - name: Checkout repository
@@ -60,44 +58,48 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Determine spec commit to use
-        id: resolve-commit
+      - name: Resolve tgbotrs commit to use
+        id: resolve-repo-commit
         run: |
-          if [ -n "${{ github.event.inputs.spec_commit }}" ]; then
-            COMMIT="${{ github.event.inputs.spec_commit }}"
-            echo "Using manually specified commit: $COMMIT"
+          if [ -n "${{ github.event.inputs.repo_commit }}" ]; then
+            SHA="${{ github.event.inputs.repo_commit }}"
+            echo "📌 Using manually specified repo commit: $SHA"
+            git checkout "$SHA"
           else
-            COMMIT=$(curl -s "https://api.github.com/repos/${{ env.SPEC_REPO }}/commits?page=1&per_page=1" \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" | \
-              python3 -c "import json,sys; data=json.load(sys.stdin); print(data[0]['sha'])")
-            echo "Latest commit: $COMMIT"
+            SHA=$(git rev-parse HEAD)
+            echo "✅ Using latest HEAD: $SHA"
           fi
-          echo "commit=$COMMIT" >> $GITHUB_OUTPUT
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
 
-      - name: Fetch latest API spec
+      - name: Fetch latest spec from tgapis/x
         id: fetch-spec
         run: |
-          COMMIT="${{ steps.resolve-commit.outputs.commit }}"
-          URL="https://raw.githubusercontent.com/${{ env.SPEC_REPO }}/${COMMIT}/api.json"
-          echo "Fetching spec from: $URL"
-          curl -sSf "$URL" -o /tmp/api_latest.json
-          
+          echo "Fetching spec from: ${{ env.SPEC_URL }}"
+          curl -sSf "${{ env.SPEC_URL }}" -o /tmp/api_latest.json
+
           VERSION=$(python3 -c "import json; d=json.load(open('/tmp/api_latest.json')); print(d['version'])")
           DATE=$(python3 -c "import json; d=json.load(open('/tmp/api_latest.json')); print(d['release_date'])")
           TYPES=$(python3 -c "import json; d=json.load(open('/tmp/api_latest.json')); print(len(d['types']))")
           METHODS=$(python3 -c "import json; d=json.load(open('/tmp/api_latest.json')); print(len(d['methods']))")
-          
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "release_date=$DATE" >> $GITHUB_OUTPUT
-          echo "commit=$COMMIT" >> $GITHUB_OUTPUT
-          echo "types=$TYPES" >> $GITHUB_OUTPUT
-          echo "methods=$METHODS" >> $GITHUB_OUTPUT
-          
-          echo "📦 Spec: $VERSION ($DATE) — $TYPES types, $METHODS methods"
 
-      - name: Read current pinned version
+          # Commit from dispatch payload when available, else use timestamp
+          COMMIT="${{ github.event.client_payload.commit }}"
+          if [ -z "$COMMIT" ]; then
+            COMMIT="$(date -u +%Y%m%dT%H%M%SZ)-manual"
+          fi
+
+          echo "version=$VERSION"     >> $GITHUB_OUTPUT
+          echo "release_date=$DATE"   >> $GITHUB_OUTPUT
+          echo "commit=$COMMIT"       >> $GITHUB_OUTPUT
+          echo "types=$TYPES"         >> $GITHUB_OUTPUT
+          echo "methods=$METHODS"     >> $GITHUB_OUTPUT
+
+          echo "📦 Latest spec: $VERSION ($DATE) — $TYPES types, $METHODS methods"
+
+      - name: Read current pinned version from repo
         id: current-version
         run: |
+          # api.json in repo root = last processed spec, always reliable for diffing
           if [ -f "api.json" ]; then
             OLD_VERSION=$(python3 -c "import json; d=json.load(open('api.json')); print(d['version'])")
             OLD_DATE=$(python3 -c "import json; d=json.load(open('api.json')); print(d['release_date'])")
@@ -107,29 +109,28 @@ jobs:
           else
             echo "version=none" >> $GITHUB_OUTPUT
             echo "release_date=none" >> $GITHUB_OUTPUT
-            echo "No current api.json found"
+            echo "No api.json found — first run"
           fi
 
-      - name: Compare specs
+      - name: Compare versions
         id: compare
         run: |
           OLD="${{ steps.current-version.outputs.version }}"
           NEW="${{ steps.fetch-spec.outputs.version }}"
           FORCE="${{ github.event.inputs.force_regenerate }}"
-          
+
           echo "old_version=$OLD" >> $GITHUB_OUTPUT
-          
+
           if [ "$OLD" != "$NEW" ] || [ "$FORCE" = "true" ]; then
-            echo "has_update=true" >> $GITHUB_OUTPUT
+            echo "has_update=true"   >> $GITHUB_OUTPUT
             echo "spec_changed=true" >> $GITHUB_OUTPUT
             echo "✅ Update detected: $OLD → $NEW"
           else
-            echo "has_update=false" >> $GITHUB_OUTPUT
+            echo "has_update=false"   >> $GITHUB_OUTPUT
             echo "spec_changed=false" >> $GITHUB_OUTPUT
-            echo "✔️ No update needed (already on $NEW)"
+            echo "✔️  No update needed (already on $NEW)"
           fi
 
-      # Copy latest spec for use in subsequent jobs
       - name: Upload latest spec as artifact
         if: steps.compare.outputs.has_update == 'true'
         uses: actions/upload-artifact@v4
@@ -157,10 +158,11 @@ jobs:
       pr_body: ${{ steps.pr-info.outputs.body }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository at resolved commit
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ needs.check-for-updates.outputs.repo_sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -173,8 +175,9 @@ jobs:
           name: api-spec-latest
           path: /tmp
 
-      - name: Copy current spec for diffing
+      - name: Copy current repo spec for diffing
         run: |
+          # api.json in repo root = reliable old spec for diffing
           cp api.json /tmp/api_old.json || echo '{}' > /tmp/api_old.json
 
       - name: Run diff analysis
@@ -184,33 +187,31 @@ jobs:
             /tmp/api_old.json \
             /tmp/api_latest.json \
             /tmp/diff_report.json
-          
-          # Export individual counts to outputs
+
           ADDED_TYPES=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['added_types']))")
           REMOVED_TYPES=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['removed_types']))")
           ADDED_METHODS=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['added_methods']))")
           REMOVED_METHODS=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['removed_methods']))")
           CHANGED_TYPES=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['changed_types']))")
           CHANGED_METHODS=$(python3 -c "import json; d=json.load(open('/tmp/diff_report.json')); print(len(d['changed_methods']))")
-          
-          echo "added_types=$ADDED_TYPES" >> $GITHUB_OUTPUT
-          echo "removed_types=$REMOVED_TYPES" >> $GITHUB_OUTPUT
-          echo "added_methods=$ADDED_METHODS" >> $GITHUB_OUTPUT
+
+          echo "added_types=$ADDED_TYPES"         >> $GITHUB_OUTPUT
+          echo "removed_types=$REMOVED_TYPES"     >> $GITHUB_OUTPUT
+          echo "added_methods=$ADDED_METHODS"     >> $GITHUB_OUTPUT
           echo "removed_methods=$REMOVED_METHODS" >> $GITHUB_OUTPUT
-          echo "changed_types=$CHANGED_TYPES" >> $GITHUB_OUTPUT
+          echo "changed_types=$CHANGED_TYPES"     >> $GITHUB_OUTPUT
           echo "changed_methods=$CHANGED_METHODS" >> $GITHUB_OUTPUT
-          
+
           echo "📊 Diff: +$ADDED_TYPES types, -$REMOVED_TYPES types, +$ADDED_METHODS methods, -$REMOVED_METHODS methods"
 
       - name: Generate new code
         run: |
-          cp /tmp/api_latest.json api.json
-          python3 ${{ env.CODEGEN_SCRIPT }} api.json ${{ env.OUT_DIR }}
+          python3 ${{ env.CODEGEN_SCRIPT }} /tmp/api_latest.json ${{ env.OUT_DIR }}
 
       - name: Validate generated code
         run: |
           python3 .github/scripts/validate_generated.py \
-            api.json \
+            /tmp/api_latest.json \
             ${{ env.OUT_DIR }}/gen_types.rs \
             ${{ env.OUT_DIR }}/gen_methods.rs
 
@@ -225,41 +226,44 @@ jobs:
             "${{ needs.check-for-updates.outputs.new_commit }}" \
             /tmp/pr_title.txt \
             /tmp/pr_body.md
-          
+
           TITLE=$(cat /tmp/pr_title.txt)
           echo "title=$TITLE" >> $GITHUB_OUTPUT
-          
-          # GitHub outputs have size limits, use file for the body
           echo "body_file=/tmp/pr_body.md" >> $GITHUB_OUTPUT
 
-      - name: Update spec_commit pin file
-        run: echo "${{ needs.check-for-updates.outputs.new_commit }}" > spec_commit
+      - name: Update api.json and spec_commit
+        run: |
+          # api.json — overwrite with latest so next run diffs correctly
+          cp /tmp/api_latest.json api.json
+          # spec_commit — record which tgbotrs repo SHA codegen was run from
+          echo "${{ needs.check-for-updates.outputs.repo_sha }}" > spec_commit
 
       - name: Commit and push to branch
         id: push
         run: |
           BRANCH="bot-api-update/${{ needs.check-for-updates.outputs.new_version }}"
           BRANCH=$(echo "$BRANCH" | tr ' ' '-' | tr '/' '-')
-          
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
-          
+
           git add api.json spec_commit \
             ${{ env.OUT_DIR }}/gen_types.rs \
             ${{ env.OUT_DIR }}/gen_methods.rs
-          
-          printf 'chore(codegen): update to %s\n\nAuto-generated from Telegram Bot API spec commit %s\n\nChanges:\n- Added types: %s\n- Removed types: %s\n- Added methods: %s\n- Removed methods: %s\n' \
+
+          printf 'chore(codegen): update to %s\n\nAuto-generated from tgapis/x data branch (botapi.json)\nSource commit: %s\nRepo SHA: %s\n\nChanges:\n- Added types: %s\n- Removed types: %s\n- Added methods: %s\n- Removed methods: %s\n' \
             "${{ needs.check-for-updates.outputs.new_version }}" \
             "${{ needs.check-for-updates.outputs.new_commit }}" \
+            "${{ needs.check-for-updates.outputs.repo_sha }}" \
             "${{ steps.diff.outputs.added_types || 0 }}" \
             "${{ steps.diff.outputs.removed_types || 0 }}" \
             "${{ steps.diff.outputs.added_methods || 0 }}" \
             "${{ steps.diff.outputs.removed_methods || 0 }}" \
             > /tmp/commit_msg.txt
           git commit -F /tmp/commit_msg.txt
-          
+
           git push origin "$BRANCH" --force
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
@@ -269,7 +273,6 @@ jobs:
         run: |
           BRANCH="${{ steps.push.outputs.branch }}"
           TITLE="${{ steps.pr-info.outputs.title }}"
-          # Try to create; if PR already exists, update it instead
           gh pr create \
             --base main \
             --head "$BRANCH" \
@@ -290,7 +293,7 @@ jobs:
           retention-days: 7
 
   # ─────────────────────────────────────────────────────────
-  # Step 3: Post a summary issue if major changes detected
+  # Step 3: Post a summary if changes were detected
   # ─────────────────────────────────────────────────────────
   post-summary:
     name: 📢 Post Update Summary
@@ -313,7 +316,7 @@ jobs:
           cat >> $GITHUB_STEP_SUMMARY << 'EOF'
           ## 🤖 Telegram Bot API Update Detected!
           EOF
-          
+
           python3 - << 'PYEOF'
           import json, os
 
@@ -323,8 +326,11 @@ jobs:
           old_v = "${{ needs.check-for-updates.outputs.old_version }}"
           new_v = "${{ needs.check-for-updates.outputs.new_version }}"
           new_d = "${{ needs.check-for-updates.outputs.new_date }}"
+          repo_sha = "${{ needs.check-for-updates.outputs.repo_sha }}"
 
           summary.write(f"\n**{old_v}** → **{new_v}** ({new_d})\n\n")
+          summary.write(f"> Source: [tgapis/x @ data branch](https://github.com/tgapis/x/tree/data) — `botapi.json`\n")
+          summary.write(f"> Repo SHA: `{repo_sha}`\n\n")
 
           def section(title, items, emoji):
               if not items:
@@ -336,10 +342,10 @@ jobs:
                   summary.write(f"- ...and {len(items)-30} more\n")
               summary.write("\n")
 
-          section("New Types", report['added_types'], "✅")
-          section("Removed Types", report['removed_types'], "❌")
-          section("New Methods", report['added_methods'], "✅")
-          section("Removed Methods", report['removed_methods'], "❌")
+          section("New Types",       report['added_types'],    "✅")
+          section("Removed Types",   report['removed_types'],  "❌")
+          section("New Methods",     report['added_methods'],  "✅")
+          section("Removed Methods", report['removed_methods'],"❌")
 
           if report['changed_types']:
               summary.write(f"### 🔄 Changed Types ({len(report['changed_types'])})\n")

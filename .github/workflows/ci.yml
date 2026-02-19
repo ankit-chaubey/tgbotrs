@@ -13,6 +13,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
+  SPEC_URL: https://raw.githubusercontent.com/tgapis/x/data/botapi.json
 
 jobs:
   # ─────────────────────────────────────────────────────────
@@ -67,7 +68,7 @@ jobs:
         run: cargo fmt --all -- --check
 
   # ─────────────────────────────────────────────────────────
-  # Validate that generated code is in sync with api.json
+  # Validate that generated code is in sync with tgapis/x spec
   # ─────────────────────────────────────────────────────────
   validate-codegen:
     name: 🔍 Validate Generated Code is in Sync
@@ -82,26 +83,33 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Fetch latest spec from tgapis/x
+        run: |
+          echo "Fetching spec from: ${{ env.SPEC_URL }}"
+          curl -sSf "${{ env.SPEC_URL }}" -o /tmp/api_latest.json
+          VERSION=$(python3 -c "import json; print(json.load(open('/tmp/api_latest.json'))['version'])")
+          echo "📦 Using spec version: $VERSION"
+
       - name: Re-run codegen into temp dir
         run: |
           mkdir -p /tmp/codegen_out
-          python3 codegen/codegen.py api.json /tmp/codegen_out
+          python3 codegen/codegen.py /tmp/api_latest.json /tmp/codegen_out
 
       - name: Compare generated files with committed files
         run: |
           echo "Checking gen_types.rs..."
           if ! diff -q tgbotrs/src/gen_types.rs /tmp/codegen_out/gen_types.rs > /dev/null 2>&1; then
-            echo "❌ gen_types.rs is OUT OF SYNC with api.json!"
-            echo "Run: python3 codegen/codegen.py api.json tgbotrs/src/ to regenerate"
+            echo "❌ gen_types.rs is OUT OF SYNC with tgapis/x spec!"
+            echo "Run: python3 codegen/codegen.py <botapi.json> tgbotrs/src/ to regenerate"
             diff tgbotrs/src/gen_types.rs /tmp/codegen_out/gen_types.rs | head -50
             exit 1
           fi
           echo "✅ gen_types.rs is in sync"
-          
+
           echo "Checking gen_methods.rs..."
           if ! diff -q tgbotrs/src/gen_methods.rs /tmp/codegen_out/gen_methods.rs > /dev/null 2>&1; then
-            echo "❌ gen_methods.rs is OUT OF SYNC with api.json!"
-            echo "Run: python3 codegen/codegen.py api.json tgbotrs/src/ to regenerate"
+            echo "❌ gen_methods.rs is OUT OF SYNC with tgapis/x spec!"
+            echo "Run: python3 codegen/codegen.py <botapi.json> tgbotrs/src/ to regenerate"
             diff tgbotrs/src/gen_methods.rs /tmp/codegen_out/gen_methods.rs | head -50
             exit 1
           fi
@@ -110,7 +118,7 @@ jobs:
       - name: Validate all types and methods are covered
         run: |
           python3 .github/scripts/validate_generated.py \
-            api.json \
+            /tmp/api_latest.json \
             tgbotrs/src/gen_types.rs \
             tgbotrs/src/gen_methods.rs
 
@@ -130,10 +138,24 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Fetch latest spec from tgapis/x
+        run: |
+          echo "Fetching spec from: ${{ env.SPEC_URL }}"
+          curl -sSf "${{ env.SPEC_URL }}" -o /tmp/api_latest.json
+          VERSION=$(python3 -c "import json; print(json.load(open('/tmp/api_latest.json'))['version'])")
+          echo "📦 Using spec version: $VERSION"
+
       - name: Generate coverage report
         run: |
-          python3 .github/scripts/coverage_report.py api.json tgbotrs/src/gen_types.rs tgbotrs/src/gen_methods.rs
+          python3 .github/scripts/coverage_report.py \
+            /tmp/api_latest.json \
+            tgbotrs/src/gen_types.rs \
+            tgbotrs/src/gen_methods.rs
 
       - name: Post to step summary
         run: |
-          python3 .github/scripts/coverage_report.py api.json tgbotrs/src/gen_types.rs tgbotrs/src/gen_methods.rs --markdown >> $GITHUB_STEP_SUMMARY
+          python3 .github/scripts/coverage_report.py \
+            /tmp/api_latest.json \
+            tgbotrs/src/gen_types.rs \
+            tgbotrs/src/gen_methods.rs \
+            --markdown >> $GITHUB_STEP_SUMMARY
