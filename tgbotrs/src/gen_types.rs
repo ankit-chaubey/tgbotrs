@@ -3287,7 +3287,7 @@ pub struct KeyboardButtonPollType {
     pub r#type: Option<String>,
 }
 
-/// This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the chat if appropriate. More about requesting chats: https://core.telegram.org/bots/features#chat-and-user-selection.
+/// This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the chat if appropriate. More about requesting chats: /bots/features#chat-and-user-selection.
 /// https://core.telegram.org/bots/api#keyboardbuttonrequestchat
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeyboardButtonRequestChat {
@@ -3324,7 +3324,7 @@ pub struct KeyboardButtonRequestChat {
     pub request_photo: Option<bool>,
 }
 
-/// This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users: https://core.telegram.org/bots/features#chat-and-user-selection
+/// This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users: /bots/features#chat-and-user-selection
 /// https://core.telegram.org/bots/api#keyboardbuttonrequestusers
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeyboardButtonRequestUsers {
@@ -3731,7 +3731,7 @@ pub struct Message {
     /// Optional. Service message: upgrade of a gift was purchased after the gift was sent
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gift_upgrade_sent: Option<Box<GiftInfo>>,
-    /// Optional. The domain name of the website on which the user has logged in. More about Telegram Login: https://core.telegram.org/widgets/login
+    /// Optional. The domain name of the website on which the user has logged in. More about Telegram Login: /widgets/login
     #[serde(skip_serializing_if = "Option::is_none")]
     pub connected_website: Option<String>,
     /// Optional. Service message: the user allowed the bot to write messages after adding it to the attachment or side menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess
