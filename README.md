@@ -406,7 +406,7 @@ use tgbotrs::types::{
 };
 
 let results = vec![
-    InlineQueryResult::Article(InlineQueryResultArticle {
+    InlineQueryResult::InlineQueryResultArticle(InlineQueryResultArticle {
         r#type: "article".into(),
         id: "1".into(),
         title: "Hello World".into(),

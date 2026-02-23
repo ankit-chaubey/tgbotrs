@@ -4612,10 +4612,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "animation".into(),
-            serde_json::to_value(animation.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -4626,7 +4622,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendAnimation", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendAnimation", req, "animation", animation.into())
             .await
     }
 }
@@ -4776,10 +4772,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "audio".into(),
-            serde_json::to_value(audio.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -4790,7 +4782,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendAudio", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendAudio", req, "audio", audio.into())
             .await
     }
 }
@@ -5317,10 +5309,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "document".into(),
-            serde_json::to_value(document.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -5331,7 +5319,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendDocument", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendDocument", req, "document", document.into())
             .await
     }
 }
@@ -5976,7 +5964,7 @@ impl Bot {
     pub async fn send_media_group(
         &self,
         chat_id: impl Into<ChatId>,
-        media: impl Into<InputMedia>,
+        media: Vec<InputMedia>,
         params: Option<SendMediaGroupParams>,
     ) -> Result<Vec<Message>, BotError> {
         let mut req = serde_json::Map::new();
@@ -5986,7 +5974,7 @@ impl Bot {
         );
         req.insert(
             "media".into(),
-            serde_json::to_value(media.into()).unwrap_or_default(),
+            serde_json::to_value(&media).unwrap_or_default(),
         );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
@@ -6485,10 +6473,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "photo".into(),
-            serde_json::to_value(photo.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -6499,7 +6483,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendPhoto", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendPhoto", req, "photo", photo.into())
             .await
     }
 }
@@ -6796,10 +6780,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "sticker".into(),
-            serde_json::to_value(sticker.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -6810,7 +6790,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendSticker", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendSticker", req, "sticker", sticker.into())
             .await
     }
 }
@@ -7151,10 +7131,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "video".into(),
-            serde_json::to_value(video.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -7165,7 +7141,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendVideo", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendVideo", req, "video", video.into())
             .await
     }
 }
@@ -7286,10 +7262,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "video_note".into(),
-            serde_json::to_value(video_note.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -7300,7 +7272,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendVideoNote", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendVideoNote", req, "video_note", video_note.into())
             .await
     }
 }
@@ -7428,10 +7400,6 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "voice".into(),
-            serde_json::to_value(voice.into()).unwrap_or_default(),
-        );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
             if let serde_json::Value::Object(m) = extra {
@@ -7442,7 +7410,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendVoice", &serde_json::Value::Object(req))
+        self.call_api_with_file("sendVoice", req, "voice", voice.into())
             .await
     }
 }
@@ -7865,11 +7833,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        req.insert(
-            "photo".into(),
-            serde_json::to_value(photo).unwrap_or_default(),
-        );
-        self.call_api("setChatPhoto", &serde_json::Value::Object(req))
+        self.call_api_with_file("setChatPhoto", req, "photo", InputFileOrString::File(photo))
             .await
     }
 }
@@ -9221,14 +9185,10 @@ impl Bot {
             serde_json::to_value(user_id).unwrap_or_default(),
         );
         req.insert(
-            "sticker".into(),
-            serde_json::to_value(sticker).unwrap_or_default(),
-        );
-        req.insert(
             "sticker_format".into(),
             serde_json::to_value(sticker_format.into()).unwrap_or_default(),
         );
-        self.call_api("uploadStickerFile", &serde_json::Value::Object(req))
+        self.call_api_with_file("uploadStickerFile", req, "sticker", InputFileOrString::File(sticker))
             .await
     }
 }

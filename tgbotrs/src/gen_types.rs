@@ -1523,7 +1523,7 @@ pub struct File {
 
 /// Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode. Not supported in channels and for messages sent on behalf of a Telegram Business account.
 /// https://core.telegram.org/bots/api#forcereply
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ForceReply {
     /// Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
     pub force_reply: bool,
@@ -1958,7 +1958,7 @@ pub enum InlineQueryResult {
 
 /// Represents a link to an article or web page.
 /// https://core.telegram.org/bots/api#inlinequeryresultarticle
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InlineQueryResultArticle {
     /// Type of the result, must be article
     #[serde(rename = "type")]
@@ -2838,7 +2838,7 @@ pub struct InputLocationMessageContent {
 
 /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 /// https://core.telegram.org/bots/api#inputmediaanimation
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaAnimation {
     /// Type of the result, must be animation
     #[serde(rename = "type")]
@@ -2876,7 +2876,7 @@ pub struct InputMediaAnimation {
 
 /// Represents an audio file to be treated as music to be sent.
 /// https://core.telegram.org/bots/api#inputmediaaudio
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaAudio {
     /// Type of the result, must be audio
     #[serde(rename = "type")]
@@ -2908,7 +2908,7 @@ pub struct InputMediaAudio {
 
 /// Represents a general file to be sent.
 /// https://core.telegram.org/bots/api#inputmediadocument
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaDocument {
     /// Type of the result, must be document
     #[serde(rename = "type")]
@@ -2934,7 +2934,7 @@ pub struct InputMediaDocument {
 
 /// Represents a photo to be sent.
 /// https://core.telegram.org/bots/api#inputmediaphoto
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaPhoto {
     /// Type of the result, must be photo
     #[serde(rename = "type")]
@@ -2960,7 +2960,7 @@ pub struct InputMediaPhoto {
 
 /// Represents a video to be sent.
 /// https://core.telegram.org/bots/api#inputmediavideo
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaVideo {
     /// Type of the result, must be video
     #[serde(rename = "type")]
@@ -3078,7 +3078,7 @@ pub struct InputPaidMediaVideo {
 
 /// This object contains information about one answer option in a poll to be sent.
 /// https://core.telegram.org/bots/api#inputpolloption
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputPollOption {
     /// Option text, 1-100 characters
     pub text: String,
@@ -3188,7 +3188,7 @@ pub struct InputStoryContentVideo {
 
 /// Represents the content of a text message to be sent as the result of an inline query.
 /// https://core.telegram.org/bots/api#inputtextmessagecontent
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputTextMessageContent {
     /// Text of the message to be sent, 1-4096 characters
     pub message_text: String,
@@ -3247,7 +3247,7 @@ pub struct Invoice {
 
 /// This object represents one button of the reply keyboard. At most one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
 /// https://core.telegram.org/bots/api#keyboardbutton
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct KeyboardButton {
     /// Text of the button. If none of the fields other than text, icon_custom_emoji_id, and style are used, it will be sent as a message when the button is pressed
     pub text: String,
@@ -4572,7 +4572,7 @@ pub struct RefundedPayment {
 
 /// This object represents a custom keyboard with reply options (see Introduction to bots for details and examples). Not supported in channels and for messages sent on behalf of a Telegram Business account.
 /// https://core.telegram.org/bots/api#replykeyboardmarkup
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ReplyKeyboardMarkup {
     /// Array of button rows, each represented by an Array of KeyboardButton objects
     pub keyboard: Vec<Vec<KeyboardButton>>,
@@ -4606,7 +4606,7 @@ pub struct ReplyKeyboardRemove {
 
 /// Describes reply parameters for the message that is being sent.
 /// https://core.telegram.org/bots/api#replyparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ReplyParameters {
     /// Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified
     pub message_id: i64,
