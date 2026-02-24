@@ -4622,8 +4622,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendAnimation", req, "animation", animation.into())
-            .await
+        self.call_api_with_file(
+            "sendAnimation",
+            req,
+            "animation",
+            animation.into(),
+        )
+        .await
     }
 }
 
@@ -4782,8 +4787,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendAudio", req, "audio", audio.into())
-            .await
+        self.call_api_with_file(
+            "sendAudio",
+            req,
+            "audio",
+            audio.into(),
+        )
+        .await
     }
 }
 
@@ -5319,8 +5329,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendDocument", req, "document", document.into())
-            .await
+        self.call_api_with_file(
+            "sendDocument",
+            req,
+            "document",
+            document.into(),
+        )
+        .await
     }
 }
 
@@ -6483,8 +6498,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendPhoto", req, "photo", photo.into())
-            .await
+        self.call_api_with_file(
+            "sendPhoto",
+            req,
+            "photo",
+            photo.into(),
+        )
+        .await
     }
 }
 
@@ -6790,8 +6810,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendSticker", req, "sticker", sticker.into())
-            .await
+        self.call_api_with_file(
+            "sendSticker",
+            req,
+            "sticker",
+            sticker.into(),
+        )
+        .await
     }
 }
 
@@ -7141,8 +7166,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendVideo", req, "video", video.into())
-            .await
+        self.call_api_with_file(
+            "sendVideo",
+            req,
+            "video",
+            video.into(),
+        )
+        .await
     }
 }
 
@@ -7272,8 +7302,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendVideoNote", req, "video_note", video_note.into())
-            .await
+        self.call_api_with_file(
+            "sendVideoNote",
+            req,
+            "video_note",
+            video_note.into(),
+        )
+        .await
     }
 }
 
@@ -7410,8 +7445,13 @@ impl Bot {
                 }
             }
         }
-        self.call_api_with_file("sendVoice", req, "voice", voice.into())
-            .await
+        self.call_api_with_file(
+            "sendVoice",
+            req,
+            "voice",
+            voice.into(),
+        )
+        .await
     }
 }
 
@@ -7833,8 +7873,13 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api_with_file("setChatPhoto", req, "photo", InputFileOrString::File(photo))
-            .await
+        self.call_api_with_file(
+            "setChatPhoto",
+            req,
+            "photo",
+            InputFileOrString::File(photo),
+        )
+        .await
     }
 }
 
@@ -9188,8 +9233,13 @@ impl Bot {
             "sticker_format".into(),
             serde_json::to_value(sticker_format.into()).unwrap_or_default(),
         );
-        self.call_api_with_file("uploadStickerFile", req, "sticker", InputFileOrString::File(sticker))
-            .await
+        self.call_api_with_file(
+            "uploadStickerFile",
+            req,
+            "sticker",
+            InputFileOrString::File(sticker),
+        )
+        .await
     }
 }
 

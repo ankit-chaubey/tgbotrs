@@ -211,8 +211,6 @@ def generate_types(spec):
             lines.append('')
         else:
             # Regular struct — add Default if every field is optional (so ..Default::default() works in user code)
-            all_optional = all(f['type'].startswith('Option<') or not f.get('required', True)
-                               for f in fields) if fields else False
             # Check at the Rust type level: if every field will be Option<...>
             all_fields_optional = all(
                 field_rust_type(field, types_map).startswith('Option<')
@@ -375,7 +373,14 @@ def generate_methods(spec):
             lines.append(f'        }}')
 
         if file_field:
-            lines.append(f'        self.call_api_with_file("{method_name}", req, "{file_field}", {safe_field_name(file_field)}.into()).await')
+            fn_arg = safe_field_name(file_field)
+            lines.append(f'        self.call_api_with_file(')
+            lines.append(f'            "{method_name}",')
+            lines.append(f'            req,')
+            lines.append(f'            "{file_field}",')
+            lines.append(f'            {fn_arg}.into(),')
+            lines.append(f'        )')
+            lines.append(f'        .await')
         else:
             lines.append(f'        self.call_api("{method_name}", &serde_json::Value::Object(req)).await')
         lines.append(f'    }}')

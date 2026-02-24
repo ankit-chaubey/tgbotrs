@@ -1,4 +1,8 @@
-use crate::{input_file::{InputFile, InputFileOrString}, types::User, BotError};
+use crate::{
+    input_file::{InputFile, InputFileOrString},
+    types::User,
+    BotError,
+};
 use reqwest::Client;
 use serde::Deserialize;
 
@@ -6,15 +10,15 @@ fn infer_mime(filename: &str) -> String {
     let ext = filename.rsplit('.').next().unwrap_or("").to_lowercase();
     match ext.as_str() {
         "jpg" | "jpeg" => "image/jpeg",
-        "png"          => "image/png",
-        "gif"          => "image/gif",
-        "webp"         => "image/webp",
-        "mp4"          => "video/mp4",
-        "mp3"          => "audio/mpeg",
-        "ogg"          => "audio/ogg",
-        "pdf"          => "application/pdf",
-        "webm"         => "video/webm",
-        _              => "application/octet-stream",
+        "png" => "image/png",
+        "gif" => "image/gif",
+        "webp" => "image/webp",
+        "mp4" => "video/mp4",
+        "mp3" => "audio/mpeg",
+        "ogg" => "audio/ogg",
+        "pdf" => "application/pdf",
+        "webm" => "video/webm",
+        _ => "application/octet-stream",
     }
     .to_string()
 }
