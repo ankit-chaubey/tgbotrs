@@ -5790,7 +5790,7 @@ pub struct WebhookInfo {
 
 /// This object represents a service message about a user allowing a bot to write messages after adding it to the attachment menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess.
 /// https://core.telegram.org/bots/api#writeaccessallowed
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct WriteAccessAllowed {
     /// Optional. True, if the access was granted after the user accepted an explicit request from a Web App sent by the method requestWriteAccess
     #[serde(skip_serializing_if = "Option::is_none")]

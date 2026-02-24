@@ -51,6 +51,7 @@ FORCE_DEFAULT = {
     "KeyboardButton",
     "ReplyKeyboardMarkup",
     "ReplyParameters",
+    "WriteAccessAllowed",
 }
 
 # ─────────────────────────────────────────────────
