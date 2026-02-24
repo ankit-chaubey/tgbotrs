@@ -2056,13 +2056,13 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#editmessagemedia
     pub async fn edit_message_media(
         &self,
-        media: impl Into<InputMedia>,
+        media: Vec<InputMedia>,
         params: Option<EditMessageMediaParams>,
     ) -> Result<serde_json::Value, BotError> {
         let mut req = serde_json::Map::new();
         req.insert(
             "media".into(),
-            serde_json::to_value(media.into()).unwrap_or_default(),
+            serde_json::to_value(&media).unwrap_or_default(),
         );
         if let Some(p) = params {
             let extra = serde_json::to_value(&p).unwrap_or_default();
@@ -7833,7 +7833,11 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api_with_file("setChatPhoto", req, "photo", InputFileOrString::File(photo))
+        req.insert(
+            "photo".into(),
+            serde_json::to_value(photo).unwrap_or_default(),
+        );
+        self.call_api("setChatPhoto", &serde_json::Value::Object(req))
             .await
     }
 }
@@ -9185,16 +9189,15 @@ impl Bot {
             serde_json::to_value(user_id).unwrap_or_default(),
         );
         req.insert(
+            "sticker".into(),
+            serde_json::to_value(sticker).unwrap_or_default(),
+        );
+        req.insert(
             "sticker_format".into(),
             serde_json::to_value(sticker_format.into()).unwrap_or_default(),
         );
-        self.call_api_with_file(
-            "uploadStickerFile",
-            req,
-            "sticker",
-            InputFileOrString::File(sticker),
-        )
-        .await
+        self.call_api("uploadStickerFile", &serde_json::Value::Object(req))
+            .await
     }
 }
 
