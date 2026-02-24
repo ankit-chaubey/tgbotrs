@@ -374,13 +374,18 @@ def generate_methods(spec):
 
         if file_field:
             fn_arg = safe_field_name(file_field)
-            lines.append(f'        self.call_api_with_file(')
-            lines.append(f'            "{method_name}",')
-            lines.append(f'            req,')
-            lines.append(f'            "{file_field}",')
-            lines.append(f'            {fn_arg}.into(),')
-            lines.append(f'        )')
-            lines.append(f'        .await')
+            single_line = f'        self.call_api_with_file("{method_name}", req, "{file_field}", {fn_arg}.into())'
+            if len(single_line) > 100:
+                lines.append(f'        self.call_api_with_file(')
+                lines.append(f'            "{method_name}",')
+                lines.append(f'            req,')
+                lines.append(f'            "{file_field}",')
+                lines.append(f'            {fn_arg}.into(),')
+                lines.append(f'        )')
+                lines.append(f'        .await')
+            else:
+                lines.append(f'        self.call_api_with_file("{method_name}", req, "{file_field}", {fn_arg}.into())')
+                lines.append(f'            .await')
         else:
             lines.append(f'        self.call_api("{method_name}", &serde_json::Value::Object(req)).await')
         lines.append(f'    }}')

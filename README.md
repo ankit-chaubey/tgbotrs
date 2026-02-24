@@ -683,7 +683,8 @@ let params = SendMessageParams::new()
     .reply_parameters(ReplyParameters { message_id: 42, ..Default::default() })
     .reply_markup(ReplyMarkup::ForceReply(ForceReply {
         force_reply: true,
-        ..Default::default()
+        input_field_placeholder: None,
+        selective: None,
     }));
 ```
 

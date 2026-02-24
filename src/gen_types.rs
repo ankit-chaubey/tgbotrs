@@ -3078,7 +3078,7 @@ pub struct InputPaidMediaVideo {
 
 /// This object contains information about one answer option in a poll to be sent.
 /// https://core.telegram.org/bots/api#inputpolloption
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct InputPollOption {
     /// Option text, 1-100 characters
     pub text: String,
@@ -3188,7 +3188,7 @@ pub struct InputStoryContentVideo {
 
 /// Represents the content of a text message to be sent as the result of an inline query.
 /// https://core.telegram.org/bots/api#inputtextmessagecontent
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct InputTextMessageContent {
     /// Text of the message to be sent, 1-4096 characters
     pub message_text: String,
@@ -3247,7 +3247,7 @@ pub struct Invoice {
 
 /// This object represents one button of the reply keyboard. At most one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button. For simple text buttons, String can be used instead of this object to specify the button text.
 /// https://core.telegram.org/bots/api#keyboardbutton
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeyboardButton {
     /// Text of the button. If none of the fields other than text, icon_custom_emoji_id, and style are used, it will be sent as a message when the button is pressed
     pub text: String,
@@ -3279,7 +3279,7 @@ pub struct KeyboardButton {
 
 /// This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
 /// https://core.telegram.org/bots/api#keyboardbuttonpolltype
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct KeyboardButtonPollType {
     /// Optional. If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of any type.
     #[serde(rename = "type")]
@@ -3362,7 +3362,7 @@ pub struct LabeledPrice {
 
 /// Describes the options used for link preview generation.
 /// https://core.telegram.org/bots/api#linkpreviewoptions
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct LinkPreviewOptions {
     /// Optional. True, if the link preview is disabled
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -3980,7 +3980,7 @@ pub struct MessageReactionUpdated {
 
 /// This object represents information about an order.
 /// https://core.telegram.org/bots/api#orderinfo
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct OrderInfo {
     /// Optional. User name
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -4572,7 +4572,7 @@ pub struct RefundedPayment {
 
 /// This object represents a custom keyboard with reply options (see Introduction to bots for details and examples). Not supported in channels and for messages sent on behalf of a Telegram Business account.
 /// https://core.telegram.org/bots/api#replykeyboardmarkup
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ReplyKeyboardMarkup {
     /// Array of button rows, each represented by an Array of KeyboardButton objects
     pub keyboard: Vec<Vec<KeyboardButton>>,
@@ -4606,7 +4606,7 @@ pub struct ReplyKeyboardRemove {
 
 /// Describes reply parameters for the message that is being sent.
 /// https://core.telegram.org/bots/api#replyparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ReplyParameters {
     /// Identifier of the message that will be replied to in the current chat, or in the chat chat_id if it is specified
     pub message_id: i64,
@@ -4635,7 +4635,7 @@ pub struct ReplyParameters {
 
 /// Describes why a request was unsuccessful.
 /// https://core.telegram.org/bots/api#responseparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ResponseParameters {
     /// Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -4691,7 +4691,7 @@ pub struct RevenueWithdrawalStateSucceeded {
 
 /// Describes an inline message sent by a Web App on behalf of a user.
 /// https://core.telegram.org/bots/api#sentwebappmessage
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SentWebAppMessage {
     /// Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5048,7 +5048,7 @@ pub struct SuggestedPostApproved {
 
 /// Describes a service message about the rejection of a suggested post.
 /// https://core.telegram.org/bots/api#suggestedpostdeclined
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SuggestedPostDeclined {
     /// Optional. Message containing the suggested post. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5091,7 +5091,7 @@ pub struct SuggestedPostPaid {
 
 /// Contains parameters of a post that is being suggested by the bot.
 /// https://core.telegram.org/bots/api#suggestedpostparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SuggestedPostParameters {
     /// Optional. Proposed price for the post. If the field is omitted, then the post is unpaid.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5124,7 +5124,7 @@ pub struct SuggestedPostRefunded {
 
 /// This object represents an inline button that switches the current user to inline mode in a chosen chat, with an optional default inline query.
 /// https://core.telegram.org/bots/api#switchinlinequerychosenchat
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SwitchInlineQueryChosenChat {
     /// Optional. The default inline query to be inserted in the input field. If left empty, only the bot's username will be inserted
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5790,7 +5790,7 @@ pub struct WebhookInfo {
 
 /// This object represents a service message about a user allowing a bot to write messages after adding it to the attachment menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess.
 /// https://core.telegram.org/bots/api#writeaccessallowed
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct WriteAccessAllowed {
     /// Optional. True, if the access was granted after the user accepted an explicit request from a Web App sent by the method requestWriteAccess
     #[serde(skip_serializing_if = "Option::is_none")]
