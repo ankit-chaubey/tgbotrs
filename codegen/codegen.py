@@ -35,6 +35,24 @@ SKIP_TYPES = {
     "InputMedia",  # ergonomic wrapper enum in tgbotrs/src/lib.rs
 }
 
+# Types that must always derive Default, even if they have required fields.
+# This allows user code to use `..Default::default()` struct update syntax.
+# Add new entries here whenever the README or examples use that pattern.
+FORCE_DEFAULT = {
+    "ForceReply",
+    "InlineQueryResultArticle",
+    "InputMediaAnimation",
+    "InputMediaAudio",
+    "InputMediaDocument",
+    "InputMediaPhoto",
+    "InputMediaVideo",
+    "InputPollOption",
+    "InputTextMessageContent",
+    "KeyboardButton",
+    "ReplyKeyboardMarkup",
+    "ReplyParameters",
+}
+
 # ─────────────────────────────────────────────────
 # Load spec
 # ─────────────────────────────────────────────────
@@ -210,14 +228,16 @@ def generate_types(spec):
             lines.append(f'pub struct {type_name} {{}}')
             lines.append('')
         else:
-            # Regular struct — add Default if every field is optional (so ..Default::default() works in user code)
-            # Check at the Rust type level: if every field will be Option<...>
+            # Regular struct — add Default if:
+            #   (a) every field is optional (Option<...>), so ..Default::default() works, OR
+            #   (b) the type is in FORCE_DEFAULT (explicitly allowlisted in this file)
             all_fields_optional = all(
                 field_rust_type(field, types_map).startswith('Option<')
                 for field in fields
             ) if fields else False
+            want_default = all_fields_optional or type_name in FORCE_DEFAULT
             derive_line = '#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]' \
-                if all_fields_optional else \
+                if want_default else \
                 '#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]'
             lines.append(derive_line)
             lines.append(f'pub struct {type_name} {{')

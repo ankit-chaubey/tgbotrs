@@ -1523,7 +1523,7 @@ pub struct File {
 
 /// Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode. Not supported in channels and for messages sent on behalf of a Telegram Business account.
 /// https://core.telegram.org/bots/api#forcereply
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ForceReply {
     /// Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
     pub force_reply: bool,
@@ -1958,7 +1958,7 @@ pub enum InlineQueryResult {
 
 /// Represents a link to an article or web page.
 /// https://core.telegram.org/bots/api#inlinequeryresultarticle
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InlineQueryResultArticle {
     /// Type of the result, must be article
     #[serde(rename = "type")]
@@ -2838,7 +2838,7 @@ pub struct InputLocationMessageContent {
 
 /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 /// https://core.telegram.org/bots/api#inputmediaanimation
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaAnimation {
     /// Type of the result, must be animation
     #[serde(rename = "type")]
@@ -2876,7 +2876,7 @@ pub struct InputMediaAnimation {
 
 /// Represents an audio file to be treated as music to be sent.
 /// https://core.telegram.org/bots/api#inputmediaaudio
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaAudio {
     /// Type of the result, must be audio
     #[serde(rename = "type")]
@@ -2908,7 +2908,7 @@ pub struct InputMediaAudio {
 
 /// Represents a general file to be sent.
 /// https://core.telegram.org/bots/api#inputmediadocument
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaDocument {
     /// Type of the result, must be document
     #[serde(rename = "type")]
@@ -2934,7 +2934,7 @@ pub struct InputMediaDocument {
 
 /// Represents a photo to be sent.
 /// https://core.telegram.org/bots/api#inputmediaphoto
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaPhoto {
     /// Type of the result, must be photo
     #[serde(rename = "type")]
@@ -2960,7 +2960,7 @@ pub struct InputMediaPhoto {
 
 /// Represents a video to be sent.
 /// https://core.telegram.org/bots/api#inputmediavideo
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct InputMediaVideo {
     /// Type of the result, must be video
     #[serde(rename = "type")]
@@ -3279,7 +3279,7 @@ pub struct KeyboardButton {
 
 /// This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
 /// https://core.telegram.org/bots/api#keyboardbuttonpolltype
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct KeyboardButtonPollType {
     /// Optional. If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of any type.
     #[serde(rename = "type")]
@@ -3362,7 +3362,7 @@ pub struct LabeledPrice {
 
 /// Describes the options used for link preview generation.
 /// https://core.telegram.org/bots/api#linkpreviewoptions
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct LinkPreviewOptions {
     /// Optional. True, if the link preview is disabled
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -3980,7 +3980,7 @@ pub struct MessageReactionUpdated {
 
 /// This object represents information about an order.
 /// https://core.telegram.org/bots/api#orderinfo
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct OrderInfo {
     /// Optional. User name
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -4635,7 +4635,7 @@ pub struct ReplyParameters {
 
 /// Describes why a request was unsuccessful.
 /// https://core.telegram.org/bots/api#responseparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct ResponseParameters {
     /// Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -4691,7 +4691,7 @@ pub struct RevenueWithdrawalStateSucceeded {
 
 /// Describes an inline message sent by a Web App on behalf of a user.
 /// https://core.telegram.org/bots/api#sentwebappmessage
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SentWebAppMessage {
     /// Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5048,7 +5048,7 @@ pub struct SuggestedPostApproved {
 
 /// Describes a service message about the rejection of a suggested post.
 /// https://core.telegram.org/bots/api#suggestedpostdeclined
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SuggestedPostDeclined {
     /// Optional. Message containing the suggested post. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5091,7 +5091,7 @@ pub struct SuggestedPostPaid {
 
 /// Contains parameters of a post that is being suggested by the bot.
 /// https://core.telegram.org/bots/api#suggestedpostparameters
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SuggestedPostParameters {
     /// Optional. Proposed price for the post. If the field is omitted, then the post is unpaid.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -5124,7 +5124,7 @@ pub struct SuggestedPostRefunded {
 
 /// This object represents an inline button that switches the current user to inline mode in a chosen chat, with an optional default inline query.
 /// https://core.telegram.org/bots/api#switchinlinequerychosenchat
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct SwitchInlineQueryChosenChat {
     /// Optional. The default inline query to be inserted in the input field. If left empty, only the bot's username will be inserted
     #[serde(skip_serializing_if = "Option::is_none")]
