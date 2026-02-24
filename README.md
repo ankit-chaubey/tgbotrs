@@ -107,8 +107,13 @@
 Add to your `Cargo.toml`:
 
 ```toml
+[package]
+name = "mybot"
+version = "0.1.0"
+edition = "2021"
+
 [dependencies]
-tgbotrs = "0.1"
+tgbotrs = ">=0.1.5"
 tokio   = { version = "1", features = ["full"] }
 ```
 
@@ -410,7 +415,7 @@ let results = vec![
         r#type: "article".into(),
         id: "1".into(),
         title: "Hello World".into(),
-        input_message_content: InputMessageContent::Text(InputTextMessageContent {
+        input_message_content: InputMessageContent::InputTextMessageContent(InputTextMessageContent {
             message_text: "Hello from inline mode! 👋".into(),
             ..Default::default()
         }),
@@ -455,7 +460,7 @@ bot.send_invoice(
 
 ### 🔔 Webhooks
 
-Register a webhook URL so Telegram pushes updates to your server instead of you polling.
+Register a webhook URL so Telegram pushes updates to your server instead of you polling. Read detailed [webhook bot examples!](https://github.com/ankit-chaubey/tgbotrs/tree/main/examples/webhook)
 
 ```rust
 use tgbotrs::gen_methods::SetWebhookParams;
