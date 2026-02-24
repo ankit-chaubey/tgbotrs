@@ -35,6 +35,24 @@ SKIP_TYPES = {
     "InputMedia",  # ergonomic wrapper enum in tgbotrs/src/lib.rs
 }
 
+# Types that must always derive Default, even if they have required fields.
+# This allows user code to use `..Default::default()` struct update syntax.
+# Add new entries here whenever the README or examples use that pattern.
+FORCE_DEFAULT = {
+    "ForceReply",
+    "InputMediaAnimation",
+    "InputMediaAudio",
+    "InputMediaDocument",
+    "InputMediaPhoto",
+    "InputMediaVideo",
+    "InputPollOption",
+    "InputTextMessageContent",
+    "KeyboardButton",
+    "ReplyKeyboardMarkup",
+    "ReplyParameters",
+    "WriteAccessAllowed",
+}
+
 # ─────────────────────────────────────────────────
 # Load spec
 # ─────────────────────────────────────────────────
@@ -210,8 +228,18 @@ def generate_types(spec):
             lines.append(f'pub struct {type_name} {{}}')
             lines.append('')
         else:
-            # Regular struct
-            lines.append('#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]')
+            # Regular struct — add Default if:
+            #   (a) every field is optional (Option<...>), so ..Default::default() works, OR
+            #   (b) the type is in FORCE_DEFAULT (explicitly allowlisted in this file)
+            all_fields_optional = all(
+                field_rust_type(field, types_map).startswith('Option<')
+                for field in fields
+            ) if fields else False
+            want_default = all_fields_optional or type_name in FORCE_DEFAULT
+            derive_line = '#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]' \
+                if want_default else \
+                '#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]'
+            lines.append(derive_line)
             lines.append(f'pub struct {type_name} {{')
             for field in fields:
                 fname = safe_field_name(field['name'])
@@ -305,6 +333,13 @@ def generate_methods(spec):
         # Return type
         ret = return_rust_type(returns, types_map)
 
+        # Identify file-upload methods: those with an InputFileOrString required field
+        file_field = None
+        for field in required_fields:
+            if field_rust_type(field, types_map) == 'InputFileOrString':
+                file_field = field['name']
+                break
+
         # Signature args
         sig_parts = []
         for field in required_fields:
@@ -318,7 +353,8 @@ def generate_methods(spec):
             elif ftype == 'InputFileOrString':
                 sig_parts.append(f'{fname}: impl Into<InputFileOrString>')
             elif ftype == 'InputMedia':
-                sig_parts.append(f'{fname}: impl Into<InputMedia>')
+                # sendMediaGroup needs Vec<InputMedia> — always a list
+                sig_parts.append(f'{fname}: Vec<InputMedia>')
             else:
                 sig_parts.append(f'{fname}: {ftype}')
 
@@ -339,8 +375,14 @@ def generate_methods(spec):
         for field in required_fields:
             fname = safe_field_name(field['name'])
             ftype = field_rust_type(field, types_map)
-            expr = f'{fname}.into()' if ftype in ('String', 'ChatId', 'InputFileOrString', 'InputMedia') else fname
-            lines.append(f'        req.insert("{field["name"]}".into(), serde_json::to_value({expr}).unwrap_or_default());')
+            if ftype == 'InputFileOrString':
+                pass  # skipped here; added via call_api_with_file below
+            elif ftype == 'InputMedia':
+                # sendMediaGroup: Vec<InputMedia> — serialize as JSON array
+                lines.append(f'        req.insert("{field["name"]}".into(), serde_json::to_value(&{fname}).unwrap_or_default());')
+            else:
+                expr = f'{fname}.into()' if ftype in ('String', 'ChatId') else fname
+                lines.append(f'        req.insert("{field["name"]}".into(), serde_json::to_value({expr}).unwrap_or_default());')
 
         if has_opts:
             lines.append(f'        if let Some(p) = params {{')
@@ -350,7 +392,22 @@ def generate_methods(spec):
             lines.append(f'            }}')
             lines.append(f'        }}')
 
-        lines.append(f'        self.call_api("{method_name}", &serde_json::Value::Object(req)).await')
+        if file_field:
+            fn_arg = safe_field_name(file_field)
+            single_line = f'        self.call_api_with_file("{method_name}", req, "{file_field}", {fn_arg}.into())'
+            if len(single_line) > 100:
+                lines.append(f'        self.call_api_with_file(')
+                lines.append(f'            "{method_name}",')
+                lines.append(f'            req,')
+                lines.append(f'            "{file_field}",')
+                lines.append(f'            {fn_arg}.into(),')
+                lines.append(f'        )')
+                lines.append(f'        .await')
+            else:
+                lines.append(f'        self.call_api_with_file("{method_name}", req, "{file_field}", {fn_arg}.into())')
+                lines.append(f'            .await')
+        else:
+            lines.append(f'        self.call_api("{method_name}", &serde_json::Value::Object(req)).await')
         lines.append(f'    }}')
         lines.append(f'}}')
         lines.append(f'')

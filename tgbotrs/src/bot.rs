@@ -1,6 +1,27 @@
-use crate::{types::User, BotError};
+use crate::{
+    input_file::{InputFile, InputFileOrString},
+    types::User,
+    BotError,
+};
 use reqwest::Client;
 use serde::Deserialize;
+
+fn infer_mime(filename: &str) -> String {
+    let ext = filename.rsplit('.').next().unwrap_or("").to_lowercase();
+    match ext.as_str() {
+        "jpg" | "jpeg" => "image/jpeg",
+        "png" => "image/png",
+        "gif" => "image/gif",
+        "webp" => "image/webp",
+        "mp4" => "video/mp4",
+        "mp3" => "audio/mpeg",
+        "ogg" => "audio/ogg",
+        "pdf" => "application/pdf",
+        "webm" => "video/webm",
+        _ => "application/octet-stream",
+    }
+    .to_string()
+}
 
 const DEFAULT_API_URL: &str = "https://api.telegram.org";
 
@@ -160,6 +181,53 @@ impl Bot {
                     .as_ref()
                     .and_then(|p| p.migrate_to_chat_id),
             })
+        }
+    }
+
+    /// Smart API call: uses multipart when a Memory file is present, JSON otherwise.
+    /// `body` should contain all params EXCEPT the file field.
+    /// `file_field` is the field name (e.g. "photo", "audio").
+    /// `file` is the InputFileOrString to send.
+    pub async fn call_api_with_file<T>(
+        &self,
+        method: &str,
+        body: serde_json::Map<String, serde_json::Value>,
+        file_field: &str,
+        file: InputFileOrString,
+    ) -> Result<T, BotError>
+    where
+        T: for<'de> Deserialize<'de>,
+    {
+        match file {
+            InputFileOrString::File(InputFile::Memory { filename, data }) => {
+                let mut form = reqwest::multipart::Form::new();
+                // Serialize all non-file params as text parts
+                for (k, v) in &body {
+                    if !v.is_null() {
+                        let s = match v {
+                            serde_json::Value::String(s) => s.clone(),
+                            other => other.to_string(),
+                        };
+                        form = form.text(k.clone(), s);
+                    }
+                }
+                let mime = infer_mime(&filename);
+                let part = reqwest::multipart::Part::bytes(data.to_vec())
+                    .file_name(filename)
+                    .mime_str(&mime)
+                    .map_err(|e| BotError::Other(e.to_string()))?;
+                form = form.part(file_field.to_string(), part);
+                self.call_api_multipart(method, form).await
+            }
+            other => {
+                // file_id, URL, or plain String — stay with JSON
+                let mut req = body;
+                req.insert(
+                    file_field.into(),
+                    serde_json::to_value(other).unwrap_or_default(),
+                );
+                self.call_api(method, &serde_json::Value::Object(req)).await
+            }
         }
     }
 
