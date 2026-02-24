@@ -40,7 +40,6 @@ SKIP_TYPES = {
 # Add new entries here whenever the README or examples use that pattern.
 FORCE_DEFAULT = {
     "ForceReply",
-    "InlineQueryResultArticle",
     "InputMediaAnimation",
     "InputMediaAudio",
     "InputMediaDocument",
