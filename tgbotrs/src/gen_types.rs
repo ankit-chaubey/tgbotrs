@@ -1958,7 +1958,7 @@ pub enum InlineQueryResult {
 
 /// Represents a link to an article or web page.
 /// https://core.telegram.org/bots/api#inlinequeryresultarticle
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct InlineQueryResultArticle {
     /// Type of the result, must be article
     #[serde(rename = "type")]

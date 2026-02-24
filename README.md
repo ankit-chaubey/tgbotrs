@@ -415,7 +415,11 @@ let results = vec![
             ..Default::default()
         }),
         description: Some("Send a greeting".into()),
-        ..Default::default()
+        reply_markup: None,
+        url: None,
+        thumbnail_url: None,
+        thumbnail_width: None,
+        thumbnail_height: None,
     }),
 ];
 
