@@ -1,5 +1,5 @@
 // THIS FILE IS AUTO-GENERATED. DO NOT EDIT.
-// Generated from Telegram Bot API Bot API 9.4
+// Generated from Telegram Bot API Bot API 9.5
 // Spec:    https://github.com/ankit-chaubey/api-spec
 // Project: https://github.com/ankit-chaubey/tgbotrs
 // Author:  Ankit Chaubey <ankitchaubey.dev@gmail.com>
@@ -597,6 +597,9 @@ pub struct ChatAdministratorRights {
     /// Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
     #[serde(skip_serializing_if = "Option::is_none")]
     pub can_manage_direct_messages: Option<bool>,
+    /// Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_manage_tags: Option<bool>,
 }
 
 /// This object represents a chat background.
@@ -991,6 +994,9 @@ pub struct ChatMemberAdministrator {
     /// Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
     #[serde(skip_serializing_if = "Option::is_none")]
     pub can_manage_direct_messages: Option<bool>,
+    /// Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_manage_tags: Option<bool>,
     /// Optional. Custom title for this user
     #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_title: Option<String>,
@@ -1024,6 +1030,9 @@ pub struct ChatMemberLeft {
 pub struct ChatMemberMember {
     /// The member's status in the chat, always "member"
     pub status: String,
+    /// Optional. Tag of the member
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
     /// Information about the user
     pub user: User,
     /// Optional. Date when the user's subscription will expire; Unix time
@@ -1052,6 +1061,9 @@ pub struct ChatMemberOwner {
 pub struct ChatMemberRestricted {
     /// The member's status in the chat, always "restricted"
     pub status: String,
+    /// Optional. Tag of the member
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
     /// Information about the user
     pub user: User,
     /// True, if the user is a member of the chat at the moment of the request
@@ -1076,6 +1088,8 @@ pub struct ChatMemberRestricted {
     pub can_send_other_messages: bool,
     /// True, if the user is allowed to add web page previews to their messages
     pub can_add_web_page_previews: bool,
+    /// True, if the user is allowed to edit their own tag
+    pub can_edit_tag: bool,
     /// True, if the user is allowed to change the chat title, photo and other settings
     pub can_change_info: bool,
     /// True, if the user is allowed to invite new users to the chat
@@ -1164,6 +1178,9 @@ pub struct ChatPermissions {
     /// Optional. True, if the user is allowed to add web page previews to their messages
     #[serde(skip_serializing_if = "Option::is_none")]
     pub can_add_web_page_previews: Option<bool>,
+    /// Optional. True, if the user is allowed to edit their own tag
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_edit_tag: Option<bool>,
     /// Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
     #[serde(skip_serializing_if = "Option::is_none")]
     pub can_change_info: Option<bool>,
@@ -3532,6 +3549,9 @@ pub struct Message {
     /// Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sender_business_bot: Option<Box<User>>,
+    /// Optional. Tag or custom title of the sender of the message; for supergroups only
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sender_tag: Option<String>,
     /// Date the message was sent in Unix time. It is always a positive number, representing a valid date.
     pub date: i64,
     /// Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
@@ -3578,7 +3598,7 @@ pub struct Message {
     /// Optional. True, if the message is a paid post. Note that such posts must not be deleted for 24 hours to receive the payment and can't be edited.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_paid_post: Option<bool>,
-    /// Optional. The unique identifier of a media message group this message belongs to
+    /// Optional. The unique identifier inside this chat of a media message group this message belongs to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_group_id: Option<String>,
     /// Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
@@ -3838,7 +3858,7 @@ pub struct MessageAutoDeleteTimerChanged {
 /// https://core.telegram.org/bots/api#messageentity
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct MessageEntity {
-    /// Type of the entity. Currently, can be "mention" (@username), "hashtag" (#hashtag or #hashtag@chatusername), "cashtag" ($USD or $USD@chatusername), "bot_command" (/start@jobs_bot), "url" (https://telegram.org), "email" (do-not-reply@telegram.org), "phone_number" (+1-212-555-0123), "bold" (bold text), "italic" (italic text), "underline" (underlined text), "strikethrough" (strikethrough text), "spoiler" (spoiler message), "blockquote" (block quotation), "expandable_blockquote" (collapsed-by-default block quotation), "code" (monowidth string), "pre" (monowidth block), "text_link" (for clickable text URLs), "text_mention" (for users without usernames), "custom_emoji" (for inline custom emoji stickers)
+    /// Type of the entity. Currently, can be "mention" (@username), "hashtag" (#hashtag or #hashtag@chatusername), "cashtag" ($USD or $USD@chatusername), "bot_command" (/start@jobs_bot), "url" (https://telegram.org), "email" (do-not-reply@telegram.org), "phone_number" (+1-212-555-0123), "bold" (bold text), "italic" (italic text), "underline" (underlined text), "strikethrough" (strikethrough text), "spoiler" (spoiler message), "blockquote" (block quotation), "expandable_blockquote" (collapsed-by-default block quotation), "code" (monowidth string), "pre" (monowidth block), "text_link" (for clickable text URLs), "text_mention" (for users without usernames), "custom_emoji" (for inline custom emoji stickers), or "date_time" (for formatted date and time)
     #[serde(rename = "type")]
     pub r#type: String,
     /// Offset in UTF-16 code units to the start of the entity
@@ -3857,6 +3877,12 @@ pub struct MessageEntity {
     /// Optional. For "custom_emoji" only, unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker
     #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_emoji_id: Option<String>,
+    /// Optional. For "date_time" only, the Unix time associated with the entity
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unix_time: Option<i64>,
+    /// Optional. For "date_time" only, the string that defines the formatting of the date and time. See date-time entity formatting for more details.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub date_time_format: Option<String>,
 }
 
 /// This object represents a unique message identifier.

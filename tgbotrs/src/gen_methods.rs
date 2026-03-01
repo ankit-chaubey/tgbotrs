@@ -1,5 +1,5 @@
 // THIS FILE IS AUTO-GENERATED. DO NOT EDIT.
-// Generated from Telegram Bot API Bot API 9.4
+// Generated from Telegram Bot API Bot API 9.5
 // Spec:    https://github.com/ankit-chaubey/api-spec
 // Project: https://github.com/ankit-chaubey/tgbotrs
 // Author:  Ankit Chaubey <ankitchaubey.dev@gmail.com>
@@ -3914,6 +3914,9 @@ pub struct PromoteChatMemberParams {
     /// Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only
     #[serde(skip_serializing_if = "Option::is_none")]
     pub can_manage_direct_messages: Option<bool>,
+    /// Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_manage_tags: Option<bool>,
 }
 
 impl PromoteChatMemberParams {
@@ -3982,6 +3985,10 @@ impl PromoteChatMemberParams {
     }
     pub fn can_manage_direct_messages(mut self, v: impl Into<bool>) -> Self {
         self.can_manage_direct_messages = Some(v.into());
+        self
+    }
+    pub fn can_manage_tags(mut self, v: impl Into<bool>) -> Self {
+        self.can_manage_tags = Some(v.into());
         self
     }
 }
@@ -6159,7 +6166,7 @@ impl SendMessageDraftParams {
 }
 
 impl Bot {
-    /// Use this method to stream a partial message to a user while the message is being generated; supported only for bots with forum topic mode enabled. Returns True on success.
+    /// Use this method to stream a partial message to a user while the message is being generated. Returns True on success.
     /// See: https://core.telegram.org/bots/api#sendmessagedraft
     pub async fn send_message_draft(
         &self,
@@ -7717,6 +7724,57 @@ impl Bot {
             }
         }
         self.call_api("setChatDescription", &serde_json::Value::Object(req))
+            .await
+    }
+}
+
+/// Optional parameters for [`Bot::set_chat_member_tag`]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct SetChatMemberTagParams {
+    /// New tag for the member; 0-16 characters, emoji are not allowed
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
+}
+
+impl SetChatMemberTagParams {
+    pub fn new() -> Self {
+        Self::default()
+    }
+    pub fn tag(mut self, v: impl Into<String>) -> Self {
+        self.tag = Some(v.into());
+        self
+    }
+}
+
+impl Bot {
+    /// Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.
+    /// See: https://core.telegram.org/bots/api#setchatmembertag
+    pub async fn set_chat_member_tag(
+        &self,
+        chat_id: impl Into<ChatId>,
+        user_id: i64,
+        params: Option<SetChatMemberTagParams>,
+    ) -> Result<bool, BotError> {
+        let mut req = serde_json::Map::new();
+        req.insert(
+            "chat_id".into(),
+            serde_json::to_value(chat_id.into()).unwrap_or_default(),
+        );
+        req.insert(
+            "user_id".into(),
+            serde_json::to_value(user_id).unwrap_or_default(),
+        );
+        if let Some(p) = params {
+            let extra = serde_json::to_value(&p).unwrap_or_default();
+            if let serde_json::Value::Object(m) = extra {
+                for (k, v) in m {
+                    if !v.is_null() {
+                        req.insert(k, v);
+                    }
+                }
+            }
+        }
+        self.call_api("setChatMemberTag", &serde_json::Value::Object(req))
             .await
     }
 }
