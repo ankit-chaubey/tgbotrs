@@ -1,5 +1,5 @@
 // THIS FILE IS AUTO-GENERATED. DO NOT EDIT.
-// Generated from Telegram Bot API Bot API 9.5
+// Generated from Telegram Bot API Bot API 9.6
 // Spec:    https://github.com/ankit-chaubey/api-spec
 // Project: https://github.com/ankit-chaubey/tgbotrs
 // Author:  Ankit Chaubey <ankitchaubey.dev@gmail.com>
@@ -3015,6 +3015,20 @@ impl Bot {
 }
 
 impl Bot {
+    /// Use this method to get the token of a managed bot. Returns the token as String on success.
+    /// See: https://core.telegram.org/bots/api#getmanagedbottoken
+    pub async fn get_managed_bot_token(&self, user_id: i64) -> Result<String, BotError> {
+        let mut req = serde_json::Map::new();
+        req.insert(
+            "user_id".into(),
+            serde_json::to_value(user_id).unwrap_or_default(),
+        );
+        self.call_api("getManagedBotToken", &serde_json::Value::Object(req))
+            .await
+    }
+}
+
+impl Bot {
     /// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a User object.
     /// See: https://core.telegram.org/bots/api#getme
     pub async fn get_me(&self) -> Result<User, BotError> {
@@ -3609,10 +3623,10 @@ pub struct GiftPremiumSubscriptionParams {
     /// Text that will be shown along with the service message about the subscription; 0-128 characters
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
-    /// Mode for parsing entities in the text. See formatting options for more details. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", and "custom_emoji" are ignored.
+    /// Mode for parsing entities in the text. See formatting options for more details. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", "custom_emoji", and "date_time" are ignored.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_parse_mode: Option<String>,
-    /// A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", and "custom_emoji" are ignored.
+    /// A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", "custom_emoji", and "date_time" are ignored.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_entities: Option<Vec<MessageEntity>>,
 }
@@ -4205,6 +4219,20 @@ impl Bot {
 }
 
 impl Bot {
+    /// Use this method to revoke the current token of a managed bot and generate a new one. Returns the new token as String on success.
+    /// See: https://core.telegram.org/bots/api#replacemanagedbottoken
+    pub async fn replace_managed_bot_token(&self, user_id: i64) -> Result<String, BotError> {
+        let mut req = serde_json::Map::new();
+        req.insert(
+            "user_id".into(),
+            serde_json::to_value(user_id).unwrap_or_default(),
+        );
+        self.call_api("replaceManagedBotToken", &serde_json::Value::Object(req))
+            .await
+    }
+}
+
+impl Bot {
     /// Use this method to replace an existing sticker in a sticker set with a new one. The method is equivalent to calling deleteStickerFromSet, then addStickerToSet, then setStickerPositionInSet. Returns True on success.
     /// See: https://core.telegram.org/bots/api#replacestickerinset
     pub async fn replace_sticker_in_set(
@@ -4458,6 +4486,31 @@ impl Bot {
         }
         self.call_api("savePreparedInlineMessage", &serde_json::Value::Object(req))
             .await
+    }
+}
+
+impl Bot {
+    /// Stores a keyboard button that can be used by a user within a Mini App. Returns a PreparedKeyboardButton object.
+    /// See: https://core.telegram.org/bots/api#savepreparedkeyboardbutton
+    pub async fn save_prepared_keyboard_button(
+        &self,
+        user_id: i64,
+        button: KeyboardButton,
+    ) -> Result<PreparedKeyboardButton, BotError> {
+        let mut req = serde_json::Map::new();
+        req.insert(
+            "user_id".into(),
+            serde_json::to_value(user_id).unwrap_or_default(),
+        );
+        req.insert(
+            "button".into(),
+            serde_json::to_value(button).unwrap_or_default(),
+        );
+        self.call_api(
+            "savePreparedKeyboardButton",
+            &serde_json::Value::Object(req),
+        )
+        .await
     }
 }
 
@@ -5446,10 +5499,10 @@ pub struct SendGiftParams {
     /// Text that will be shown along with the gift; 0-128 characters
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
-    /// Mode for parsing entities in the text. See formatting options for more details. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", and "custom_emoji" are ignored.
+    /// Mode for parsing entities in the text. See formatting options for more details. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", "custom_emoji", and "date_time" are ignored.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_parse_mode: Option<String>,
-    /// A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", and "custom_emoji" are ignored.
+    /// A JSON-serialized list of special entities that appear in the gift text. It can be specified instead of text_parse_mode. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", "custom_emoji", and "date_time" are ignored.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_entities: Option<Vec<MessageEntity>>,
 }
@@ -6517,12 +6570,24 @@ pub struct SendPollParams {
     #[serde(rename = "type")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
-    /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
+    /// Pass True, if the poll allows multiple answers, defaults to False
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allows_multiple_answers: Option<bool>,
-    /// 0-based identifier of the correct answer option, required for polls in quiz mode
+    /// Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub correct_option_id: Option<i64>,
+    pub allows_revoting: Option<bool>,
+    /// Pass True, if the poll options must be shown in random order
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub shuffle_options: Option<bool>,
+    /// Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub allow_adding_options: Option<bool>,
+    /// Pass True, if poll results must be shown only after the poll closes
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hide_results_until_closes: Option<bool>,
+    /// A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub correct_option_ids: Option<Vec<i64>>,
     /// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
     #[serde(skip_serializing_if = "Option::is_none")]
     pub explanation: Option<String>,
@@ -6532,15 +6597,24 @@ pub struct SendPollParams {
     /// A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode
     #[serde(skip_serializing_if = "Option::is_none")]
     pub explanation_entities: Option<Vec<MessageEntity>>,
-    /// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
+    /// Amount of time in seconds the poll will be active after creation, 5-2628000. Can't be used together with close_date.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub open_period: Option<i64>,
-    /// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
+    /// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub close_date: Option<i64>,
     /// Pass True if the poll needs to be immediately closed. This can be useful for poll preview.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_closed: Option<bool>,
+    /// Description of the poll to be sent, 0-1024 characters after entities parsing
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    /// Mode for parsing entities in the poll description. See formatting options for more details.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description_parse_mode: Option<String>,
+    /// A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description_entities: Option<Vec<MessageEntity>>,
     /// Sends the message silently. Users will receive a notification with no sound.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_notification: Option<bool>,
@@ -6593,8 +6667,24 @@ impl SendPollParams {
         self.allows_multiple_answers = Some(v.into());
         self
     }
-    pub fn correct_option_id(mut self, v: impl Into<i64>) -> Self {
-        self.correct_option_id = Some(v.into());
+    pub fn allows_revoting(mut self, v: impl Into<bool>) -> Self {
+        self.allows_revoting = Some(v.into());
+        self
+    }
+    pub fn shuffle_options(mut self, v: impl Into<bool>) -> Self {
+        self.shuffle_options = Some(v.into());
+        self
+    }
+    pub fn allow_adding_options(mut self, v: impl Into<bool>) -> Self {
+        self.allow_adding_options = Some(v.into());
+        self
+    }
+    pub fn hide_results_until_closes(mut self, v: impl Into<bool>) -> Self {
+        self.hide_results_until_closes = Some(v.into());
+        self
+    }
+    pub fn correct_option_ids(mut self, v: impl Into<Vec<i64>>) -> Self {
+        self.correct_option_ids = Some(v.into());
         self
     }
     pub fn explanation(mut self, v: impl Into<String>) -> Self {
@@ -6619,6 +6709,18 @@ impl SendPollParams {
     }
     pub fn is_closed(mut self, v: impl Into<bool>) -> Self {
         self.is_closed = Some(v.into());
+        self
+    }
+    pub fn description(mut self, v: impl Into<String>) -> Self {
+        self.description = Some(v.into());
+        self
+    }
+    pub fn description_parse_mode(mut self, v: impl Into<String>) -> Self {
+        self.description_parse_mode = Some(v.into());
+        self
+    }
+    pub fn description_entities(mut self, v: impl Into<Vec<MessageEntity>>) -> Self {
+        self.description_entities = Some(v.into());
         self
     }
     pub fn disable_notification(mut self, v: impl Into<bool>) -> Self {

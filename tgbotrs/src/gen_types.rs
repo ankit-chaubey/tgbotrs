@@ -1,5 +1,5 @@
 // THIS FILE IS AUTO-GENERATED. DO NOT EDIT.
-// Generated from Telegram Bot API Bot API 9.5
+// Generated from Telegram Bot API Bot API 9.6
 // Spec:    https://github.com/ankit-chaubey/api-spec
 // Project: https://github.com/ankit-chaubey/tgbotrs
 // Author:  Ankit Chaubey <ankitchaubey.dev@gmail.com>
@@ -2725,7 +2725,7 @@ pub struct InputChecklist {
     /// Optional. Mode for parsing entities in the title. See formatting options for more details.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_mode: Option<String>,
-    /// Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+    /// Optional. List of special entities that appear in the title, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub title_entities: Option<Vec<MessageEntity>>,
     /// List of 1-30 tasks in the checklist
@@ -2749,7 +2749,7 @@ pub struct InputChecklistTask {
     /// Optional. Mode for parsing entities in the text. See formatting options for more details.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_mode: Option<String>,
-    /// Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are allowed.
+    /// Optional. List of special entities that appear in the text, which can be specified instead of parse_mode. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are allowed.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_entities: Option<Vec<MessageEntity>>,
 }
@@ -3280,6 +3280,9 @@ pub struct KeyboardButton {
     /// Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a "chat_shared" service message. Available in private chats only.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_chat: Option<Box<KeyboardButtonRequestChat>>,
+    /// Optional. If specified, pressing the button will ask the user to create and share a bot that will be managed by the current bot. Available for bots that enabled management of other bots in the @BotFather Mini App. Available in private chats only.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub request_managed_bot: Option<Box<KeyboardButtonRequestManagedBot>>,
     /// Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_contact: Option<bool>,
@@ -3339,6 +3342,20 @@ pub struct KeyboardButtonRequestChat {
     /// Optional. Pass True to request the chat's photo
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_photo: Option<bool>,
+}
+
+/// This object defines the parameters for the creation of a managed bot. Information about the created bot will be shared with the bot using the update managed_bot and a Message with the field managed_bot_created.
+/// https://core.telegram.org/bots/api#keyboardbuttonrequestmanagedbot
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct KeyboardButtonRequestManagedBot {
+    /// Signed 32-bit identifier of the request. Must be unique within the message
+    pub request_id: i64,
+    /// Optional. Suggested name for the bot
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub suggested_name: Option<String>,
+    /// Optional. Suggested username for the bot
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub suggested_username: Option<String>,
 }
 
 /// This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users: /bots/features#chat-and-user-selection
@@ -3453,6 +3470,24 @@ pub struct LoginUrl {
     /// Optional. Pass True to request the permission for your bot to send messages to the user.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_write_access: Option<bool>,
+}
+
+/// This object contains information about the bot that was created to be managed by the current bot.
+/// https://core.telegram.org/bots/api#managedbotcreated
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ManagedBotCreated {
+    /// Information about the bot. The bot's token can be fetched using the method getManagedBotToken.
+    pub bot: User,
+}
+
+/// This object contains information about the creation or token update of a bot that is managed by the current bot.
+/// https://core.telegram.org/bots/api#managedbotupdated
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ManagedBotUpdated {
+    /// User that created the bot
+    pub user: User,
+    /// Information about the bot. Token of the bot can be fetched using the method getManagedBotToken.
+    pub bot: User,
 }
 
 /// This object describes the position on faces where a mask should be placed by default.
@@ -3583,6 +3618,9 @@ pub struct Message {
     /// Optional. Identifier of the specific checklist task that is being replied to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_to_checklist_task_id: Option<i64>,
+    /// Optional. Persistent identifier of the specific poll option that is being replied to
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply_to_poll_option_id: Option<String>,
     /// Optional. Bot through which the message was sent
     #[serde(skip_serializing_if = "Option::is_none")]
     pub via_bot: Option<Box<User>>,
@@ -3808,9 +3846,18 @@ pub struct Message {
     /// Optional. Service message: a giveaway without public winners was completed
     #[serde(skip_serializing_if = "Option::is_none")]
     pub giveaway_completed: Option<Box<GiveawayCompleted>>,
+    /// Optional. Service message: user created a bot that will be managed by the current bot
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub managed_bot_created: Option<Box<ManagedBotCreated>>,
     /// Optional. Service message: the price for paid messages has changed in the chat
     #[serde(skip_serializing_if = "Option::is_none")]
     pub paid_message_price_changed: Option<Box<PaidMessagePriceChanged>>,
+    /// Optional. Service message: answer option was added to a poll
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_option_added: Option<Box<PollOptionAdded>>,
+    /// Optional. Service message: answer option was deleted from a poll
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_option_deleted: Option<Box<PollOptionDeleted>>,
     /// Optional. Service message: a suggested post was approved
     #[serde(skip_serializing_if = "Option::is_none")]
     pub suggested_post_approved: Option<Box<SuggestedPostApproved>>,
@@ -4434,9 +4481,11 @@ pub struct Poll {
     pub r#type: String,
     /// True, if the poll allows multiple answers
     pub allows_multiple_answers: bool,
-    /// Optional. 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
+    /// True, if the poll allows to change the chosen answer options
+    pub allows_revoting: bool,
+    /// Optional. Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub correct_option_id: Option<i64>,
+    pub correct_option_ids: Option<Vec<i64>>,
     /// Optional. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters
     #[serde(skip_serializing_if = "Option::is_none")]
     pub explanation: Option<String>,
@@ -4449,6 +4498,12 @@ pub struct Poll {
     /// Optional. Point in time (Unix timestamp) when the poll will be automatically closed
     #[serde(skip_serializing_if = "Option::is_none")]
     pub close_date: Option<i64>,
+    /// Optional. Description of the poll; for polls inside the Message object only
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    /// Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the description
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description_entities: Option<Vec<MessageEntity>>,
 }
 
 /// This object represents an answer of a user in a non-anonymous poll.
@@ -4465,19 +4520,64 @@ pub struct PollAnswer {
     pub user: Option<Box<User>>,
     /// 0-based identifiers of chosen answer options. May be empty if the vote was retracted.
     pub option_ids: Vec<i64>,
+    /// Persistent identifiers of the chosen answer options. May be empty if the vote was retracted.
+    pub option_persistent_ids: Vec<String>,
 }
 
 /// This object contains information about one answer option in a poll.
 /// https://core.telegram.org/bots/api#polloption
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PollOption {
+    /// Unique identifier of the option, persistent on option addition and deletion
+    pub persistent_id: String,
     /// Option text, 1-100 characters
     pub text: String,
     /// Optional. Special entities that appear in the option text. Currently, only custom emoji entities are allowed in poll option texts
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text_entities: Option<Vec<MessageEntity>>,
-    /// Number of users that voted for this option
+    /// Number of users who voted for this option; may be 0 if unknown
     pub voter_count: i64,
+    /// Optional. User who added the option; omitted if the option wasn't added by a user after poll creation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub added_by_user: Option<Box<User>>,
+    /// Optional. Chat that added the option; omitted if the option wasn't added by a chat after poll creation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub added_by_chat: Option<Box<Chat>>,
+    /// Optional. Point in time (Unix timestamp) when the option was added; omitted if the option existed in the original poll
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub addition_date: Option<i64>,
+}
+
+/// Describes a service message about an option added to a poll.
+/// https://core.telegram.org/bots/api#polloptionadded
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PollOptionAdded {
+    /// Optional. Message containing the poll to which the option was added, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_message: Option<Box<MaybeInaccessibleMessage>>,
+    /// Unique identifier of the added option
+    pub option_persistent_id: String,
+    /// Option text
+    pub option_text: String,
+    /// Optional. Special entities that appear in the option_text
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub option_text_entities: Option<Vec<MessageEntity>>,
+}
+
+/// Describes a service message about an option deleted from a poll.
+/// https://core.telegram.org/bots/api#polloptiondeleted
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PollOptionDeleted {
+    /// Optional. Message containing the poll from which the option was deleted, if known. Note that the Message object in this field will not contain the reply_to_message field even if it itself is a reply.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_message: Option<Box<MaybeInaccessibleMessage>>,
+    /// Unique identifier of the deleted option
+    pub option_persistent_id: String,
+    /// Option text
+    pub option_text: String,
+    /// Optional. Special entities that appear in the option_text
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub option_text_entities: Option<Vec<MessageEntity>>,
 }
 
 /// This object contains information about an incoming pre-checkout query.
@@ -4510,6 +4610,14 @@ pub struct PreparedInlineMessage {
     pub id: String,
     /// Expiration date of the prepared message, in Unix time. Expired prepared messages can no longer be used
     pub expiration_date: i64,
+}
+
+/// Describes a keyboard button to be used by a user of a Mini App.
+/// https://core.telegram.org/bots/api#preparedkeyboardbutton
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PreparedKeyboardButton {
+    /// Unique identifier of the keyboard button
+    pub id: String,
 }
 
 /// This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.
@@ -4642,7 +4750,7 @@ pub struct ReplyParameters {
     /// Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic. Always True for messages sent on behalf of a business account.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_sending_without_reply: Option<bool>,
-    /// Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, and custom_emoji entities. The message will fail to send if the quote isn't found in the original message.
+    /// Optional. Quoted part of the message to be replied to; 0-1024 characters after entities parsing. The quote must be an exact substring of the message to be replied to, including bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities. The message will fail to send if the quote isn't found in the original message.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub quote: Option<String>,
     /// Optional. Mode for parsing entities in the quote. See formatting options for more details.
@@ -4657,6 +4765,9 @@ pub struct ReplyParameters {
     /// Optional. Identifier of the specific checklist task to be replied to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub checklist_task_id: Option<i64>,
+    /// Optional. Persistent identifier of the specific poll option to be replied to
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_option_id: Option<String>,
 }
 
 /// Describes why a request was unsuccessful.
@@ -5175,7 +5286,7 @@ pub struct SwitchInlineQueryChosenChat {
 pub struct TextQuote {
     /// Text of the quoted part of a message that is replied to by the given message
     pub text: String,
-    /// Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, and custom_emoji entities are kept in quotes.
+    /// Optional. Special entities that appear in the quote. Currently, only bold, italic, underline, strikethrough, spoiler, custom_emoji, and date_time entities are kept in quotes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub entities: Option<Vec<MessageEntity>>,
     /// Approximate quote position in the original message in UTF-16 code units as specified by the sender
@@ -5516,6 +5627,9 @@ pub struct Update {
     /// Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub removed_chat_boost: Option<Box<ChatBoostRemoved>>,
+    /// Optional. A new bot was created to be managed by the bot or token of a bot was changed
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub managed_bot: Option<Box<ManagedBotUpdated>>,
 }
 
 /// This object represents a Telegram user or bot.
@@ -5564,6 +5678,9 @@ pub struct User {
     /// Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allows_users_to_create_topics: Option<bool>,
+    /// Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_manage_bots: Option<bool>,
 }
 
 /// This object represents a list of boosts added to a chat by a user.
