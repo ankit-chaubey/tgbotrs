@@ -10,6 +10,14 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.7] — 2026-04-05
+
+### Telegram Bot API: `Bot API 9.6`
+
+Auto-generated from latest Telegram Bot API spec.
+
+---
+
 ## [0.1.6] — 2026-03-01
 
 ### Telegram Bot API: `Bot API 9.5`
