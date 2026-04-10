@@ -15,7 +15,7 @@ use tracing::{debug, error, warn};
 use crate::{
     framework::{
         context::Context,
-        handler::{ContinueGroups, EndGroups, Handler, HandlerResult},
+        handler::{ContinueGroups, EndGroups, Handler},
     },
     types::Update,
     Bot,
