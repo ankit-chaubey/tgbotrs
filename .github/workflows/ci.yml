@@ -35,12 +35,6 @@ jobs:
   build:
     name: Build (${{ matrix.os }} / Rust ${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
-    # Only run when Rust source or build config changed
-    if: >-
-      contains(toJson(github.event.commits.*.modified + github.event.commits.*.added), 'tgbotrs/') ||
-      contains(toJson(github.event.commits.*.modified + github.event.commits.*.added), 'codegen/') ||
-      contains(toJson(github.event.commits.*.modified), 'Cargo.toml') ||
-      github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
