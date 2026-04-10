@@ -30,11 +30,9 @@ env:
   OUT_DIR: tgbotrs/src
 
 jobs:
-  # ─────────────────────────────────────────────────────────
   # Step 1: Resolve which tgbotrs commit to run codegen from,
   #         fetch latest spec from tgapis/x, compare against
   #         api.json already committed in repo root
-  # ─────────────────────────────────────────────────────────
   check-for-updates:
     name: 🔍 Check for API Updates
     runs-on: ubuntu-latest
@@ -139,9 +137,7 @@ jobs:
           path: /tmp/api_latest.json
           retention-days: 1
 
-  # ─────────────────────────────────────────────────────────
   # Step 2: Run codegen and compute full diff report
-  # ─────────────────────────────────────────────────────────
   regenerate:
     name: 🔧 Regenerate Library
     runs-on: ubuntu-latest
@@ -307,9 +303,7 @@ jobs:
           path: /tmp/diff_report.json
           retention-days: 7
 
-  # ─────────────────────────────────────────────────────────
   # Step 3: Post a summary if changes were detected
-  # ─────────────────────────────────────────────────────────
   post-summary:
     name: 📢 Post Update Summary
     runs-on: ubuntu-latest

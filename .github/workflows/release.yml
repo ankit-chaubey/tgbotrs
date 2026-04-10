@@ -24,6 +24,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  actions: read
 
 jobs:
   release:
@@ -53,22 +54,35 @@ jobs:
       - name: Install cargo-edit (for version bumping)
         run: cargo install cargo-edit --locked
 
+      - name: Download diff report from auto-regenerate run
+        if: github.event_name != 'workflow_dispatch'
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: auto-regenerate.yml
+          pr: ${{ github.event.pull_request.number }}
+          name: diff-report
+          path: /tmp
+        continue-on-error: true
+
       - name: Determine version bump type
         id: bump-type
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             BUMP="${{ github.event.inputs.bump }}"
           else
-            # For auto-updates: check if there are removed/breaking changes → minor, else → patch
+            # For auto-updates: removed/breaking changes → minor, else → patch
             REMOVED_TYPES=$(python3 -c "
-          import json
+          import json, sys
           try:
               r = json.load(open('/tmp/diff_report.json'))
               print(len(r.get('removed_types', [])) + len(r.get('removed_methods', [])))
-          except:
+          except Exception as e:
+              print(0, file=sys.stderr)
               print(0)
-          " 2>/dev/null || echo "0")
-            
+          " 2>/tmp/bump_err.txt)
+            if [ -s /tmp/bump_err.txt ]; then
+              echo "⚠️  Could not read diff report, defaulting to patch: $(cat /tmp/bump_err.txt)"
+            fi
             if [ "$REMOVED_TYPES" -gt "0" ]; then
               BUMP="minor"
             else
@@ -81,7 +95,7 @@ jobs:
       - name: Read current version
         id: current-ver
         run: |
-          VER=$(grep '^version' tgbotrs/Cargo.toml | head -1 | sed 's/version = "//;s/"//')
+          VER=$(grep '^version' tgbotrs/Cargo.toml | head -1 | sed 's/version = \"//;s/\"//')
           echo "version=$VER" >> $GITHUB_OUTPUT
           echo "Current version: $VER"
 
@@ -90,7 +104,7 @@ jobs:
         run: |
           cd tgbotrs
           cargo set-version --bump ${{ steps.bump-type.outputs.bump }}
-          VER=$(grep '^version' Cargo.toml | head -1 | sed 's/version = "//;s/"//')
+          VER=$(grep '^version' Cargo.toml | head -1 | sed 's/version = \"//;s/\"//')
           echo "version=$VER" >> $GITHUB_OUTPUT
           echo "New version: $VER"
 
@@ -105,7 +119,7 @@ jobs:
           API_VER="${{ steps.api-ver.outputs.version }}"
           CRATE_VER="${{ steps.new-ver.outputs.version }}"
           DATE=$(date +%Y-%m-%d)
-          
+
           python3 .github/scripts/update_changelog.py \
             CHANGELOG.md \
             "$CRATE_VER" \

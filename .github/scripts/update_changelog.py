@@ -80,11 +80,19 @@ def main():
             entry_lines.append("")
 
         if changed_t:
-            entry_lines.append(f"**Changed Types:** {len(changed_t)} types updated (see PR for details)")
+            entry_lines.append(f"**Changed Types** ({len(changed_t)}):")
+            for type_name, fields in sorted(changed_t.items()):
+                entry_lines.append(f"- `{type_name}`")
+                for field_name, desc in sorted(fields.items()):
+                    entry_lines.append(f"  - `{field_name}`: {desc}")
             entry_lines.append("")
 
         if changed_m:
-            entry_lines.append(f"**Changed Methods:** {len(changed_m)} methods updated (see PR for details)")
+            entry_lines.append(f"**Changed Methods** ({len(changed_m)}):")
+            for method_name, fields in sorted(changed_m.items()):
+                entry_lines.append(f"- `{method_name}`")
+                for field_name, desc in sorted(fields.items()):
+                    entry_lines.append(f"  - `{field_name}`: {desc}")
             entry_lines.append("")
     else:
         entry_lines.append("Auto-generated from latest Telegram Bot API spec.")

@@ -3,25 +3,44 @@ name: 🦀 CI - Build & Test
 on:
   push:
     branches: [main, develop]
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
-      - '.gitignore'
+    paths:
+      - 'tgbotrs/**'
+      - 'codegen/**'
+      - 'Cargo.toml'
+      - 'api.json'
+      - '.github/workflows/ci.yml'
+      - '.github/scripts/validate_generated.py'
+      - '.github/scripts/coverage_report.py'
   pull_request:
     branches: [main]
+    paths:
+      - 'tgbotrs/**'
+      - 'codegen/**'
+      - 'Cargo.toml'
+      - 'api.json'
+      - '.github/workflows/ci.yml'
+      - '.github/scripts/validate_generated.py'
+      - '.github/scripts/coverage_report.py'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
-  SPEC_URL: https://raw.githubusercontent.com/tgapis/x/data/botapi.json
 
 jobs:
-  # ─────────────────────────────────────────────────────────
   # Build and test the library
-  # ─────────────────────────────────────────────────────────
   build:
     name: Build (${{ matrix.os }} / Rust ${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
+    # Only run when Rust source or build config changed
+    if: >-
+      contains(toJson(github.event.commits.*.modified + github.event.commits.*.added), 'tgbotrs/') ||
+      contains(toJson(github.event.commits.*.modified + github.event.commits.*.added), 'codegen/') ||
+      contains(toJson(github.event.commits.*.modified), 'Cargo.toml') ||
+      github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -67,11 +86,12 @@ jobs:
         if: matrix.rust == 'stable' && matrix.os == 'ubuntu-latest'
         run: cargo fmt --all -- --check
 
-  # ─────────────────────────────────────────────────────────
-  # Validate that generated code is in sync with tgapis/x spec
-  # ─────────────────────────────────────────────────────────
-  validate-codegen:
-    name: 🔍 Validate Generated Code is in Sync
+  # Validate generated code + coverage report
+  # Runs against api.json (committed spec) - not the live feed.
+  # This ensures CI stays green even when a new spec has dropped
+  # but the auto-regen PR hasn't been merged yet.
+  validate-and-coverage:
+    name: 🔍 Validate & Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -83,24 +103,22 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fetch latest spec from tgapis/x
+      - name: Read spec version
         run: |
-          echo "Fetching spec from: ${{ env.SPEC_URL }}"
-          curl -sSf "${{ env.SPEC_URL }}" -o /tmp/api_latest.json
-          VERSION=$(python3 -c "import json; print(json.load(open('/tmp/api_latest.json'))['version'])")
-          echo "📦 Using spec version: $VERSION"
+          VERSION=$(python3 -c "import json; print(json.load(open('api.json'))['version'])")
+          echo "📦 Validating against committed spec: $VERSION"
 
-      - name: Re-run codegen into temp dir
+      - name: Re-run codegen from committed api.json
         run: |
           mkdir -p /tmp/codegen_out
-          python3 codegen/codegen.py /tmp/api_latest.json /tmp/codegen_out
+          python3 codegen/codegen.py api.json /tmp/codegen_out
 
       - name: Compare generated files with committed files
         run: |
           echo "Checking gen_types.rs..."
           if ! diff -q tgbotrs/src/gen_types.rs /tmp/codegen_out/gen_types.rs > /dev/null 2>&1; then
-            echo "❌ gen_types.rs is OUT OF SYNC with tgapis/x spec!"
-            echo "Run: python3 codegen/codegen.py <botapi.json> tgbotrs/src/ to regenerate"
+            echo "❌ gen_types.rs is OUT OF SYNC with api.json!"
+            echo "Run: python3 codegen/codegen.py api.json tgbotrs/src/ to regenerate"
             diff tgbotrs/src/gen_types.rs /tmp/codegen_out/gen_types.rs | head -50
             exit 1
           fi
@@ -108,8 +126,8 @@ jobs:
 
           echo "Checking gen_methods.rs..."
           if ! diff -q tgbotrs/src/gen_methods.rs /tmp/codegen_out/gen_methods.rs > /dev/null 2>&1; then
-            echo "❌ gen_methods.rs is OUT OF SYNC with tgapis/x spec!"
-            echo "Run: python3 codegen/codegen.py <botapi.json> tgbotrs/src/ to regenerate"
+            echo "❌ gen_methods.rs is OUT OF SYNC with api.json!"
+            echo "Run: python3 codegen/codegen.py api.json tgbotrs/src/ to regenerate"
             diff tgbotrs/src/gen_methods.rs /tmp/codegen_out/gen_methods.rs | head -50
             exit 1
           fi
@@ -118,44 +136,21 @@ jobs:
       - name: Validate all types and methods are covered
         run: |
           python3 .github/scripts/validate_generated.py \
-            /tmp/api_latest.json \
+            api.json \
             tgbotrs/src/gen_types.rs \
             tgbotrs/src/gen_methods.rs
-
-  # ─────────────────────────────────────────────────────────
-  # Coverage report
-  # ─────────────────────────────────────────────────────────
-  coverage:
-    name: 📊 API Coverage Report
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Fetch latest spec from tgapis/x
-        run: |
-          echo "Fetching spec from: ${{ env.SPEC_URL }}"
-          curl -sSf "${{ env.SPEC_URL }}" -o /tmp/api_latest.json
-          VERSION=$(python3 -c "import json; print(json.load(open('/tmp/api_latest.json'))['version'])")
-          echo "📦 Using spec version: $VERSION"
 
       - name: Generate coverage report
         run: |
           python3 .github/scripts/coverage_report.py \
-            /tmp/api_latest.json \
+            api.json \
             tgbotrs/src/gen_types.rs \
             tgbotrs/src/gen_methods.rs
 
-      - name: Post to step summary
+      - name: Post coverage to step summary
         run: |
           python3 .github/scripts/coverage_report.py \
-            /tmp/api_latest.json \
+            api.json \
             tgbotrs/src/gen_types.rs \
             tgbotrs/src/gen_methods.rs \
             --markdown >> $GITHUB_STEP_SUMMARY
