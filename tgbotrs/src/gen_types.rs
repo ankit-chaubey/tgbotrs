@@ -3480,7 +3480,7 @@ pub struct ManagedBotCreated {
     pub bot: User,
 }
 
-/// This object contains information about the creation or token update of a bot that is managed by the current bot.
+/// This object contains information about the creation, token update, or owner update of a bot that is managed by the current bot.
 /// https://core.telegram.org/bots/api#managedbotupdated
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ManagedBotUpdated {
@@ -5627,7 +5627,7 @@ pub struct Update {
     /// Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub removed_chat_boost: Option<Box<ChatBoostRemoved>>,
-    /// Optional. A new bot was created to be managed by the bot or token of a bot was changed
+    /// Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed_bot: Option<Box<ManagedBotUpdated>>,
 }
