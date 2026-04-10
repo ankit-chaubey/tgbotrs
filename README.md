@@ -80,6 +80,15 @@
   
 ---
 
+### 🌐 Webhook Support
+- Built-in `WebhookServer` with **axum**
+- Same handler interface as **Poller**
+- Validates **secret token**
+- Spawns **Tokio task per update**
+- Or use **manual webhook with your own HTTP server**
+  
+---
+
 ## 📦 Installation
 
 Add to your `Cargo.toml`:
@@ -392,18 +401,62 @@ bot.send_invoice(
 
 ### 🔔 Webhooks
 
-```rust
-use tgbotrs::gen_methods::SetWebhookParams;
+`tgbotrs` supports two webhook approaches: a **built-in server** (zero boilerplate) or a **manual setup** using your own HTTP framework.
 
-let params = SetWebhookParams::new()
-    .max_connections(100i64)
-    .allowed_updates(vec!["message".into(), "callback_query".into()])
-    .secret_token("my_secret_token".to_string());
+---
 
-bot.set_webhook("https://mybot.example.com/webhook", Some(params)).await?;
+#### ⚡ Built-in `WebhookServer`
+
+Enable the feature flag:
+
+```toml
+[dependencies]
+tgbotrs = { version = ">=0.1.5", features = ["webhook"] }
+tokio   = { version = "1", features = ["full"] }
 ```
 
-**Full webhook server with [axum](https://github.com/tokio-rs/axum):**
+Then use `WebhookServer` it uses the same `UpdateHandler` interface as `Poller`:
+
+```rust
+use tgbotrs::{Bot, UpdateHandler, WebhookServer};
+
+#[tokio::main]
+async fn main() {
+    let bot = Bot::new(std::env::var("BOT_TOKEN").unwrap()).await.unwrap();
+
+    let handler: UpdateHandler = Box::new(|bot, update| {
+        Box::pin(async move {
+            let Some(msg) = update.message else { return };
+            let _ = bot.send_message(msg.chat.id, "Received via webhook! 🚀", None).await;
+        })
+    });
+
+    WebhookServer::new(bot, handler)
+        .port(8080)
+        .path("/webhook")
+        .secret_token("my_secret")        // validates X-Telegram-Bot-Api-Secret-Token
+        .max_connections(40)
+        .drop_pending_updates()
+        .start("https://yourdomain.com")  // registers setWebhook + starts axum server
+        .await
+        .unwrap();
+}
+```
+
+Internally this:
+
+* Calls `setWebhook` with Telegram
+* Starts an **axum HTTP server**
+* Spawns each update as a **Tokio task**
+* Returns **200 OK immediately** so Telegram doesn't retry
+
+> For local testing run: `ngrok http 8080` and use the generated HTTPS URL as your webhook URL.
+
+---
+
+#### Manual Webhook (bring your own server)
+
+If you already run **axum, actix-web, or another HTTP framework**, register the webhook manually and handle the JSON body yourself:
 
 ```rust
 use axum::{extract::State, http::StatusCode, routing::post, Json, Router};
@@ -416,9 +469,14 @@ struct AppState { bot: Bot }
 async fn main() {
     let bot = Bot::new("YOUR_BOT_TOKEN").await.unwrap();
 
+    // Register webhook once on startup
     bot.set_webhook(
         "https://yourdomain.com/webhook",
-        Some(SetWebhookParams::new()),
+        Some(
+            SetWebhookParams::new()
+                .secret_token("my_secret".to_string())
+                .allowed_updates(vec!["message".into(), "callback_query".into()]),
+        ),
     )
     .await
     .unwrap();
@@ -436,17 +494,31 @@ async fn handle_update(
     Json(update): Json<Update>,
 ) -> StatusCode {
     let bot = state.bot.clone();
-    // Spawn immediately - return 200 fast or Telegram will retry
+
+    // Spawn immediately so Telegram gets a fast 200 OK
     tokio::spawn(async move {
         if let Some(msg) = update.message {
-            let _ = bot.send_message(msg.chat.id, "Received via webhook! 🚀", None).await;
+            let _ = bot.send_message(msg.chat.id, "Hello!", None).await;
         }
     });
+
     StatusCode::OK
 }
 ```
 
-> For local testing: `ngrok http 8080` and use the ngrok URL as your webhook
+---
+
+#### Which to use
+
+|                             | Built-in `WebhookServer` |  Manual  |
+| :-------------------------- | :----------------------: | :------: |
+| Zero boilerplate            |             ✅            |     ❌    |
+| Secret token validation     |        ✅ built-in        | ✅ manual |
+| Custom middleware / routing |             ❌            |     ✅    |
+| Works with existing server  |             ❌            |     ✅    |
+| Feature flag needed         |        ✅ `webhook`       |     ❌    |
+
+See [`examples/webhook/`](https://github.com/ankit-chaubey/tgbotrs/tree/main/examples/webhook) for a full working example with `.env` configuration.
 
 ---
 
@@ -690,13 +762,7 @@ Started as a personal tool in 2024 to address limitations in existing Rust Teleg
 
 ## 🙏 Credits
 
-Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** for the auto-generation approach was directly inspired by his Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**.
-
-| | |
-|:---|:---|
-| [**Telegram**](https://core.telegram.org/bots/api) | The Bot API this library implements |
-| [**PaulSonOfLars / gotgbot**](https://github.com/PaulSonOfLars/gotgbot) | Inspiration for the codegen-first approach |
-| [**tgapis/x**](https://github.com/tgapis/x/tree/data) | Machine-readable spec source |
+Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** for the auto-generation approach was directly inspired by his Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**
 
 ---
 
