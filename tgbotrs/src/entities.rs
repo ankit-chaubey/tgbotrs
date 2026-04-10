@@ -12,6 +12,7 @@
 //!
 //! ```rust,no_run
 //! use tgbotrs::types::Message;
+//! use tgbotrs::MessageEntityExt;
 //!
 //! fn print_bold(msg: &Message) {
 //!     for ent in msg.parse_entities() {
