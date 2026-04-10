@@ -2,5 +2,6 @@
 members = [
     "tgbotrs",
     "codegen",
+    "examples/mock_client",
 ]
 resolver = "2"

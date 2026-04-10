@@ -2,6 +2,7 @@ use thiserror::Error;
 
 /// The main error type for tgbotrs.
 #[derive(Debug, Error)]
+#[non_exhaustive]
 pub enum BotError {
     #[error("HTTP error: {0}")]
     Http(#[from] reqwest::Error),

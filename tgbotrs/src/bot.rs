@@ -1,10 +1,13 @@
+use std::sync::Arc;
+
+use serde::Deserialize;
+
 use crate::{
+    client::{BotClient, FormPart, ReqwestClient},
     input_file::{InputFile, InputFileOrString},
     types::User,
     BotError,
 };
-use reqwest::Client;
-use serde::Deserialize;
 
 fn infer_mime(filename: &str) -> String {
     let ext = filename.rsplit('.').next().unwrap_or("").to_lowercase();
@@ -43,7 +46,10 @@ pub struct Bot {
     pub me: User,
     /// API base URL (default: `https://api.telegram.org`).
     pub api_url: String,
-    pub(crate) client: Client,
+    /// Pre-computed "{api_url}/bot{token}/" — avoids a format! on every API call.
+    pub(crate) base: String,
+    /// Pluggable HTTP back-end. Defaults to [`ReqwestClient`].
+    pub(crate) client: Arc<dyn BotClient>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -61,9 +67,17 @@ struct ResponseParameters {
     retry_after: Option<i64>,
 }
 
-fn empty_user() -> User {
+fn parse_bot_id(token: &str) -> Result<i64, BotError> {
+    token
+        .split(':')
+        .next()
+        .and_then(|s| s.parse::<i64>().ok())
+        .ok_or(BotError::InvalidToken)
+}
+
+fn stub_user(id: i64) -> User {
     User {
-        id: 0,
+        id,
         is_bot: true,
         first_name: String::new(),
         last_name: None,
@@ -83,15 +97,26 @@ fn empty_user() -> User {
 }
 
 impl Bot {
+    // Constructors
     /// Create a new Bot and verify the token by calling `getMe`.
+    /// Uses a **30-second** HTTP timeout.
     pub async fn new(token: impl Into<String>) -> Result<Self, BotError> {
-        Self::with_api_url(token, DEFAULT_API_URL).await
+        Self::with_timeout(token, DEFAULT_API_URL, std::time::Duration::from_secs(30)).await
     }
 
-    /// Create a Bot pointing at a custom API server (e.g. local Bot API).
+    /// Create a Bot pointing at a custom API server. Calls `getMe` on creation.
     pub async fn with_api_url(
         token: impl Into<String>,
         api_url: impl Into<String>,
+    ) -> Result<Self, BotError> {
+        Self::with_timeout(token, api_url, std::time::Duration::from_secs(30)).await
+    }
+
+    /// Create a Bot with a custom HTTP timeout and API URL. Calls `getMe`.
+    pub async fn with_timeout(
+        token: impl Into<String>,
+        api_url: impl Into<String>,
+        timeout: std::time::Duration,
     ) -> Result<Self, BotError> {
         let token = token.into();
         let api_url = api_url.into();
@@ -100,61 +125,88 @@ impl Bot {
             return Err(BotError::InvalidToken);
         }
 
-        let client = Client::builder()
-            .timeout(std::time::Duration::from_secs(30))
-            .build()
-            .map_err(BotError::Http)?;
+        let bot_id = parse_bot_id(&token)?;
+        let client = ReqwestClient::with_timeout(timeout)?;
 
+        let base = format!("{}/bot{}/", api_url, token);
         let mut bot = Bot {
             token,
-            me: empty_user(),
+            me: stub_user(bot_id),
             api_url,
-            client,
+            base,
+            client: Arc::new(client),
         };
 
-        bot.me = bot.call_api("getMe", &serde_json::json!({})).await?;
-
+        bot.me = bot.call_api("getMe", serde_json::json!({})).await?;
         Ok(bot)
     }
 
-    /// Create a Bot without calling `getMe` (skips token verification).
-    pub fn new_unverified(token: impl Into<String>) -> Self {
-        Bot {
-            token: token.into(),
-            me: empty_user(),
-            api_url: DEFAULT_API_URL.to_string(),
-            client: Client::new(),
+    /// Create a Bot with a **custom HTTP client** implementing [`BotClient`].
+    ///
+    /// The main hook for testing or custom transports. The bot ID is parsed
+    /// from the token so `bot.me.id` is always valid. Call `getMe` yourself
+    /// if you need the rest of the `me` fields populated.
+    pub fn with_client(
+        token: impl Into<String>,
+        api_url: impl Into<String>,
+        client: impl BotClient + 'static,
+    ) -> Result<Self, BotError> {
+        let token = token.into();
+        if !token.contains(':') {
+            return Err(BotError::InvalidToken);
         }
+        let bot_id = parse_bot_id(&token)?;
+        let api_url = api_url.into();
+        let base = format!("{}/bot{}/", api_url, token);
+        Ok(Bot {
+            token,
+            me: stub_user(bot_id),
+            api_url,
+            base,
+            client: Arc::new(client),
+        })
     }
 
-    /// Build the full endpoint URL for a method name.
+    /// Create a Bot **without** calling `getMe` (no network on startup).
+    ///
+    /// The bot ID is parsed from the token so `bot.me.id` is always valid.
+    /// All other `me` fields are left as zero-values until you call `getMe`.
+    pub fn new_unverified(token: impl Into<String>) -> Result<Self, BotError> {
+        let token = token.into();
+        let bot_id = parse_bot_id(&token)?;
+        let client = ReqwestClient::with_timeout(std::time::Duration::from_secs(30))
+            .expect("default client should build");
+        let api_url = DEFAULT_API_URL.to_string();
+        let base = format!("{}/bot{}/", api_url, token);
+        Ok(Bot {
+            token,
+            me: stub_user(bot_id),
+            api_url,
+            base,
+            client: Arc::new(client),
+        })
+    }
+
+    // API plumbing
+    /// Build the full endpoint URL for a Telegram method name.
     pub fn endpoint(&self, method: &str) -> String {
-        format!("{}/bot{}/{}", self.api_url, self.token, method)
+        // `self.base` is pre-computed as "{api_url}/bot{token}/" at construction time.
+        format!("{}{}", self.base, method)
     }
 
     /// Make a JSON API call and deserialize the result.
-    pub async fn call_api<T>(&self, method: &str, body: &serde_json::Value) -> Result<T, BotError>
+    pub async fn call_api<T>(&self, method: &str, body: serde_json::Value) -> Result<T, BotError>
     where
         T: for<'de> Deserialize<'de>,
     {
         let url = self.endpoint(method);
-
-        let response = self
-            .client
-            .post(&url)
-            .json(body)
-            .send()
-            .await
-            .map_err(BotError::Http)?;
-
-        let tg: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
-
+        let bytes = self.client.post_json(&url, body).await?;
+        let tg: TelegramResponse<T> = serde_json::from_slice(&bytes)?;
         self.unwrap_response(tg)
     }
 
-    /// Make an API call using multipart when a `Memory` file is present, JSON otherwise.
-    ///
-    /// `body` holds all params except the file field.
+    /// Make an API call using multipart when a `Memory` file is present,
+    /// JSON otherwise.
     pub async fn call_api_with_file<T>(
         &self,
         method: &str,
@@ -167,57 +219,46 @@ impl Bot {
     {
         match file {
             InputFileOrString::File(InputFile::Memory { filename, data }) => {
-                let mut form = reqwest::multipart::Form::new();
-                for (k, v) in &body {
-                    if !v.is_null() {
-                        let s = match v {
+                let mime = infer_mime(&filename);
+
+                let mut parts: Vec<FormPart> = body
+                    .into_iter()
+                    .filter(|(_, v)| !v.is_null())
+                    .map(|(k, v)| {
+                        let text = match &v {
                             serde_json::Value::String(s) => s.clone(),
                             other => other.to_string(),
                         };
-                        form = form.text(k.clone(), s);
-                    }
-                }
-                let mime = infer_mime(&filename);
-                let part = reqwest::multipart::Part::bytes(data.to_vec())
-                    .file_name(filename)
-                    .mime_str(&mime)
-                    .map_err(|e| BotError::Other(e.to_string()))?;
-                form = form.part(file_field.to_string(), part);
-                self.call_api_multipart(method, form).await
+                        FormPart::text(k, text)
+                    })
+                    .collect();
+
+                parts.push(FormPart::bytes(file_field, filename, mime, data));
+                self.call_api_multipart(method, parts).await
             }
             other => {
-                // file_id or URL - send as JSON
                 let mut req = body;
                 req.insert(
                     file_field.into(),
                     serde_json::to_value(other).unwrap_or_default(),
                 );
-                self.call_api(method, &serde_json::Value::Object(req)).await
+                self.call_api(method, serde_json::Value::Object(req)).await
             }
         }
     }
 
-    /// Make a multipart/form-data API call (for file uploads).
+    /// Make a `multipart/form-data` API call directly from [`FormPart`]s.
     pub async fn call_api_multipart<T>(
         &self,
         method: &str,
-        form: reqwest::multipart::Form,
+        parts: Vec<FormPart>,
     ) -> Result<T, BotError>
     where
         T: for<'de> Deserialize<'de>,
     {
         let url = self.endpoint(method);
-
-        let response = self
-            .client
-            .post(&url)
-            .multipart(form)
-            .send()
-            .await
-            .map_err(BotError::Http)?;
-
-        let tg: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
-
+        let bytes = self.client.post_form(&url, parts).await?;
+        let tg: TelegramResponse<T> = serde_json::from_slice(&bytes)?;
         self.unwrap_response(tg)
     }
 

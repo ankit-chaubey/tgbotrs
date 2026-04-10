@@ -407,7 +407,7 @@ def generate_methods(spec):
                 lines.append(f'        self.call_api_with_file("{method_name}", req, "{file_field}", {fn_arg}.into())')
                 lines.append(f'            .await')
         else:
-            lines.append(f'        self.call_api("{method_name}", &serde_json::Value::Object(req)).await')
+            lines.append(f'        self.call_api("{method_name}", serde_json::Value::Object(req)).await')
         lines.append(f'    }}')
         lines.append(f'}}')
         lines.append(f'')

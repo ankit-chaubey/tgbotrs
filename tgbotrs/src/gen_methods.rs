@@ -35,7 +35,7 @@ impl Bot {
             "sticker".into(),
             serde_json::to_value(sticker).unwrap_or_default(),
         );
-        self.call_api("addStickerToSet", &serde_json::Value::Object(req))
+        self.call_api("addStickerToSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -102,7 +102,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("answerCallbackQuery", &serde_json::Value::Object(req))
+        self.call_api("answerCallbackQuery", serde_json::Value::Object(req))
             .await
     }
 }
@@ -175,7 +175,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("answerInlineQuery", &serde_json::Value::Object(req))
+        self.call_api("answerInlineQuery", serde_json::Value::Object(req))
             .await
     }
 }
@@ -223,7 +223,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("answerPreCheckoutQuery", &serde_json::Value::Object(req))
+        self.call_api("answerPreCheckoutQuery", serde_json::Value::Object(req))
             .await
     }
 }
@@ -278,7 +278,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("answerShippingQuery", &serde_json::Value::Object(req))
+        self.call_api("answerShippingQuery", serde_json::Value::Object(req))
             .await
     }
 }
@@ -300,7 +300,7 @@ impl Bot {
             "result".into(),
             serde_json::to_value(result).unwrap_or_default(),
         );
-        self.call_api("answerWebAppQuery", &serde_json::Value::Object(req))
+        self.call_api("answerWebAppQuery", serde_json::Value::Object(req))
             .await
     }
 }
@@ -322,7 +322,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("approveChatJoinRequest", &serde_json::Value::Object(req))
+        self.call_api("approveChatJoinRequest", serde_json::Value::Object(req))
             .await
     }
 }
@@ -373,7 +373,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("approveSuggestedPost", &serde_json::Value::Object(req))
+        self.call_api("approveSuggestedPost", serde_json::Value::Object(req))
             .await
     }
 }
@@ -431,7 +431,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("banChatMember", &serde_json::Value::Object(req))
+        self.call_api("banChatMember", serde_json::Value::Object(req))
             .await
     }
 }
@@ -453,7 +453,7 @@ impl Bot {
             "sender_chat_id".into(),
             serde_json::to_value(sender_chat_id).unwrap_or_default(),
         );
-        self.call_api("banChatSenderChat", &serde_json::Value::Object(req))
+        self.call_api("banChatSenderChat", serde_json::Value::Object(req))
             .await
     }
 }
@@ -463,8 +463,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#close
     pub async fn close(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("close", &serde_json::Value::Object(req))
-            .await
+        self.call_api("close", serde_json::Value::Object(req)).await
     }
 }
 
@@ -485,7 +484,7 @@ impl Bot {
             "message_thread_id".into(),
             serde_json::to_value(message_thread_id).unwrap_or_default(),
         );
-        self.call_api("closeForumTopic", &serde_json::Value::Object(req))
+        self.call_api("closeForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -502,7 +501,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("closeGeneralForumTopic", &serde_json::Value::Object(req))
+        self.call_api("closeGeneralForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -524,7 +523,7 @@ impl Bot {
             "owned_gift_id".into(),
             serde_json::to_value(owned_gift_id.into()).unwrap_or_default(),
         );
-        self.call_api("convertGiftToStars", &serde_json::Value::Object(req))
+        self.call_api("convertGiftToStars", serde_json::Value::Object(req))
             .await
     }
 }
@@ -671,7 +670,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("copyMessage", &serde_json::Value::Object(req))
+        self.call_api("copyMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -755,7 +754,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("copyMessages", &serde_json::Value::Object(req))
+        self.call_api("copyMessages", serde_json::Value::Object(req))
             .await
     }
 }
@@ -822,7 +821,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("createChatInviteLink", &serde_json::Value::Object(req))
+        self.call_api("createChatInviteLink", serde_json::Value::Object(req))
             .await
     }
 }
@@ -880,7 +879,7 @@ impl Bot {
         }
         self.call_api(
             "createChatSubscriptionInviteLink",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -939,7 +938,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("createForumTopic", &serde_json::Value::Object(req))
+        self.call_api("createForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1117,7 +1116,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("createInvoiceLink", &serde_json::Value::Object(req))
+        self.call_api("createInvoiceLink", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1185,7 +1184,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("createNewStickerSet", &serde_json::Value::Object(req))
+        self.call_api("createNewStickerSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1207,7 +1206,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("declineChatJoinRequest", &serde_json::Value::Object(req))
+        self.call_api("declineChatJoinRequest", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1258,7 +1257,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("declineSuggestedPost", &serde_json::Value::Object(req))
+        self.call_api("declineSuggestedPost", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1280,7 +1279,7 @@ impl Bot {
             "message_ids".into(),
             serde_json::to_value(message_ids).unwrap_or_default(),
         );
-        self.call_api("deleteBusinessMessages", &serde_json::Value::Object(req))
+        self.call_api("deleteBusinessMessages", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1294,7 +1293,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("deleteChatPhoto", &serde_json::Value::Object(req))
+        self.call_api("deleteChatPhoto", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1311,7 +1310,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("deleteChatStickerSet", &serde_json::Value::Object(req))
+        self.call_api("deleteChatStickerSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1333,7 +1332,7 @@ impl Bot {
             "message_thread_id".into(),
             serde_json::to_value(message_thread_id).unwrap_or_default(),
         );
-        self.call_api("deleteForumTopic", &serde_json::Value::Object(req))
+        self.call_api("deleteForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1365,7 +1364,7 @@ impl Bot {
             "message_id".into(),
             serde_json::to_value(message_id).unwrap_or_default(),
         );
-        self.call_api("deleteMessage", &serde_json::Value::Object(req))
+        self.call_api("deleteMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1387,7 +1386,7 @@ impl Bot {
             "message_ids".into(),
             serde_json::to_value(message_ids).unwrap_or_default(),
         );
-        self.call_api("deleteMessages", &serde_json::Value::Object(req))
+        self.call_api("deleteMessages", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1435,7 +1434,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("deleteMyCommands", &serde_json::Value::Object(req))
+        self.call_api("deleteMyCommands", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1452,7 +1451,7 @@ impl Bot {
             "sticker".into(),
             serde_json::to_value(sticker.into()).unwrap_or_default(),
         );
-        self.call_api("deleteStickerFromSet", &serde_json::Value::Object(req))
+        self.call_api("deleteStickerFromSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1466,7 +1465,7 @@ impl Bot {
             "name".into(),
             serde_json::to_value(name.into()).unwrap_or_default(),
         );
-        self.call_api("deleteStickerSet", &serde_json::Value::Object(req))
+        self.call_api("deleteStickerSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1488,7 +1487,7 @@ impl Bot {
             "story_id".into(),
             serde_json::to_value(story_id).unwrap_or_default(),
         );
-        self.call_api("deleteStory", &serde_json::Value::Object(req))
+        self.call_api("deleteStory", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1529,7 +1528,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("deleteWebhook", &serde_json::Value::Object(req))
+        self.call_api("deleteWebhook", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1601,7 +1600,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editChatInviteLink", &serde_json::Value::Object(req))
+        self.call_api("editChatInviteLink", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1654,7 +1653,7 @@ impl Bot {
         }
         self.call_api(
             "editChatSubscriptionInviteLink",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -1713,7 +1712,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editForumTopic", &serde_json::Value::Object(req))
+        self.call_api("editForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1735,7 +1734,7 @@ impl Bot {
             "name".into(),
             serde_json::to_value(name.into()).unwrap_or_default(),
         );
-        self.call_api("editGeneralForumTopic", &serde_json::Value::Object(req))
+        self.call_api("editGeneralForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1832,7 +1831,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageCaption", &serde_json::Value::Object(req))
+        self.call_api("editMessageCaption", serde_json::Value::Object(req))
             .await
     }
 }
@@ -1893,7 +1892,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageChecklist", &serde_json::Value::Object(req))
+        self.call_api("editMessageChecklist", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2000,7 +1999,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageLiveLocation", &serde_json::Value::Object(req))
+        self.call_api("editMessageLiveLocation", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2074,7 +2073,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageMedia", &serde_json::Value::Object(req))
+        self.call_api("editMessageMedia", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2143,7 +2142,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageReplyMarkup", &serde_json::Value::Object(req))
+        self.call_api("editMessageReplyMarkup", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2238,7 +2237,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editMessageText", &serde_json::Value::Object(req))
+        self.call_api("editMessageText", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2315,7 +2314,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("editStory", &serde_json::Value::Object(req))
+        self.call_api("editStory", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2342,7 +2341,7 @@ impl Bot {
             "is_canceled".into(),
             serde_json::to_value(is_canceled).unwrap_or_default(),
         );
-        self.call_api("editUserStarSubscription", &serde_json::Value::Object(req))
+        self.call_api("editUserStarSubscription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2359,7 +2358,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("exportChatInviteLink", &serde_json::Value::Object(req))
+        self.call_api("exportChatInviteLink", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2457,7 +2456,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("forwardMessage", &serde_json::Value::Object(req))
+        self.call_api("forwardMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2534,7 +2533,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("forwardMessages", &serde_json::Value::Object(req))
+        self.call_api("forwardMessages", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2544,7 +2543,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#getavailablegifts
     pub async fn get_available_gifts(&self) -> Result<Gifts, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("getAvailableGifts", &serde_json::Value::Object(req))
+        self.call_api("getAvailableGifts", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2653,7 +2652,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getBusinessAccountGifts", &serde_json::Value::Object(req))
+        self.call_api("getBusinessAccountGifts", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2672,7 +2671,7 @@ impl Bot {
         );
         self.call_api(
             "getBusinessAccountStarBalance",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -2690,7 +2689,7 @@ impl Bot {
             "business_connection_id".into(),
             serde_json::to_value(business_connection_id.into()).unwrap_or_default(),
         );
-        self.call_api("getBusinessConnection", &serde_json::Value::Object(req))
+        self.call_api("getBusinessConnection", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2704,7 +2703,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("getChat", &serde_json::Value::Object(req))
+        self.call_api("getChat", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2721,7 +2720,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("getChatAdministrators", &serde_json::Value::Object(req))
+        self.call_api("getChatAdministrators", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2830,7 +2829,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getChatGifts", &serde_json::Value::Object(req))
+        self.call_api("getChatGifts", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2852,7 +2851,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("getChatMember", &serde_json::Value::Object(req))
+        self.call_api("getChatMember", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2866,7 +2865,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("getChatMemberCount", &serde_json::Value::Object(req))
+        self.call_api("getChatMemberCount", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2907,7 +2906,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getChatMenuButton", &serde_json::Value::Object(req))
+        self.call_api("getChatMenuButton", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2924,7 +2923,7 @@ impl Bot {
             "custom_emoji_ids".into(),
             serde_json::to_value(custom_emoji_ids).unwrap_or_default(),
         );
-        self.call_api("getCustomEmojiStickers", &serde_json::Value::Object(req))
+        self.call_api("getCustomEmojiStickers", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2939,7 +2938,7 @@ impl Bot {
             "file_id".into(),
             serde_json::to_value(file_id.into()).unwrap_or_default(),
         );
-        self.call_api("getFile", &serde_json::Value::Object(req))
+        self.call_api("getFile", serde_json::Value::Object(req))
             .await
     }
 }
@@ -2949,7 +2948,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#getforumtopiciconstickers
     pub async fn get_forum_topic_icon_stickers(&self) -> Result<Vec<Sticker>, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("getForumTopicIconStickers", &serde_json::Value::Object(req))
+        self.call_api("getForumTopicIconStickers", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3009,7 +3008,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getGameHighScores", &serde_json::Value::Object(req))
+        self.call_api("getGameHighScores", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3023,7 +3022,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("getManagedBotToken", &serde_json::Value::Object(req))
+        self.call_api("getManagedBotToken", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3033,8 +3032,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#getme
     pub async fn get_me(&self) -> Result<User, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("getMe", &serde_json::Value::Object(req))
-            .await
+        self.call_api("getMe", serde_json::Value::Object(req)).await
     }
 }
 
@@ -3081,7 +3079,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getMyCommands", &serde_json::Value::Object(req))
+        self.call_api("getMyCommands", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3124,7 +3122,7 @@ impl Bot {
         }
         self.call_api(
             "getMyDefaultAdministratorRights",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -3166,7 +3164,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getMyDescription", &serde_json::Value::Object(req))
+        self.call_api("getMyDescription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3204,7 +3202,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getMyName", &serde_json::Value::Object(req))
+        self.call_api("getMyName", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3245,7 +3243,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getMyShortDescription", &serde_json::Value::Object(req))
+        self.call_api("getMyShortDescription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3255,7 +3253,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#getmystarbalance
     pub async fn get_my_star_balance(&self) -> Result<StarAmount, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("getMyStarBalance", &serde_json::Value::Object(req))
+        self.call_api("getMyStarBalance", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3303,7 +3301,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getStarTransactions", &serde_json::Value::Object(req))
+        self.call_api("getStarTransactions", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3317,7 +3315,7 @@ impl Bot {
             "name".into(),
             serde_json::to_value(name.into()).unwrap_or_default(),
         );
-        self.call_api("getStickerSet", &serde_json::Value::Object(req))
+        self.call_api("getStickerSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3379,7 +3377,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getUpdates", &serde_json::Value::Object(req))
+        self.call_api("getUpdates", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3401,7 +3399,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("getUserChatBoosts", &serde_json::Value::Object(req))
+        self.call_api("getUserChatBoosts", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3496,7 +3494,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getUserGifts", &serde_json::Value::Object(req))
+        self.call_api("getUserGifts", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3549,7 +3547,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getUserProfileAudios", &serde_json::Value::Object(req))
+        self.call_api("getUserProfileAudios", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3602,7 +3600,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("getUserProfilePhotos", &serde_json::Value::Object(req))
+        self.call_api("getUserProfilePhotos", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3612,7 +3610,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#getwebhookinfo
     pub async fn get_webhook_info(&self) -> Result<WebhookInfo, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("getWebhookInfo", &serde_json::Value::Object(req))
+        self.call_api("getWebhookInfo", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3682,7 +3680,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("giftPremiumSubscription", &serde_json::Value::Object(req))
+        self.call_api("giftPremiumSubscription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3699,7 +3697,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("hideGeneralForumTopic", &serde_json::Value::Object(req))
+        self.call_api("hideGeneralForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3713,7 +3711,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("leaveChat", &serde_json::Value::Object(req))
+        self.call_api("leaveChat", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3723,7 +3721,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#logout
     pub async fn log_out(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("logOut", &serde_json::Value::Object(req))
+        self.call_api("logOut", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3781,7 +3779,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("pinChatMessage", &serde_json::Value::Object(req))
+        self.call_api("pinChatMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -3872,7 +3870,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("postStory", &serde_json::Value::Object(req))
+        self.call_api("postStory", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4035,7 +4033,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("promoteChatMember", &serde_json::Value::Object(req))
+        self.call_api("promoteChatMember", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4062,7 +4060,7 @@ impl Bot {
             "message_id".into(),
             serde_json::to_value(message_id).unwrap_or_default(),
         );
-        self.call_api("readBusinessMessage", &serde_json::Value::Object(req))
+        self.call_api("readBusinessMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4084,7 +4082,7 @@ impl Bot {
             "telegram_payment_charge_id".into(),
             serde_json::to_value(telegram_payment_charge_id.into()).unwrap_or_default(),
         );
-        self.call_api("refundStarPayment", &serde_json::Value::Object(req))
+        self.call_api("refundStarPayment", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4132,7 +4130,7 @@ impl Bot {
         }
         self.call_api(
             "removeBusinessAccountProfilePhoto",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -4150,7 +4148,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("removeChatVerification", &serde_json::Value::Object(req))
+        self.call_api("removeChatVerification", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4160,7 +4158,7 @@ impl Bot {
     /// See: https://core.telegram.org/bots/api#removemyprofilephoto
     pub async fn remove_my_profile_photo(&self) -> Result<bool, BotError> {
         let mut req = serde_json::Map::new();
-        self.call_api("removeMyProfilePhoto", &serde_json::Value::Object(req))
+        self.call_api("removeMyProfilePhoto", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4174,7 +4172,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("removeUserVerification", &serde_json::Value::Object(req))
+        self.call_api("removeUserVerification", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4196,7 +4194,7 @@ impl Bot {
             "message_thread_id".into(),
             serde_json::to_value(message_thread_id).unwrap_or_default(),
         );
-        self.call_api("reopenForumTopic", &serde_json::Value::Object(req))
+        self.call_api("reopenForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4213,7 +4211,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("reopenGeneralForumTopic", &serde_json::Value::Object(req))
+        self.call_api("reopenGeneralForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4227,7 +4225,7 @@ impl Bot {
             "user_id".into(),
             serde_json::to_value(user_id).unwrap_or_default(),
         );
-        self.call_api("replaceManagedBotToken", &serde_json::Value::Object(req))
+        self.call_api("replaceManagedBotToken", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4259,7 +4257,7 @@ impl Bot {
             "sticker".into(),
             serde_json::to_value(sticker).unwrap_or_default(),
         );
-        self.call_api("replaceStickerInSet", &serde_json::Value::Object(req))
+        self.call_api("replaceStickerInSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4327,7 +4325,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("repostStory", &serde_json::Value::Object(req))
+        self.call_api("repostStory", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4390,7 +4388,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("restrictChatMember", &serde_json::Value::Object(req))
+        self.call_api("restrictChatMember", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4412,7 +4410,7 @@ impl Bot {
             "invite_link".into(),
             serde_json::to_value(invite_link.into()).unwrap_or_default(),
         );
-        self.call_api("revokeChatInviteLink", &serde_json::Value::Object(req))
+        self.call_api("revokeChatInviteLink", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4484,7 +4482,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("savePreparedInlineMessage", &serde_json::Value::Object(req))
+        self.call_api("savePreparedInlineMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4506,11 +4504,8 @@ impl Bot {
             "button".into(),
             serde_json::to_value(button).unwrap_or_default(),
         );
-        self.call_api(
-            "savePreparedKeyboardButton",
-            &serde_json::Value::Object(req),
-        )
-        .await
+        self.call_api("savePreparedKeyboardButton", serde_json::Value::Object(req))
+            .await
     }
 }
 
@@ -4901,7 +4896,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendChatAction", &serde_json::Value::Object(req))
+        self.call_api("sendChatAction", serde_json::Value::Object(req))
             .await
     }
 }
@@ -4985,7 +4980,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendChecklist", &serde_json::Value::Object(req))
+        self.call_api("sendChecklist", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5118,7 +5113,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendContact", &serde_json::Value::Object(req))
+        self.call_api("sendContact", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5234,7 +5229,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendDice", &serde_json::Value::Object(req))
+        self.call_api("sendDice", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5479,7 +5474,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendGame", &serde_json::Value::Object(req))
+        self.call_api("sendGame", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5560,7 +5555,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendGift", &serde_json::Value::Object(req))
+        self.call_api("sendGift", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5799,7 +5794,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendInvoice", &serde_json::Value::Object(req))
+        self.call_api("sendInvoice", serde_json::Value::Object(req))
             .await
     }
 }
@@ -5946,7 +5941,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendLocation", &serde_json::Value::Object(req))
+        self.call_api("sendLocation", serde_json::Value::Object(req))
             .await
     }
 }
@@ -6046,7 +6041,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendMediaGroup", &serde_json::Value::Object(req))
+        self.call_api("sendMediaGroup", serde_json::Value::Object(req))
             .await
     }
 }
@@ -6181,7 +6176,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendMessage", &serde_json::Value::Object(req))
+        self.call_api("sendMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -6251,7 +6246,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendMessageDraft", &serde_json::Value::Object(req))
+        self.call_api("sendMessageDraft", serde_json::Value::Object(req))
             .await
     }
 }
@@ -6398,7 +6393,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendPaidMedia", &serde_json::Value::Object(req))
+        self.call_api("sendPaidMedia", serde_json::Value::Object(req))
             .await
     }
 }
@@ -6782,7 +6777,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendPoll", &serde_json::Value::Object(req))
+        self.call_api("sendPoll", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7056,7 +7051,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("sendVenue", &serde_json::Value::Object(req))
+        self.call_api("sendVenue", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7565,7 +7560,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setBusinessAccountBio", &serde_json::Value::Object(req))
+        self.call_api("setBusinessAccountBio", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7594,7 +7589,7 @@ impl Bot {
         );
         self.call_api(
             "setBusinessAccountGiftSettings",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -7646,7 +7641,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setBusinessAccountName", &serde_json::Value::Object(req))
+        self.call_api("setBusinessAccountName", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7699,7 +7694,7 @@ impl Bot {
         }
         self.call_api(
             "setBusinessAccountProfilePhoto",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -7746,11 +7741,8 @@ impl Bot {
                 }
             }
         }
-        self.call_api(
-            "setBusinessAccountUsername",
-            &serde_json::Value::Object(req),
-        )
-        .await
+        self.call_api("setBusinessAccountUsername", serde_json::Value::Object(req))
+            .await
     }
 }
 
@@ -7778,7 +7770,7 @@ impl Bot {
         );
         self.call_api(
             "setChatAdministratorCustomTitle",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -7825,7 +7817,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setChatDescription", &serde_json::Value::Object(req))
+        self.call_api("setChatDescription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7876,7 +7868,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setChatMemberTag", &serde_json::Value::Object(req))
+        self.call_api("setChatMemberTag", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7924,7 +7916,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setChatMenuButton", &serde_json::Value::Object(req))
+        self.call_api("setChatMenuButton", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7975,7 +7967,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setChatPermissions", &serde_json::Value::Object(req))
+        self.call_api("setChatPermissions", serde_json::Value::Object(req))
             .await
     }
 }
@@ -7997,7 +7989,7 @@ impl Bot {
             "photo".into(),
             serde_json::to_value(photo).unwrap_or_default(),
         );
-        self.call_api("setChatPhoto", &serde_json::Value::Object(req))
+        self.call_api("setChatPhoto", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8019,7 +8011,7 @@ impl Bot {
             "sticker_set_name".into(),
             serde_json::to_value(sticker_set_name.into()).unwrap_or_default(),
         );
-        self.call_api("setChatStickerSet", &serde_json::Value::Object(req))
+        self.call_api("setChatStickerSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8041,7 +8033,7 @@ impl Bot {
             "title".into(),
             serde_json::to_value(title.into()).unwrap_or_default(),
         );
-        self.call_api("setChatTitle", &serde_json::Value::Object(req))
+        self.call_api("setChatTitle", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8089,7 +8081,7 @@ impl Bot {
         }
         self.call_api(
             "setCustomEmojiStickerSetThumbnail",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -8169,7 +8161,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setGameScore", &serde_json::Value::Object(req))
+        self.call_api("setGameScore", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8227,7 +8219,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setMessageReaction", &serde_json::Value::Object(req))
+        self.call_api("setMessageReaction", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8280,7 +8272,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setMyCommands", &serde_json::Value::Object(req))
+        self.call_api("setMyCommands", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8330,7 +8322,7 @@ impl Bot {
         }
         self.call_api(
             "setMyDefaultAdministratorRights",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -8379,7 +8371,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setMyDescription", &serde_json::Value::Object(req))
+        self.call_api("setMyDescription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8424,7 +8416,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setMyName", &serde_json::Value::Object(req))
+        self.call_api("setMyName", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8438,7 +8430,7 @@ impl Bot {
             "photo".into(),
             serde_json::to_value(photo).unwrap_or_default(),
         );
-        self.call_api("setMyProfilePhoto", &serde_json::Value::Object(req))
+        self.call_api("setMyProfilePhoto", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8486,7 +8478,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setMyShortDescription", &serde_json::Value::Object(req))
+        self.call_api("setMyShortDescription", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8509,7 +8501,7 @@ impl Bot {
             "errors".into(),
             serde_json::to_value(errors).unwrap_or_default(),
         );
-        self.call_api("setPassportDataErrors", &serde_json::Value::Object(req))
+        self.call_api("setPassportDataErrors", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8531,7 +8523,7 @@ impl Bot {
             "emoji_list".into(),
             serde_json::to_value(emoji_list).unwrap_or_default(),
         );
-        self.call_api("setStickerEmojiList", &serde_json::Value::Object(req))
+        self.call_api("setStickerEmojiList", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8577,7 +8569,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setStickerKeywords", &serde_json::Value::Object(req))
+        self.call_api("setStickerKeywords", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8623,7 +8615,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setStickerMaskPosition", &serde_json::Value::Object(req))
+        self.call_api("setStickerMaskPosition", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8645,7 +8637,7 @@ impl Bot {
             "position".into(),
             serde_json::to_value(position).unwrap_or_default(),
         );
-        self.call_api("setStickerPositionInSet", &serde_json::Value::Object(req))
+        self.call_api("setStickerPositionInSet", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8701,7 +8693,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setStickerSetThumbnail", &serde_json::Value::Object(req))
+        self.call_api("setStickerSetThumbnail", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8723,7 +8715,7 @@ impl Bot {
             "title".into(),
             serde_json::to_value(title.into()).unwrap_or_default(),
         );
-        self.call_api("setStickerSetTitle", &serde_json::Value::Object(req))
+        self.call_api("setStickerSetTitle", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8776,7 +8768,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setUserEmojiStatus", &serde_json::Value::Object(req))
+        self.call_api("setUserEmojiStatus", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8858,7 +8850,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("setWebhook", &serde_json::Value::Object(req))
+        self.call_api("setWebhook", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8927,7 +8919,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("stopMessageLiveLocation", &serde_json::Value::Object(req))
+        self.call_api("stopMessageLiveLocation", serde_json::Value::Object(req))
             .await
     }
 }
@@ -8985,7 +8977,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("stopPoll", &serde_json::Value::Object(req))
+        self.call_api("stopPoll", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9009,7 +9001,7 @@ impl Bot {
         );
         self.call_api(
             "transferBusinessAccountStars",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -9066,7 +9058,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("transferGift", &serde_json::Value::Object(req))
+        self.call_api("transferGift", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9117,7 +9109,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("unbanChatMember", &serde_json::Value::Object(req))
+        self.call_api("unbanChatMember", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9139,7 +9131,7 @@ impl Bot {
             "sender_chat_id".into(),
             serde_json::to_value(sender_chat_id).unwrap_or_default(),
         );
-        self.call_api("unbanChatSenderChat", &serde_json::Value::Object(req))
+        self.call_api("unbanChatSenderChat", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9156,7 +9148,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("unhideGeneralForumTopic", &serde_json::Value::Object(req))
+        self.call_api("unhideGeneralForumTopic", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9173,7 +9165,7 @@ impl Bot {
             "chat_id".into(),
             serde_json::to_value(chat_id.into()).unwrap_or_default(),
         );
-        self.call_api("unpinAllChatMessages", &serde_json::Value::Object(req))
+        self.call_api("unpinAllChatMessages", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9195,11 +9187,8 @@ impl Bot {
             "message_thread_id".into(),
             serde_json::to_value(message_thread_id).unwrap_or_default(),
         );
-        self.call_api(
-            "unpinAllForumTopicMessages",
-            &serde_json::Value::Object(req),
-        )
-        .await
+        self.call_api("unpinAllForumTopicMessages", serde_json::Value::Object(req))
+            .await
     }
 }
 
@@ -9217,7 +9206,7 @@ impl Bot {
         );
         self.call_api(
             "unpinAllGeneralForumTopicMessages",
-            &serde_json::Value::Object(req),
+            serde_json::Value::Object(req),
         )
         .await
     }
@@ -9271,7 +9260,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("unpinChatMessage", &serde_json::Value::Object(req))
+        self.call_api("unpinChatMessage", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9329,7 +9318,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("upgradeGift", &serde_json::Value::Object(req))
+        self.call_api("upgradeGift", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9356,7 +9345,7 @@ impl Bot {
             "sticker_format".into(),
             serde_json::to_value(sticker_format.into()).unwrap_or_default(),
         );
-        self.call_api("uploadStickerFile", &serde_json::Value::Object(req))
+        self.call_api("uploadStickerFile", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9402,7 +9391,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("verifyChat", &serde_json::Value::Object(req))
+        self.call_api("verifyChat", serde_json::Value::Object(req))
             .await
     }
 }
@@ -9448,7 +9437,7 @@ impl Bot {
                 }
             }
         }
-        self.call_api("verifyUser", &serde_json::Value::Object(req))
+        self.call_api("verifyUser", serde_json::Value::Object(req))
             .await
     }
 }

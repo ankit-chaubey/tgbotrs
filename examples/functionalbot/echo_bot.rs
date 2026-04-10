@@ -1,35 +1,44 @@
-use tgbotrs::{Bot, Poller, UpdateHandler};
+//! Minimal echo bot using the tgbotrs helper methods.
+//!
+//! Demonstrates: `msg.get_text()`, `msg.reply()`, `Updater`.
+
+use tgbotrs::{Bot, CommandHandler, Dispatcher, DispatcherOpts, HandlerResult, Updater, Context};
+
+async fn echo(bot: Bot, ctx: Context) -> HandlerResult {
+    if let Some(msg) = ctx.effective_message() {
+        if let Some(text) = msg.get_text() {
+            msg.reply(&bot, text, None).await?;
+        }
+    }
+    Ok(())
+}
+
+async fn start(bot: Bot, ctx: Context) -> HandlerResult {
+    if let Some(msg) = ctx.effective_message() {
+        let link = msg.get_link();
+        let info = if link.is_empty() {
+            "No public link (private/group chat)".into()
+        } else {
+            format!("Message link: {link}")
+        };
+        msg.reply(&bot, format!("Hello! I'll echo your messages.\n{info}"), None).await?;
+    }
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() {
-    let bot = Bot::new("YOUR_BOT_TOKEN")
+    let token = std::env::var("BOT_TOKEN").expect("BOT_TOKEN not set");
+    let bot   = Bot::new(token).await.expect("failed to connect");
+
+    let mut dp = Dispatcher::new(DispatcherOpts::default());
+    dp.add_handler(CommandHandler::new("start", start));
+    dp.add_handler(CommandHandler::new("echo",  echo));
+
+    println!("Polling as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
+    Updater::new(bot, dp)
+        .poll_timeout(30)
+        .start_polling()
         .await
-        .expect("Failed to create bot");
-
-    println!("Running as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
-
-    let handler: UpdateHandler = Box::new(|bot, update| {
-        Box::pin(async move {
-            let Some(msg) = update.message else { return };
-            let Some(text) = &msg.text else { return };
-            let chat_id = msg.chat.id;
-
-            let reply = match text.as_str() {
-                "/start" => "👋 Hello! I'm your bot. Send me anything!".to_string(),
-                "/help"  => "Commands:\n/start - Welcome\n/help - This message".to_string(),
-                other    => format!("You said: {}", other),
-            };
-
-            match bot.send_message(chat_id, reply, None).await {
-                Ok(_)  => println!("Replied to {}", chat_id),
-                Err(e) => eprintln!("Error: {}", e),
-            }
-        })
-    });
-
-    Poller::new(bot, handler)
-        .timeout(30)
-        .start()
-        .await
-        .expect("Polling failed");
+        .expect("polling failed");
 }

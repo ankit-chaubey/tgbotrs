@@ -1,6 +1,6 @@
 [package]
 name = "tgbotrs"
-version = "0.1.7"
+version = "0.2.0"
 edition = "2021"
 description = "A fully-featured, auto-generated Telegram Bot API library for Rust. All 285 types and 165 methods - strongly typed, fully async."
 license = "MIT"
@@ -12,12 +12,18 @@ keywords = ["telegram", "bot", "api", "async", "tokio"]
 categories = ["api-bindings", "asynchronous", "network-programming"]
 readme = "../README.md"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 ## Enable the built-in webhook server (pulls in axum + http).
 webhook = ["dep:axum", "dep:http"]
+## Enable multi-bot webhook routing.
+bot-mapping = ["webhook"]
+## Enable the synchronous ureq-backed client.
+client-ureq = ["dep:ureq"]
 
 [dependencies]
-reqwest    = { version = "0.12", features = ["json", "multipart"] }
 serde      = { version = "1",    features = ["derive"] }
 serde_json = "1"
 tokio      = { version = "1",    features = ["full"] }
@@ -25,8 +31,18 @@ thiserror  = "1"
 async-trait = "0.1"
 bytes      = "1"
 mime       = "0.3"
+tracing    = "0.1"
+regex      = "1"
 axum       = { version = "0.7", optional = true }
 http       = { version = "1",   optional = true }
+ureq       = { version = "2",   optional = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+reqwest = { version = "0.12", features = ["json", "multipart"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+reqwest = { version = "0.12", features = ["json"] }
 
 [dev-dependencies]
 axum = "0.7"
+tokio = { version = "1", features = ["full"] }

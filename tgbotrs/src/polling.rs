@@ -3,6 +3,8 @@ use crate::types::Update;
 use crate::{Bot, BotError};
 use std::future::Future;
 use std::pin::Pin;
+use std::time::Duration;
+use tracing::{error, info, warn};
 
 /// A function that handles an incoming update.
 pub type UpdateHandler =
@@ -53,8 +55,14 @@ impl Poller {
     /// Start polling. Runs until the process exits or an unrecoverable error occurs.
     pub async fn start(self) -> Result<(), BotError> {
         let mut offset: i64 = 0;
+        // Clone once — this Vec is immutable for the lifetime of the poller.
+        let allowed_updates = if self.allowed_updates.is_empty() {
+            None
+        } else {
+            Some(self.allowed_updates.clone())
+        };
 
-        println!("[tgbotrs] polling started");
+        info!("polling started");
 
         loop {
             let mut params = GetUpdatesParams::new()
@@ -62,15 +70,29 @@ impl Poller {
                 .timeout(self.timeout)
                 .limit(self.limit);
 
-            if !self.allowed_updates.is_empty() {
-                params = params.allowed_updates(self.allowed_updates.clone());
+            if let Some(ref au) = allowed_updates {
+                params = params.allowed_updates(au.clone());
             }
 
             let updates = match self.bot.get_updates(Some(params)).await {
                 Ok(u) => u,
                 Err(e) => {
-                    eprintln!("[tgbotrs] getUpdates error: {}", e);
-                    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                    // On flood-wait (429) honour the server-supplied retry_after.
+                    // On any other error back off 3 s to avoid hammering the API.
+                    let sleep_secs = match &e {
+                        BotError::Api {
+                            retry_after: Some(secs),
+                            ..
+                        } => {
+                            warn!(retry_after = secs, "flood-wait on getUpdates");
+                            *secs as u64
+                        }
+                        _ => {
+                            error!(error = %e, "getUpdates error, retrying in 3 s");
+                            3
+                        }
+                    };
+                    tokio::time::sleep(Duration::from_secs(sleep_secs)).await;
                     continue;
                 }
             };
@@ -79,6 +101,9 @@ impl Poller {
                 offset = update.update_id + 1;
                 let bot_clone = self.bot.clone();
                 let fut = (self.handler)(bot_clone, update);
+
+                // Single spawn per update. Tokio catches panics at the task
+                // boundary — a panic aborts only this task, not the poller.
                 tokio::spawn(fut);
             }
         }

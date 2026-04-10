@@ -50,6 +50,7 @@ use axum::{
 };
 use std::net::SocketAddr;
 use std::sync::Arc;
+use tracing::{error, info, warn};
 
 struct AppState {
     bot: Bot,
@@ -156,7 +157,7 @@ impl WebhookServer {
         }
 
         self.bot.set_webhook(full_url.clone(), Some(params)).await?;
-        println!("[tgbotrs] webhook registered: {}", full_url);
+        info!(url = %full_url, "webhook registered");
 
         let state = Arc::new(AppState {
             bot: self.bot,
@@ -169,7 +170,7 @@ impl WebhookServer {
             .with_state(state);
 
         let addr = SocketAddr::from(([0, 0, 0, 0], self.port));
-        println!("[tgbotrs] listening on http://0.0.0.0:{}", self.port);
+        info!(addr = %addr, "webhook server listening");
 
         let listener = tokio::net::TcpListener::bind(addr)
             .await
@@ -195,16 +196,23 @@ async fn handle_update(
             .unwrap_or("");
 
         if provided != expected {
-            eprintln!("[tgbotrs] invalid secret token - request rejected");
+            warn!("invalid secret token - webhook request rejected");
             return StatusCode::FORBIDDEN;
         }
     }
 
     // Spawn the handler so we return 200 immediately.
     // Telegram retries if we take too long or return non-2xx.
+    // The outer spawn catches panics from the inner task via JoinError.
     let bot = state.bot.clone();
     let handler = Arc::clone(&state.handler);
-    tokio::spawn(async move { (handler)(bot, update).await });
+    tokio::spawn(async move {
+        if let Err(join_err) = tokio::spawn(async move { (handler)(bot, update).await }).await {
+            if join_err.is_panic() {
+                error!("handler panicked on webhook update - continuing");
+            }
+        }
+    });
 
     StatusCode::OK
 }
