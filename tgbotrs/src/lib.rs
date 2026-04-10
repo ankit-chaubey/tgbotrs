@@ -3,7 +3,7 @@
 //! A fully-featured, auto-generated Telegram Bot API library for Rust.
 //!
 //! All **285 types** and **165 methods** from [Telegram Bot API](https://core.telegram.org/bots/api)
-//! — strongly typed, fully async, automatically kept in sync with every official release.
+//! - strongly typed, fully async, automatically kept in sync with every official release.
 //!
 //! ## Quick Start
 //!
@@ -72,7 +72,7 @@
 //!
 //! ## License
 //!
-//! MIT — Copyright (c) 2024-present Ankit Chaubey
+//! MIT - Copyright (c) 2024-present Ankit Chaubey
 
 #![allow(clippy::all)]
 
@@ -138,7 +138,7 @@ impl From<types::InputMediaAnimation> for InputMedia {
     }
 }
 
-/// `Default` for `InlineKeyboardButton` — only `text` is required by the API.
+/// `Default` for `InlineKeyboardButton` - only `text` is required by the API.
 impl Default for crate::gen_types::InlineKeyboardButton {
     fn default() -> Self {
         Self {

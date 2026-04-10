@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-diff_spec.py — Compute a semantic diff between two Telegram Bot API spec files.
+diff_spec.py - Compute a semantic diff between two Telegram Bot API spec files.
 
 Usage: python3 diff_spec.py old_api.json new_api.json output_report.json
 """

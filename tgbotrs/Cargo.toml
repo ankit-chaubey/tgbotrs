@@ -2,7 +2,7 @@
 name = "tgbotrs"
 version = "0.1.7"
 edition = "2021"
-description = "A fully-featured, auto-generated Telegram Bot API library for Rust. All 285 types and 165 methods — strongly typed, fully async."
+description = "A fully-featured, auto-generated Telegram Bot API library for Rust. All 285 types and 165 methods - strongly typed, fully async."
 license = "MIT"
 repository = "https://github.com/ankit-chaubey/tgbotrs"
 homepage = "https://github.com/ankit-chaubey/tgbotrs"

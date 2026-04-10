@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize, Serializer};
 
 /// A file to be sent via the Telegram Bot API.
 ///
-/// - `FileId` — reference a file already on Telegram's servers
-/// - `Url` — let Telegram download the file from a URL
-/// - `Memory` — upload raw bytes directly via multipart
+/// - `FileId` - reference a file already on Telegram's servers
+/// - `Url` - let Telegram download the file from a URL
+/// - `Memory` - upload raw bytes directly via multipart
 #[derive(Debug, Clone)]
 pub enum InputFile {
     FileId(String),

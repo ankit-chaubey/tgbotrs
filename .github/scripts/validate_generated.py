@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-validate_generated.py — Validates that all types and methods from api.json
+validate_generated.py - Validates that all types and methods from api.json
 are present across the generated AND hand-crafted Rust source files.
 
 Usage:
@@ -29,9 +29,9 @@ import sys
 # Value = list of source file globs (relative to repo root) where it lives
 # ─────────────────────────────────────────────────────────────────────────────
 HAND_CRAFTED_TYPES = {
-    # Rich enum with FileId / Url / Memory variants — in input_file.rs
+    # Rich enum with FileId / Url / Memory variants - in input_file.rs
     "InputFile":  ["tgbotrs/src/input_file.rs"],
-    # Ergonomic wrapper enum with From<> impls — in lib.rs
+    # Ergonomic wrapper enum with From<> impls - in lib.rs
     "InputMedia": ["tgbotrs/src/lib.rs"],
 }
 # ─────────────────────────────────────────────────────────────────────────────
@@ -92,7 +92,7 @@ def main():
             if not find_type_in_sources(type_name, HAND_CRAFTED_TYPES[type_name]):
                 errors.append(
                     f"❌ Hand-crafted type '{type_name}' not found in "
-                    f"{HAND_CRAFTED_TYPES[type_name]} — did you forget to implement it?"
+                    f"{HAND_CRAFTED_TYPES[type_name]} - did you forget to implement it?"
                 )
         else:
             if gen_pattern not in types_src:

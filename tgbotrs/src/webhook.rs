@@ -10,7 +10,7 @@
 //! each [`Update`] to your [`UpdateHandler`] in a spawned task.
 //!
 //! Telegram retries if the server returns non-2xx or takes too long, so the
-//! handler is always spawned — the endpoint returns `200 OK` immediately.
+//! handler is always spawned - the endpoint returns `200 OK` immediately.
 //!
 //! # Example
 //!
@@ -59,7 +59,7 @@ struct AppState {
 
 /// A built-in HTTP server that receives Telegram webhook updates.
 ///
-/// Same [`UpdateHandler`] interface as [`Poller`](crate::Poller) — swap one line
+/// Same [`UpdateHandler`] interface as [`Poller`](crate::Poller) - swap one line
 /// to switch between long-polling and webhooks.
 pub struct WebhookServer {
     bot: Bot,

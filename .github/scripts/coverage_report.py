@@ -27,7 +27,7 @@ def snake_case(name: str) -> str:
 
 
 # -------------------------------------------------
-# Args  — accepts an optional --markdown flag
+# Args  - accepts an optional --markdown flag
 # -------------------------------------------------
 args = sys.argv[1:]
 markdown = "--markdown" in args
@@ -94,10 +94,10 @@ types_pct   = int((types_covered   / total_types)   * 100) if total_types   else
 methods_pct = int((methods_covered / total_methods) * 100) if total_methods else 100
 
 # -------------------------------------------------
-# Output — plain text or Markdown
+# Output - plain text or Markdown
 # -------------------------------------------------
 if markdown:
-    print("## 📊 tgbotrs API Coverage — Telegram Bot API\n")
+    print("## 📊 tgbotrs API Coverage - Telegram Bot API\n")
     print("| Category | Covered | Total | % |")
     print("|----------|--------:|------:|--:|")
     print(f"| Types    | {types_covered} | {total_types} | {types_pct}% |")
@@ -118,10 +118,10 @@ if markdown:
         print("```")
 
     if not missing_types and not missing_methods:
-        print("\n✅ **Full coverage — all types and methods implemented.**")
+        print("\n✅ **Full coverage - all types and methods implemented.**")
 else:
     print("=" * 60)
-    print("📊 tgbotrs API Coverage — Telegram Bot API")
+    print("📊 tgbotrs API Coverage - Telegram Bot API")
     print("=" * 60)
     print(f"  Types:   {types_covered}/{total_types}  ({types_pct}%)")
     print(f"  Methods: {methods_covered}/{total_methods}  ({methods_pct}%)")

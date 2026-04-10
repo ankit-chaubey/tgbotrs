@@ -161,7 +161,7 @@ fn method_params_name(name: &str) -> String {
     format!("{}Params", name.to_pascal_case())
 }
 
-// Types implemented manually in the library — skip generating them to avoid duplicates.
+// Types implemented manually in the library - skip generating them to avoid duplicates.
 // Keep in sync with SKIP_TYPES in codegen/codegen.py and HAND_CRAFTED_TYPES in
 // .github/scripts/validate_generated.py
 const SKIP_TYPES: &[&str] = &["InputFile", "InputMedia"];

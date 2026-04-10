@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-tgbotrs — Code Generator
+tgbotrs - Code Generator
 ========================
 Generates Rust source files from the Telegram Bot API spec (api.json).
 
@@ -16,8 +16,8 @@ Example:
     python3 codegen/codegen.py api.json tgbotrs/src/
 
 Generates:
-    gen_types.rs   — All 285 Telegram Bot API types
-    gen_methods.rs — All 165 Telegram Bot API methods
+    gen_types.rs   - All 285 Telegram Bot API types
+    gen_methods.rs - All 165 Telegram Bot API methods
 
 No external dependencies required. Pure Python 3.6+.
 """
@@ -228,7 +228,7 @@ def generate_types(spec):
             lines.append(f'pub struct {type_name} {{}}')
             lines.append('')
         else:
-            # Regular struct — add Default if:
+            # Regular struct - add Default if:
             #   (a) every field is optional (Option<...>), so ..Default::default() works, OR
             #   (b) the type is in FORCE_DEFAULT (explicitly allowlisted in this file)
             all_fields_optional = all(
@@ -353,7 +353,7 @@ def generate_methods(spec):
             elif ftype == 'InputFileOrString':
                 sig_parts.append(f'{fname}: impl Into<InputFileOrString>')
             elif ftype == 'InputMedia':
-                # sendMediaGroup needs Vec<InputMedia> — always a list
+                # sendMediaGroup needs Vec<InputMedia> - always a list
                 sig_parts.append(f'{fname}: Vec<InputMedia>')
             else:
                 sig_parts.append(f'{fname}: {ftype}')
@@ -378,7 +378,7 @@ def generate_methods(spec):
             if ftype == 'InputFileOrString':
                 pass  # skipped here; added via call_api_with_file below
             elif ftype == 'InputMedia':
-                # sendMediaGroup: Vec<InputMedia> — serialize as JSON array
+                # sendMediaGroup: Vec<InputMedia> - serialize as JSON array
                 lines.append(f'        req.insert("{field["name"]}".into(), serde_json::to_value(&{fname}).unwrap_or_default());')
             else:
                 expr = f'{fname}.into()' if ftype in ('String', 'ChatId') else fname

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build_pr_body.py — Generates the PR title and markdown body from a diff report.
+build_pr_body.py - Generates the PR title and markdown body from a diff report.
 
 Usage:
   python3 build_pr_body.py <diff_report.json> <old_version> <new_version>
@@ -69,8 +69,8 @@ def main():
     is_breaking = bool(removed_types or removed_methods)
     breaking_label = "⚠️ BREAKING" if is_breaking else "✨"
 
-    # Build title — old_v/new_v already contain "Bot API X.X", don't prepend again
-    title = f"🤖 {breaking_label} {old_v} → {new_v} — Auto-regenerated"
+    # Build title - old_v/new_v already contain "Bot API X.X", don't prepend again
+    title = f"🤖 {breaking_label} {old_v} → {new_v} - Auto-regenerated"
     with open(title_out, "w") as f:
         f.write(title)
 
@@ -90,11 +90,11 @@ def main():
 
 | | Before | After | Delta |
 |---|---|---|---|
-| **API Version** | `{old_v}` | `{new_v}` ({new_d}) | — |
+| **API Version** | `{old_v}` | `{new_v}` ({new_d}) | - |
 | **Types** | {stats.get('old_types', '?')} | {stats.get('new_types', '?')} | {emoji_for_count(len(added_types))} +{len(added_types)} / ❌ -{len(removed_types)} |
 | **Methods** | {stats.get('old_methods', '?')} | {stats.get('new_methods', '?')} | {emoji_for_count(len(added_methods))} +{len(added_methods)} / ❌ -{len(removed_methods)} |
-| **Changed Types** | — | — | 🔄 {len(changed_types)} |
-| **Changed Methods** | — | — | 🔄 {len(changed_methods)} |
+| **Changed Types** | - | - | 🔄 {len(changed_types)} |
+| **Changed Methods** | - | - | 🔄 {len(changed_methods)} |
 
 🔗 [Official Changelog]({changelog_url}) | [Spec Commit]({spec_url})
 

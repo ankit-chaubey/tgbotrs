@@ -1,4 +1,4 @@
-name: 🚀 Release — Publish to crates.io
+name: 🚀 Release - Publish to crates.io
 
 on:
   # Trigger when a bot-api-update PR is merged into main
@@ -131,14 +131,14 @@ jobs:
       - name: Create git tag
         run: |
           TAG="v${{ steps.new-ver.outputs.version }}"
-          git tag -a "$TAG" -m "Release $TAG — Telegram Bot API ${{ steps.api-ver.outputs.version }}"
+          git tag -a "$TAG" -m "Release $TAG - Telegram Bot API ${{ steps.api-ver.outputs.version }}"
           git push origin "$TAG"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.new-ver.outputs.version }}
-          name: "v${{ steps.new-ver.outputs.version }} — Telegram Bot API ${{ steps.api-ver.outputs.version }}"
+          name: "v${{ steps.new-ver.outputs.version }} - Telegram Bot API ${{ steps.api-ver.outputs.version }}"
           body_path: /tmp/release_notes.md
           generate_release_notes: true
           draft: false

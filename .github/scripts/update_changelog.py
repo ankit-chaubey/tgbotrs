@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-update_changelog.py — Prepends a new entry to CHANGELOG.md.
+update_changelog.py - Prepends a new entry to CHANGELOG.md.
 
 Usage: python3 update_changelog.py CHANGELOG.md <crate_version> <api_version> <date>
 """
@@ -42,7 +42,7 @@ def main():
 
     # Build new entry
     entry_lines = []
-    entry_lines.append(f"## [{crate_ver}] — {date}")
+    entry_lines.append(f"## [{crate_ver}] - {date}")
     entry_lines.append(f"")
     entry_lines.append(f"### Telegram Bot API: `{api_ver}`")
     entry_lines.append(f"")

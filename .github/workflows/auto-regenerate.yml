@@ -6,7 +6,7 @@ on:
     types:
       - x-data-updated
 
-  # Manual trigger — optionally pin a specific tgbotrs repo commit to run codegen from
+  # Manual trigger - optionally pin a specific tgbotrs repo commit to run codegen from
   workflow_dispatch:
     inputs:
       force_regenerate:
@@ -94,7 +94,7 @@ jobs:
           echo "types=$TYPES"         >> $GITHUB_OUTPUT
           echo "methods=$METHODS"     >> $GITHUB_OUTPUT
 
-          echo "📦 Latest spec: $VERSION ($DATE) — $TYPES types, $METHODS methods"
+          echo "📦 Latest spec: $VERSION ($DATE) - $TYPES types, $METHODS methods"
 
       - name: Read current pinned version from repo
         id: current-version
@@ -109,7 +109,7 @@ jobs:
           else
             echo "version=none" >> $GITHUB_OUTPUT
             echo "release_date=none" >> $GITHUB_OUTPUT
-            echo "No api.json found — first run"
+            echo "No api.json found - first run"
           fi
 
       - name: Compare versions
@@ -233,9 +233,9 @@ jobs:
 
       - name: Update api.json and spec_commit
         run: |
-          # api.json — overwrite with latest so next run diffs correctly
+          # api.json - overwrite with latest so next run diffs correctly
           cp /tmp/api_latest.json api.json
-          # spec_commit — record which tgbotrs repo SHA codegen was run from
+          # spec_commit - record which tgbotrs repo SHA codegen was run from
           echo "${{ needs.check-for-updates.outputs.repo_sha }}" > spec_commit
 
       - name: Commit and push to branch
@@ -294,7 +294,7 @@ jobs:
               --label "auto-generated" \
               --assignee ankit-chaubey
           else
-            echo "PR #$EXISTING already exists — updating"
+            echo "PR #$EXISTING already exists - updating"
             gh pr edit "$EXISTING" \
               --title "$TITLE" \
               --body-file /tmp/pr_body.md
@@ -344,7 +344,7 @@ jobs:
           repo_sha = "${{ needs.check-for-updates.outputs.repo_sha }}"
 
           summary.write(f"\n**{old_v}** → **{new_v}** ({new_d})\n\n")
-          summary.write(f"> Source: [tgapis/x @ data branch](https://github.com/tgapis/x/tree/data) — `botapi.json`\n")
+          summary.write(f"> Source: [tgapis/x @ data branch](https://github.com/tgapis/x/tree/data) - `botapi.json`\n")
           summary.write(f"> Repo SHA: `{repo_sha}`\n\n")
 
           def section(title, items, emoji):
