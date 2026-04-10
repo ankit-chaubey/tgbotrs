@@ -95,7 +95,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-tgbotrs = ">=0.1.5"
+tgbotrs = "0.2"
 tokio   = { version = "1", features = ["full"] }
 ```
 
@@ -411,7 +411,7 @@ Enable the feature flag:
 
 ```toml
 [dependencies]
-tgbotrs = { version = ">=0.1.5", features = ["webhook"] }
+tgbotrs = { version = "0.2", features = ["webhook"] }
 tokio   = { version = "1", features = ["full"] }
 ```
 

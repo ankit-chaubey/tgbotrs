@@ -188,6 +188,7 @@ mod tests {
     };
     use async_trait::async_trait;
 
+    #[allow(dead_code)]
     struct NoopHandler;
 
     #[async_trait]

@@ -157,6 +157,10 @@ jobs:
           generate_release_notes: true
           draft: false
 
+
+      - name: Copy root README into package for publish
+        run: cp README.md tgbotrs/README.md
+
       - name: Publish to crates.io
         if: github.event.inputs.dry_run != 'true'
         run: |
