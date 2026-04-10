@@ -66,18 +66,14 @@ fn main_menu_inline_keyboard() -> InlineKeyboardMarkup {
 
 #[tokio::main]
 async fn main() {
-    let token = "YOUR_BOT_TOKEN".to_string();
+    let bot = Bot::new("YOUR_BOT_TOKEN")
+        .await
+        .expect("Failed to create bot");
 
-    println!("Starting bot...");
-    let bot = Bot::new(token).await.expect("Failed to create bot");
-    println!(
-        "Running as @{}",
-        bot.me.username.as_deref().unwrap_or("unknown")
-    );
+    println!("Running as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
 
     let handler: UpdateHandler = Box::new(|bot, update| {
         Box::pin(async move {
-            // ── Text messages ──────────────────────────────────────────────
             if let Some(msg) = update.message {
                 let chat_id = msg.chat.id;
 
@@ -105,9 +101,9 @@ async fn main() {
                                 .send_message(
                                     chat_id,
                                     "<b>📖 Help</b>\n\n\
-                                    /start — Show main menu\n\
-                                    /help  — This message\n\
-                                    /menu  — Show menu again\n\n\
+                                    /start - Show main menu\n\
+                                    /help  - This message\n\
+                                    /menu  - Show menu again\n\n\
                                     Or just tap buttons below 👇",
                                     Some(params),
                                 )
@@ -126,12 +122,9 @@ async fn main() {
                         }
                     }
                 }
-
-            // ── Callback queries (button taps) ──────────────────────────
             } else if let Some(cq) = update.callback_query {
                 let cq_id = cq.id.clone();
 
-                // Extract chat_id and message_id from MaybeInaccessibleMessage
                 let (chat_id, message_id) = match &cq.message {
                     Some(m) => match m.as_ref() {
                         MaybeInaccessibleMessage::Message(msg) => (msg.chat.id, msg.message_id),
@@ -142,7 +135,6 @@ async fn main() {
 
                 let data = cq.data.as_deref().unwrap_or("");
 
-                // Acknowledge the callback
                 let _ = bot
                     .answer_callback_query(cq_id, Some(AnswerCallbackQueryParams::new()))
                     .await;
@@ -153,13 +145,13 @@ async fn main() {
                         main_menu_inline_keyboard(),
                     ),
                     "weather" => (
-                        "🌦 <b>Weather</b>\n\nThis is a demo — plug in a real API here!\n\n\
+                        "🌦 <b>Weather</b>\n\nThis is a demo - plug in a real API here!\n\n\
                         Example: <code>20°C, Sunny ☀️</code>"
                             .to_string(),
                         back_keyboard(),
                     ),
                     "news" => (
-                        "📰 <b>Latest News</b>\n\nThis is a demo — plug in a news API here!\n\n\
+                        "📰 <b>Latest News</b>\n\nThis is a demo - plug in a news API here!\n\n\
                         Example: <i>\"Rust 2.0 announced!\"</i>"
                             .to_string(),
                         back_keyboard(),
@@ -189,7 +181,6 @@ async fn main() {
                     _ => return,
                 };
 
-                // Edit the existing message — chat_id & message_id go in params
                 let edit_params = EditMessageTextParams::new()
                     .chat_id(chat_id)
                     .message_id(message_id)
@@ -201,7 +192,6 @@ async fn main() {
         })
     });
 
-    println!("Polling for updates...");
     Poller::new(bot, handler)
         .timeout(30)
         .start()
@@ -209,7 +199,7 @@ async fn main() {
         .expect("Polling failed");
 }
 
-/// Quick seedless pseudo-random u8 using system time
+/// Seedless pseudo-random u8 via system time nanoseconds.
 fn rand_u8() -> u8 {
     use std::time::{SystemTime, UNIX_EPOCH};
     let nanos = SystemTime::now()

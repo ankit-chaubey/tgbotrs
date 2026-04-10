@@ -21,7 +21,7 @@
 
 <br/>
 
-> All **285 types** and **165 methods** of the Telegram Bot API —  
+> All **285 types** and **165 methods** of the Telegram Bot API,
 > strongly typed, fully async, automatically kept in sync with every official release.
 
 <br/>
@@ -48,7 +48,7 @@
 <td width="50%">
 
 **🔄 Auto-Generated & Always Fresh**
-- Spec sourced from [tgapis/x](https://github.com/tgapis/x/tree/data) — auto-updated every 6 hours
+- Spec sourced from [tgapis/x](https://github.com/tgapis/x/tree/data), auto-updated every 6 hours
 - Pipeline dispatches regeneration on every new API version
 - PR auto-opened with full semantic diff on every change
 - Zero manual work to stay up-to-date
@@ -60,7 +60,7 @@
 
 **🦀 Idiomatic Rust**
 - Fully `async/await` with **Tokio**
-- `Into<ChatId>` — accepts `i64` or `"@username"`
+- `Into<ChatId>` accepts `i64` or `"@username"`
 - `Into<String>` on all text params
 - `Option<T>` for all optional fields
 - `Box<T>` to break recursive type cycles
@@ -70,7 +70,7 @@
 
 **🛡️ Fully Type-Safe**
 - `ChatId` — integer or username, no stringly typing
-- `InputFile` — file_id / URL / raw bytes
+- `InputFile` — file_id, URL, or raw bytes
 - `ReplyMarkup` — unified enum for all 4 keyboard types
 - `InputMedia` — typed enum for media groups
 - Compile-time guarantees on every API call
@@ -107,17 +107,12 @@
 Add to your `Cargo.toml`:
 
 ```toml
-[package]
-name = "mybot"
-version = "0.1.0"
-edition = "2021"
-
 [dependencies]
 tgbotrs = ">=0.1.5"
 tokio   = { version = "1", features = ["full"] }
 ```
 
-> **Requirements:** Rust `1.75+` · Tokio async runtime
+> **Requirements:** Rust `1.75+` and Tokio async runtime
 
 ---
 
@@ -131,9 +126,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let bot = Bot::new("YOUR_BOT_TOKEN").await?;
 
     println!("✅ Running as @{}", bot.me.username.as_deref().unwrap_or("unknown"));
-    println!("   ID: {}", bot.me.id);
 
-    // chat_id accepts i64, negative group IDs, or "@username"
     let msg = bot.send_message(123456789i64, "Hello from tgbotrs! 🦀", None).await?;
     println!("📨 Sent message #{}", msg.message_id);
 
@@ -146,8 +139,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ## 📖 Examples
 
 ### 🔁 Echo Bot — Long Polling
-
-The simplest possible bot. Receives every message and echoes it back.
 
 ```rust
 use tgbotrs::{Bot, Poller, UpdateHandler};
@@ -181,8 +172,6 @@ async fn main() {
 
 ### 💬 Formatted Messages
 
-Send HTML or MarkdownV2 formatted messages with optional settings.
-
 ```rust
 use tgbotrs::gen_methods::SendMessageParams;
 
@@ -200,8 +189,6 @@ bot.send_message(
 ---
 
 ### 🎹 Inline Keyboards
-
-Buttons embedded inside messages. Perfect for interactive menus.
 
 ```rust
 use tgbotrs::{ReplyMarkup, gen_methods::SendMessageParams};
@@ -221,13 +208,6 @@ let keyboard = InlineKeyboardMarkup {
                 ..Default::default()
             },
         ],
-        vec![
-            InlineKeyboardButton {
-                text: "🌐 Visit Website".into(),
-                url: Some("https://ankitchaubey.in".into()),
-                ..Default::default()
-            },
-        ],
     ],
 };
 
@@ -242,8 +222,6 @@ bot.send_message(chat_id, "<b>Make a choice:</b>", Some(params)).await?;
 
 ### ⚡ Callback Queries
 
-Handle button taps from inline keyboards. Always acknowledge with `answer_callback_query`.
-
 ```rust
 use tgbotrs::gen_methods::{AnswerCallbackQueryParams, EditMessageTextParams};
 use tgbotrs::types::MaybeInaccessibleMessage;
@@ -253,7 +231,7 @@ let handler: UpdateHandler = Box::new(|bot, update| {
         let Some(cq) = update.callback_query else { return };
         let data = cq.data.as_deref().unwrap_or("");
 
-        // Always acknowledge — dismisses the loading spinner
+        // Always acknowledge - dismisses the loading spinner
         let _ = bot
             .answer_callback_query(
                 cq.id.clone(),
@@ -265,7 +243,6 @@ let handler: UpdateHandler = Box::new(|bot, update| {
             )
             .await;
 
-        // Edit the original message in-place
         if let Some(msg) = &cq.message {
             if let MaybeInaccessibleMessage::Message(m) = msg.as_ref() {
                 let edit_params = EditMessageTextParams::new()
@@ -289,8 +266,6 @@ let handler: UpdateHandler = Box::new(|bot, update| {
 
 ### ⌨️ Reply Keyboards
 
-Custom keyboard shown at the bottom of the screen. Great for persistent menu buttons.
-
 ```rust
 use tgbotrs::{ReplyMarkup, gen_methods::SendMessageParams};
 use tgbotrs::types::{KeyboardButton, ReplyKeyboardMarkup};
@@ -309,10 +284,6 @@ let keyboard = ReplyKeyboardMarkup {
                 ..Default::default()
             },
         ],
-        vec![
-            KeyboardButton { text: "🏠 Home".into(), ..Default::default() },
-            KeyboardButton { text: "⚙️ Settings".into(), ..Default::default() },
-        ],
     ],
     resize_keyboard: Some(true),
     one_time_keyboard: Some(true),
@@ -329,8 +300,6 @@ bot.send_message(chat_id, "Use the keyboard below 👇", Some(params)).await?;
 
 ### 📸 Send Photos & Files
 
-Send files by file\_id, URL, or raw bytes from disk.
-
 ```rust
 use tgbotrs::{InputFile, gen_methods::SendPhotoParams};
 
@@ -338,7 +307,7 @@ let params = SendPhotoParams::new()
     .caption("Look at this! 📷".to_string())
     .parse_mode("HTML".to_string());
 
-// Fastest — already on Telegram's servers
+// Reference a file already on Telegram's servers (fastest)
 bot.send_photo(chat_id, "AgACAgIAAxkBAAI...", Some(params.clone())).await?;
 
 // Let Telegram download from a URL
@@ -352,8 +321,6 @@ bot.send_photo(chat_id, InputFile::memory("photo.jpg", data), Some(params)).awai
 ---
 
 ### 🎬 Media Groups
-
-Send multiple photos or videos as an album in a single message.
 
 ```rust
 use tgbotrs::InputMedia;
@@ -381,8 +348,6 @@ bot.send_media_group(chat_id, media, None).await?;
 
 ### 📊 Polls
 
-Send polls — regular or quiz style.
-
 ```rust
 use tgbotrs::gen_methods::SendPollParams;
 use tgbotrs::types::InputPollOption;
@@ -393,16 +358,12 @@ let options = vec![
     InputPollOption { text: "🐍 Python".into(), ..Default::default() },
 ];
 
-let params = SendPollParams::new().is_anonymous(false);
-
-bot.send_poll(chat_id, "Best language for bots?", options, Some(params)).await?;
+bot.send_poll(chat_id, "Best language for bots?", options, Some(SendPollParams::new().is_anonymous(false))).await?;
 ```
 
 ---
 
 ### 🏪 Inline Queries
-
-Handle `@yourbot query` inline mode from any chat.
 
 ```rust
 use tgbotrs::types::{
@@ -420,11 +381,7 @@ let results = vec![
             ..Default::default()
         }),
         description: Some("Send a greeting".into()),
-        reply_markup: None,
-        url: None,
-        thumbnail_url: None,
-        thumbnail_width: None,
-        thumbnail_height: None,
+        ..Default::default()
     }),
 ];
 
@@ -435,10 +392,7 @@ bot.answer_inline_query(query.id.clone(), results, None).await?;
 
 ### 🛒 Payments & Telegram Stars
 
-Send invoices using Telegram Stars (`XTR`) or payment providers.
-
 ```rust
-use tgbotrs::gen_methods::SendInvoiceParams;
 use tgbotrs::types::LabeledPrice;
 
 let prices = vec![
@@ -450,7 +404,7 @@ bot.send_invoice(
     "Premium Access",
     "30 days of unlimited features",
     "payload_premium_30d",
-    "XTR",   // Telegram Stars
+    "XTR",  // Telegram Stars
     prices,
     None,
 ).await?;
@@ -460,12 +414,9 @@ bot.send_invoice(
 
 ### 🔔 Webhooks
 
-Register a webhook URL so Telegram pushes updates to your server instead of you polling. Read detailed [webhook bot examples!](https://github.com/ankit-chaubey/tgbotrs/tree/main/examples/webhook)
-
 ```rust
 use tgbotrs::gen_methods::SetWebhookParams;
 
-// Register webhook
 let params = SetWebhookParams::new()
     .max_connections(100i64)
     .allowed_updates(vec!["message".into(), "callback_query".into()])
@@ -475,12 +426,6 @@ bot.set_webhook("https://mybot.example.com/webhook", Some(params)).await?;
 ```
 
 **Full webhook server with [axum](https://github.com/tokio-rs/axum):**
-
-```toml
-# Cargo.toml
-[dev-dependencies]
-axum = "0.7"
-```
 
 ```rust
 use axum::{extract::State, http::StatusCode, routing::post, Json, Router};
@@ -513,25 +458,21 @@ async fn handle_update(
     Json(update): Json<Update>,
 ) -> StatusCode {
     let bot = state.bot.clone();
-    // Spawn immediately — return 200 fast or Telegram will retry
+    // Spawn immediately - return 200 fast or Telegram will retry
     tokio::spawn(async move {
         if let Some(msg) = update.message {
-            let _ = bot
-                .send_message(msg.chat.id, "Received via webhook! 🚀", None)
-                .await;
+            let _ = bot.send_message(msg.chat.id, "Received via webhook! 🚀", None).await;
         }
     });
     StatusCode::OK
 }
 ```
 
-> For local testing: `ngrok http 8080` → use the ngrok URL as your webhook
+> For local testing: `ngrok http 8080` and use the ngrok URL as your webhook
 
 ---
 
 ### 🌐 Local Bot API Server
-
-Point the bot at a self-hosted [Telegram Bot API server](https://github.com/tdlib/telegram-bot-api) for higher file size limits and faster speeds.
 
 ```rust
 let bot = Bot::with_api_url("YOUR_TOKEN", "http://localhost:8081").await?;
@@ -540,8 +481,6 @@ let bot = Bot::with_api_url("YOUR_TOKEN", "http://localhost:8081").await?;
 ---
 
 ### 🛠️ Error Handling
-
-Structured errors with helpers for flood-wait and common API errors.
 
 ```rust
 use tgbotrs::BotError;
@@ -553,7 +492,7 @@ match bot.send_message(chat_id, "Hello!", None).await {
         eprintln!("🚫 Bot was blocked by user");
     }
     Err(BotError::Api { code: 400, description, .. }) => {
-        eprintln!("⚠️  Bad request: {}", description);
+        eprintln!("⚠️ Bad request: {}", description);
     }
     Err(e) if e.is_api_error_code(429) => {
         if let Some(secs) = e.flood_wait_seconds() {
@@ -569,7 +508,7 @@ match bot.send_message(chat_id, "Hello!", None).await {
 
 ## 🔧 API Reference
 
-### `Bot` — Core Struct
+### `Bot`
 
 ```rust
 pub struct Bot {
@@ -587,9 +526,9 @@ pub struct Bot {
 
 ---
 
-### `ChatId` — Flexible Chat Identifier
+### `ChatId`
 
-Anywhere `ChatId` is expected, you can pass any of these:
+Anywhere `ChatId` is expected, you can pass:
 
 ```rust
 bot.send_message(123456789i64,     "user by numeric id", None).await?;
@@ -600,47 +539,34 @@ bot.send_message(ChatId::Id(123),  "explicit wrapper",   None).await?;
 
 ---
 
-### `InputFile` — File Sending
+### `InputFile`
 
 ```rust
-// Reference a file already on Telegram's servers (fastest)
-InputFile::file_id("AgACAgIAAxkBAAI...")
-
-// Let Telegram download from a URL
-InputFile::url("https://example.com/image.png")
-
-// Upload raw bytes directly
-let data = tokio::fs::read("photo.jpg").await?;
-InputFile::memory("photo.jpg", data)
+InputFile::file_id("AgACAgIAAxkBAAI...")   // Already on Telegram's servers (fastest)
+InputFile::url("https://example.com/image.png")  // Telegram downloads from URL
+InputFile::memory("photo.jpg", bytes)      // Upload raw bytes directly
 ```
 
 ---
 
-### `ReplyMarkup` — All Keyboard Types
+### `ReplyMarkup`
 
 ```rust
-// Inline keyboard — buttons inside messages
 ReplyMarkup::InlineKeyboard(InlineKeyboardMarkup { .. })
-
-// Reply keyboard — custom keyboard at bottom of screen
 ReplyMarkup::ReplyKeyboard(ReplyKeyboardMarkup { .. })
-
-// Remove the reply keyboard
 ReplyMarkup::ReplyKeyboardRemove(ReplyKeyboardRemove { remove_keyboard: true, .. })
-
-// Force the user to reply to a message
 ReplyMarkup::ForceReply(ForceReply { force_reply: true, .. })
 ```
 
 ---
 
-### `Poller` — Long Polling Dispatcher
+### `Poller`
 
 ```rust
 Poller::new(bot, handler)
-    .timeout(30)           // Seconds to long-poll (0 = short poll)
-    .limit(100)            // Max updates per request (1–100)
-    .allowed_updates(vec![ // Filter which update types to receive
+    .timeout(30)
+    .limit(100)
+    .allowed_updates(vec![
         "message".into(),
         "callback_query".into(),
         "inline_query".into(),
@@ -651,145 +577,102 @@ Poller::new(bot, handler)
 
 ---
 
-### `BotError` — Error Variants
+### `BotError`
 
 ```rust
 pub enum BotError {
-    Http(reqwest::Error),       // Network / HTTP transport error
-    Json(serde_json::Error),    // Serialization error
+    Http(reqwest::Error),
+    Json(serde_json::Error),
     Api {
-        code: i64,                       // Telegram error code (400, 403, 429…)
-        description: String,             // Human-readable message
+        code: i64,
+        description: String,
         retry_after: Option<i64>,        // Flood-wait seconds (code 429)
         migrate_to_chat_id: Option<i64>, // Migration target (code 400)
     },
-    InvalidToken,               // Token missing ':'
-    Other(String),              // Catch-all
+    InvalidToken,
+    Other(String),
 }
 
-// Helper methods
-error.is_api_error_code(429)   // → bool
-error.flood_wait_seconds()     // → Option<i64>
+error.is_api_error_code(429)   // -> bool
+error.flood_wait_seconds()     // -> Option<i64>
 ```
 
 ---
 
-### Builder Pattern for Optional Params
+### Builder Pattern
 
-Every method with optional parameters has a `*Params` struct with a fluent builder API:
+Every method with optional parameters has a `*Params` struct with a fluent builder:
 
 ```rust
-// Pattern: MethodNameParams::new().field(value).field(value)
 let params = SendMessageParams::new()
     .parse_mode("HTML".to_string())
     .disable_notification(true)
     .protect_content(false)
     .message_thread_id(123i64)
-    .reply_parameters(ReplyParameters { message_id: 42, ..Default::default() })
-    .reply_markup(ReplyMarkup::ForceReply(ForceReply {
-        force_reply: true,
-        input_field_placeholder: None,
-        selective: None,
-    }));
+    .reply_parameters(ReplyParameters { message_id: 42, ..Default::default() });
 ```
 
 ---
 
-## 📊 Coverage Statistics
+## 📊 Coverage
 
 | Category | Count | Status |
 |:---|:---:|:---:|
 | **Total Types** | **285** | ✅ 100% |
-| ↳ Struct types | 257 | ✅ |
-| ↳ Union / Enum types | 21 | ✅ |
-| ↳ Marker types | 7 | ✅ |
+| Struct types | 257 | ✅ |
+| Union / Enum types | 21 | ✅ |
+| Marker types | 7 | ✅ |
 | **Total Methods** | **165** | ✅ 100% |
-| ↳ `set*` methods | 30 | ✅ |
-| ↳ `get*` methods | 29 | ✅ |
-| ↳ `send*` methods | 22 | ✅ |
-| ↳ `edit*` methods | 12 | ✅ |
-| ↳ `delete*` methods | 11 | ✅ |
-| ↳ Other methods | 61 | ✅ |
+| `set*` methods | 30 | ✅ |
+| `get*` methods | 29 | ✅ |
+| `send*` methods | 22 | ✅ |
+| `edit*` methods | 12 | ✅ |
+| `delete*` methods | 11 | ✅ |
+| Other methods | 61 | ✅ |
 | **Optional params structs** | 100 | ✅ |
-| **Lines auto-generated** | ~11,258 | — |
+| **Lines auto-generated** | ~11,258 | - |
 
 ---
 
 ## 🔄 Auto-Codegen
 
-tgbotrs is the only Rust Telegram library that **automatically stays in sync** with the official API — no manual updates, no lag.
-
-The spec is sourced from **[tgapis/x](https://github.com/tgapis/x/tree/data)** (`data` branch, `botapi.json`), which scrapes and parses the official Telegram Bot API page and auto-updates every **6 hours**. When a new API version is detected, the `tgapis/x` pipeline dispatches a trigger to this repo — regeneration kicks off immediately, no cron required.
-
-### How It Works
+tgbotrs automatically stays in sync with the official API. The spec is sourced from **[tgapis/x](https://github.com/tgapis/x/tree/data)**, which scrapes the official Telegram Bot API page every 6 hours. When a new version is detected, regeneration kicks off immediately.
 
 ```
-tgapis/x scrapes Telegram Bot API
-every 6 hours → pushes botapi.json
-to the data branch
-        │
-        ▼
-  ┌─────────────────────┐
-  │  tgapis/x pipeline  │── No change? ──► Stop ✅
-  │  detects new version│
-  └──────────┬──────────┘
-             │ Changed!
-             │ repository_dispatch →
-             │ event: x-data-updated
-             ▼
-  ┌─────────────────────┐
-  │  Fetch botapi.json  │  ← raw.githubusercontent.com/tgapis/x/data/botapi.json
-  │  (always latest)    │
-  └──────────┬──────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  Compare with       │── No change? ──► Stop ✅
-  │  pinned api.json    │
-  └──────────┬──────────┘
-             │ Changed!
-             ▼
-  ┌─────────────────────┐
-  │  diff_spec.py       │  ← Semantic diff (added/removed types & methods)
-  └──────────┬──────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  codegen.py         │  ← Pure Python, zero pip dependencies
-  │                     │    Generates gen_types.rs + gen_methods.rs
-  └──────────┬──────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  validate.py        │  ← Verify 100% coverage
-  └──────────┬──────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  Open PR with       │  ← Rich report: summary table, per-field diff
-  │  full report        │    New/removed items, checklist
-  └──────────┬──────────┘
-             │
-             ▼
-  ┌─────────────────────┐
-  │  On PR merge:       │
-  │  • Bump semver      │
-  │  • Git tag          │
-  │  • GitHub Release   │
-  │  • crates.io        │
-  └─────────────────────┘
+tgapis/x detects new API version
+        |
+        v
+  Fetch latest botapi.json
+        |
+        v
+  Compare with pinned api.json --> No change? Stop
+        |
+        v
+  diff_spec.py  (semantic diff)
+        |
+        v
+  codegen.py    (generates gen_types.rs + gen_methods.rs)
+        |
+        v
+  validate.py   (verify 100% coverage)
+        |
+        v
+  Open PR with full diff report
+        |
+        v
+  On merge: bump semver, tag, GitHub Release, crates.io
 ```
 
 ### Regenerate Manually
 
 ```sh
-# 1. Pull latest spec from tgapis/x data branch into repo root
+# Pull latest spec
 curl -sSf https://raw.githubusercontent.com/tgapis/x/data/botapi.json -o api.json
 
-# 2. Run codegen (no pip installs needed)
+# Run codegen (no pip installs needed)
 python3 codegen/codegen.py api.json tgbotrs/src/
 
-# 3. Rebuild
+# Rebuild
 cargo build
 ```
 
@@ -797,33 +680,31 @@ cargo build
 
 | Workflow | Trigger | Purpose |
 |:---|:---|:---|
-| `auto-regenerate.yml` | 📡 Pipeline dispatch from `tgapis/x` + manual | Spec sync → diff → codegen → PR |
-| `ci.yml` | Every push / PR | Build, test, lint on 3 OS × 2 Rust versions (spec fetched live from `tgapis/x`) |
-| `release.yml` | PR merged → main | Semver bump → tag → crates.io publish |
-| `notify.yml` | After regen | GitHub Issue with full change summary |
+| `auto-regenerate.yml` | Pipeline dispatch from `tgapis/x` + manual | Spec sync, diff, codegen, PR |
+| `ci.yml` | Every push / PR | Build, test, lint on 3 OS x 2 Rust versions |
+| `release.yml` | PR merged to main | Semver bump, tag, crates.io publish |
+| `notify.yml` | After regen | GitHub Issue with change summary |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome!
-
 **Report issues:**
-- 🐛 Bug → [open a bug report](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=bug_report.md)
-- 💡 Feature → [open a feature request](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=feature_request.md)
-- 🔒 Security → email [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com) directly
+- 🐛 Bug: [open a bug report](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=bug_report.md)
+- 💡 Feature: [open a feature request](https://github.com/ankit-chaubey/tgbotrs/issues/new?template=feature_request.md)
+- 🔒 Security: email [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com) directly
 
 **Development workflow:**
 
 ```sh
 git clone https://github.com/ankit-chaubey/tgbotrs && cd tgbotrs
 
-cargo build --workspace                    # Build everything
-cargo test --workspace                     # Run tests
-cargo clippy --workspace -- -D warnings    # Lint
-cargo fmt --all                            # Format
+cargo build --workspace
+cargo test --workspace
+cargo clippy --workspace -- -D warnings
+cargo fmt --all
 
-# Pull the latest spec from tgapis/x into repo root and regenerate
+# Regenerate from latest spec
 curl -sSf https://raw.githubusercontent.com/tgapis/x/data/botapi.json -o api.json
 python3 codegen/codegen.py api.json tgbotrs/src/
 
@@ -834,7 +715,7 @@ python3 .github/scripts/validate_generated.py \
 
 **PR guidelines:**
 - One concern per PR
-- Always run `cargo fmt` and `cargo clippy` before submitting
+- Run `cargo fmt` and `cargo clippy` before submitting
 - Never edit `gen_types.rs` or `gen_methods.rs` directly — edit `codegen.py` instead
 - Add examples for any new helpers
 
@@ -846,24 +727,11 @@ See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
 ---
 
-### Developed by [Ankit Chaubey](https://github.com/ankit-chaubey)
+## 👤 Author
 
-**tgbotrs** started as a personal tool.  
-I was constantly running into limitations, missing features, and unsupported things,  
-so in 2024 I decided to build my own solution.
+**tgbotrs** was built and is maintained by [Ankit Chaubey](https://github.com/ankit-chaubey).
 
-After using **tgbotrs** for a long time (2024-26) and refining it along the way,  
-I felt it could be useful for others too — so I made it public.
-
-If this helps you in any way, feel free to ⭐ star it or 🍴 fork it 😁
-
-Developed and maintained by Ankit Chaubey [(@ankit-chaubey)](https://github.com/ankit-chaubey)
-
-<p align="center">
-  <sub>
-    Rust engineer · Open-source builder · Telegram & systems enthusiast
-  </sub>
-</p>
+Started as a personal tool in 2024 to address limitations in existing Rust Telegram libraries, refined over two years, and made public for the community.
 
 <p align="center">
   <a href="https://github.com/ankit-chaubey">
@@ -892,22 +760,19 @@ Developed and maintained by Ankit Chaubey [(@ankit-chaubey)](https://github.com/
   <a href="https://github.com/ankit-chaubey/tgbotrs/stargazers">
     <img src="https://img.shields.io/github/stars/ankit-chaubey/tgbotrs?style=social" />
   </a>
-  <a href="https://github.com/ankit-chaubey/tgbotrs/network/members">
-    <img src="https://img.shields.io/github/forks/ankit-chaubey/tgbotrs?style=social" />
-  </a>
 </p>
 
 ---
 
-## 🙏 Thanks & Credits
+## 🙏 Credits
 
-Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach at the heart of this library was directly inspired by his excellent Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)** and api-spec gen. Seeing how clean and maintainable a fully-generated, strongly-typed Telegram library can be was the spark for building tgbotrs.
+Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach was directly inspired by his Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**.
 
 | | |
 |:---|:---|
 | [**Telegram**](https://core.telegram.org/bots/api) | The Bot API this library implements |
 | [**PaulSonOfLars / gotgbot**](https://github.com/PaulSonOfLars/gotgbot) | Inspiration for the codegen-first approach |
-| [**tgapis/x**](https://github.com/tgapis/x/tree/data) | Machine-readable spec source — auto-updated every 6 hours |
+| [**tgapis/x**](https://github.com/tgapis/x/tree/data) | Machine-readable spec source |
 
 ---
 
@@ -920,3 +785,5 @@ MIT License © 2026 [Ankit Chaubey](https://github.com/ankit-chaubey)
 <div align="center">
 
 *If tgbotrs saved you time, a ⭐ on GitHub means a lot!*
+
+</div>

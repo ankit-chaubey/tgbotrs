@@ -4,7 +4,7 @@ use crate::{Bot, BotError};
 use std::future::Future;
 use std::pin::Pin;
 
-/// A function type that handles incoming updates.
+/// A function that handles an incoming update.
 pub type UpdateHandler =
     Box<dyn Fn(Bot, Update) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
 
@@ -12,16 +12,16 @@ pub type UpdateHandler =
 pub struct Poller {
     bot: Bot,
     handler: UpdateHandler,
-    /// How many seconds to long-poll (0 = short poll).
+    /// Seconds to long-poll per request (0 = short poll).
     timeout: i64,
-    /// Max updates per batch.
+    /// Max updates per `getUpdates` call.
     limit: i64,
     /// Update types to receive (empty = all).
     allowed_updates: Vec<String>,
 }
 
 impl Poller {
-    /// Create a new Poller with the given bot and update handler.
+    /// Create a new Poller with the given bot and handler.
     pub fn new(bot: Bot, handler: UpdateHandler) -> Self {
         Poller {
             bot,
@@ -38,24 +38,23 @@ impl Poller {
         self
     }
 
-    /// Set the max number of updates per getUpdates call.
+    /// Set the max number of updates per `getUpdates` call.
     pub fn limit(mut self, l: i64) -> Self {
         self.limit = l;
         self
     }
 
-    /// Specify which update types to receive.
+    /// Filter which update types to receive.
     pub fn allowed_updates(mut self, updates: Vec<String>) -> Self {
         self.allowed_updates = updates;
         self
     }
 
-    /// Start polling for updates, calling the handler for each one.
-    /// Runs until the process exits or an unrecoverable error occurs.
+    /// Start polling. Runs until the process exits or an unrecoverable error occurs.
     pub async fn start(self) -> Result<(), BotError> {
         let mut offset: i64 = 0;
 
-        log_info("tgbotrs polling started");
+        println!("[tgbotrs] polling started");
 
         loop {
             let mut params = GetUpdatesParams::new()
@@ -84,8 +83,4 @@ impl Poller {
             }
         }
     }
-}
-
-fn log_info(msg: &str) {
-    println!("[tgbotrs] {}", msg);
 }

@@ -1,15 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-/// Represents a chat identifier - either a numeric ID or a username string (@username).
+/// A chat identifier - either a numeric ID or a `@username` string.
 ///
-/// Most Telegram Bot API methods accept either an integer chat ID or a string
-/// like `@channelusername`. This enum handles both transparently.
+/// All methods that accept `ChatId` also accept `i64`, `&str`, and `String` via `Into<ChatId>`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ChatId {
-    /// A numeric chat ID.
     Id(i64),
-    /// A username string like `@channelname` or an invite link.
     Username(String),
 }
 
@@ -18,25 +15,21 @@ impl From<i64> for ChatId {
         ChatId::Id(id)
     }
 }
-
 impl From<i32> for ChatId {
     fn from(id: i32) -> Self {
         ChatId::Id(id as i64)
     }
 }
-
 impl From<u64> for ChatId {
     fn from(id: u64) -> Self {
         ChatId::Id(id as i64)
     }
 }
-
 impl From<String> for ChatId {
     fn from(s: String) -> Self {
         ChatId::Username(s)
     }
 }
-
 impl From<&str> for ChatId {
     fn from(s: &str) -> Self {
         ChatId::Username(s.to_string())

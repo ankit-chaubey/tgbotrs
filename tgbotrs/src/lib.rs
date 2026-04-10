@@ -1,19 +1,9 @@
-//! # tgbotrs 🦀
+//! # tgbotrs
 //!
-//! **A fully-featured, auto-generated Telegram Bot API library for Rust.**
+//! A fully-featured, auto-generated Telegram Bot API library for Rust.
 //!
-//! [![Crates.io](https://img.shields.io/crates/v/tgbotrs)](https://crates.io/crates/tgbotrs)
-//! [![docs.rs](https://img.shields.io/docsrs/tgbotrs)](https://docs.rs/tgbotrs)
-//!
-//! Created and developed by **[Ankit Chaubey](https://github.com/ankit-chaubey)**
-//! - 📧 [ankitchaubey.dev@gmail.com](mailto:ankitchaubey.dev@gmail.com)
-//! - 💬 Telegram: [@ankify](https://t.me/ankify)
-//!
-//! All **285 types** and **165 methods** from [Telegram Bot API 9.4](https://core.telegram.org/bots/api)
-//! are fully implemented and auto-generated from the
-//! [api-spec](https://github.com/ankit-chaubey/api-spec) repository.
-//!
-//! ---
+//! All **285 types** and **165 methods** from [Telegram Bot API](https://core.telegram.org/bots/api)
+//! — strongly typed, fully async, automatically kept in sync with every official release.
 //!
 //! ## Quick Start
 //!
@@ -53,7 +43,7 @@
 //!
 //! ## Webhook Server
 //!
-//! Enable the `webhook` feature for a built-in webhook server:
+//! Enable the `webhook` feature in `Cargo.toml`:
 //!
 //! ```toml
 //! tgbotrs = { version = "0.1", features = ["webhook"] }
@@ -68,7 +58,7 @@
 //!     let handler: UpdateHandler = Box::new(|bot, upd| {
 //!         Box::pin(async move {
 //!             if let Some(msg) = upd.message {
-//!                 let _ = bot.send_message(msg.chat.id, "pong!", None::<tgbotrs::gen_methods::SendMessageParams>).await;
+//!                 let _ = bot.send_message(msg.chat.id, "pong!", None).await;
 //!             }
 //!         })
 //!     });
@@ -78,14 +68,6 @@
 //!         .start("https://yourdomain.com")
 //!         .await.unwrap();
 //! }
-//! ```
-//!
-//! ## Regenerating from the Latest API Spec
-//!
-//! ```sh
-//! curl -o api.json https://raw.githubusercontent.com/ankit-chaubey/api-spec/main/api.json
-//! python3 codegen/codegen.py api.json tgbotrs/src/
-//! cargo build
 //! ```
 //!
 //! ## License
@@ -119,7 +101,7 @@ pub use types::*;
 #[cfg(feature = "webhook")]
 pub use webhook::WebhookServer;
 
-/// The `InputMedia` enum — used for `sendMediaGroup` and related methods.
+/// Typed enum for `sendMediaGroup` and related methods.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum InputMedia {
@@ -156,7 +138,7 @@ impl From<types::InputMediaAnimation> for InputMedia {
     }
 }
 
-/// Default impl for `InlineKeyboardButton` — only `text` is required.
+/// `Default` for `InlineKeyboardButton` — only `text` is required by the API.
 impl Default for crate::gen_types::InlineKeyboardButton {
     fn default() -> Self {
         Self {

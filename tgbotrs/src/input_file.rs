@@ -1,34 +1,27 @@
 use bytes::Bytes;
 use serde::{Deserialize, Serialize, Serializer};
 
-/// Represents a file to be sent.
+/// A file to be sent via the Telegram Bot API.
 ///
-/// Can be one of:
-/// - A `file_id` string (reference an existing file on Telegram's servers)
-/// - A URL string (Telegram downloads the file from the URL)
-/// - Raw bytes with a filename (uploaded directly via multipart)
+/// - `FileId` — reference a file already on Telegram's servers
+/// - `Url` — let Telegram download the file from a URL
+/// - `Memory` — upload raw bytes directly via multipart
 #[derive(Debug, Clone)]
 pub enum InputFile {
-    /// A file already uploaded to Telegram, referenced by `file_id`.
     FileId(String),
-    /// A URL that Telegram will download.
     Url(String),
-    /// Raw bytes with a filename to upload via multipart.
     Memory { filename: String, data: Bytes },
 }
 
 impl InputFile {
-    /// Create an InputFile from a file_id string.
     pub fn file_id(id: impl Into<String>) -> Self {
         InputFile::FileId(id.into())
     }
 
-    /// Create an InputFile from a URL.
     pub fn url(url: impl Into<String>) -> Self {
         InputFile::Url(url.into())
     }
 
-    /// Create an InputFile from raw bytes.
     pub fn memory(filename: impl Into<String>, data: impl Into<Bytes>) -> Self {
         InputFile::Memory {
             filename: filename.into(),
@@ -37,8 +30,8 @@ impl InputFile {
     }
 }
 
-// InputFile serializes to its string representation (file_id or URL).
 // Memory files are handled separately when building multipart requests.
+// FileId and Url serialize to their string value.
 impl Serialize for InputFile {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         match self {
@@ -73,11 +66,7 @@ impl From<&str> for InputFile {
     }
 }
 
-// ─────────────────────────────────────────────────
-// InputFileOrString
-// ─────────────────────────────────────────────────
-
-/// A field that can be either an InputFile or a String (file_id / URL).
+/// A field that accepts either an [`InputFile`] or a plain string (file_id / URL).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InputFileOrString {

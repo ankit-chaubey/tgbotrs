@@ -1,10 +1,10 @@
-//! color_buttons_bot — Bot API 9.4 button styles + inline query
+//! color_buttons_bot - demonstrates Bot API 9.4 button styles and inline queries.
 //!
-//! Button styles (new in 9.4):
-//!   "primary" → 🔵 blue   "success" → 🟢 green   "danger" → 🔴 red
+//! Button styles:
+//!   "primary" -> blue   "success" -> green   "danger" -> red
 //!
-//! Commands:  /start  /reply  /all
-//! Inline:    @yourbot <query>
+//! Commands: /start  /reply  /all
+//! Inline:   @yourbot <query>
 //!
 //! Run:
 //!   BOT_TOKEN=your_token cargo run --example color_buttons_bot
@@ -18,8 +18,6 @@ use tgbotrs::{
     },
     Bot, Poller, ReplyMarkup, UpdateHandler,
 };
-
-// ── Button helpers ────────────────────────────────────────────────────────────
 
 fn ibtn(text: &str, data: &str, style: Option<&str>) -> InlineKeyboardButton {
     InlineKeyboardButton {
@@ -52,8 +50,6 @@ fn rbtn(text: &str, style: Option<&str>) -> KeyboardButton {
         web_app: None,
     }
 }
-
-// ── Keyboards ─────────────────────────────────────────────────────────────────
 
 fn colored_inline_keyboard() -> InlineKeyboardMarkup {
     InlineKeyboardMarkup {
@@ -95,14 +91,12 @@ fn colored_reply_keyboard() -> ReplyKeyboardMarkup {
     }
 }
 
-// ── Inline query results ──────────────────────────────────────────────────────
-
 fn inline_results(query: &str) -> Vec<InlineQueryResult> {
     let items: &[(&str, &str, &str, &str)] = &[
-        ("1", "🔵 Primary", "primary", "Blue — use for main actions"),
-        ("2", "🟢 Success", "success", "Green — use for confirmations"),
-        ("3", "🔴 Danger",  "danger",  "Red — use for destructive actions"),
-        ("4", "⬜ Default", "default", "No style — app default colour"),
+        ("1", "🔵 Primary", "primary", "Blue - use for main actions"),
+        ("2", "🟢 Success", "success", "Green - use for confirmations"),
+        ("3", "🔴 Danger",  "danger",  "Red - use for destructive actions"),
+        ("4", "⬜ Default", "default", "No style - app default colour"),
     ];
 
     items
@@ -145,8 +139,6 @@ fn inline_results(query: &str) -> Vec<InlineQueryResult> {
         .collect()
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
 #[tokio::main]
 async fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Set BOT_TOKEN env var");
@@ -156,11 +148,9 @@ async fn main() {
         "🤖 Running as @{}",
         bot.me.username.as_deref().unwrap_or("unknown")
     );
-    println!("Commands: /start  /reply  /all");
 
     let handler: UpdateHandler = Box::new(|bot, update| {
         Box::pin(async move {
-            // ── Commands & messages ───────────────────────────────────────
             if let Some(msg) = update.message {
                 let chat_id = msg.chat.id;
                 let text = msg.text.as_deref().unwrap_or("");
@@ -175,11 +165,11 @@ async fn main() {
                         let _ = bot
                             .send_message(
                                 chat_id,
-                                "<b>🎨 Button Styles</b> — Bot API 9.4\n\n\
-                                <code>primary</code> → 🔵 blue\n\
-                                <code>success</code> → 🟢 green\n\
-                                <code>danger</code>  → 🔴 red\n\
-                                (none)          → ⬜ default",
+                                "<b>🎨 Button Styles</b> - Bot API 9.4\n\n\
+                                <code>primary</code> -> 🔵 blue\n\
+                                <code>success</code> -> 🟢 green\n\
+                                <code>danger</code>  -> 🔴 red\n\
+                                (none)          -> ⬜ default",
                                 Some(params),
                             )
                             .await;
@@ -193,7 +183,7 @@ async fn main() {
                         let _ = bot
                             .send_message(
                                 chat_id,
-                                "⌨️ Colored reply keyboard — tap any button:",
+                                "⌨️ Colored reply keyboard - tap any button:",
                                 Some(params),
                             )
                             .await;
@@ -241,17 +231,16 @@ async fn main() {
                 }
             }
 
-            // ── Callback queries ──────────────────────────────────────────
             if let Some(cq) = update.callback_query {
                 let data = cq.data.as_deref().unwrap_or("");
                 let label = if data.contains("primary") {
-                    "🔵 primary — blue"
+                    "🔵 primary - blue"
                 } else if data.contains("success") || data.contains("confirm") {
-                    "🟢 success — green"
+                    "🟢 success - green"
                 } else if data.contains("danger") || data.contains("cancel") || data.contains("delete") {
-                    "🔴 danger — red"
+                    "🔴 danger - red"
                 } else {
-                    "⬜ default — no style"
+                    "⬜ default - no style"
                 };
 
                 let _ = bot
@@ -266,7 +255,6 @@ async fn main() {
                     .await;
             }
 
-            // ── Inline queries ────────────────────────────────────────────
             if let Some(iq) = update.inline_query {
                 let results = inline_results(&iq.query);
                 let _ = bot

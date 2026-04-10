@@ -1,7 +1,7 @@
 use crate::types::{ForceReply, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove};
 use serde::{Deserialize, Serialize};
 
-/// The reply_markup field can be one of four types.
+/// Unified `reply_markup` type covering all four keyboard variants.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum ReplyMarkup {

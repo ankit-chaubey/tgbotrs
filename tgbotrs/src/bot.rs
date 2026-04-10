@@ -38,13 +38,11 @@ const DEFAULT_API_URL: &str = "https://api.telegram.org";
 /// ```
 #[derive(Debug, Clone)]
 pub struct Bot {
-    /// The bot's token.
     pub token: String,
-    /// Info about the bot, retrieved on creation via getMe.
+    /// Bot info populated via `getMe` on creation.
     pub me: User,
-    /// The API base URL (default: https://api.telegram.org).
+    /// API base URL (default: `https://api.telegram.org`).
     pub api_url: String,
-    /// The underlying HTTP client.
     pub(crate) client: Client,
 }
 
@@ -63,13 +61,34 @@ struct ResponseParameters {
     retry_after: Option<i64>,
 }
 
+fn empty_user() -> User {
+    User {
+        id: 0,
+        is_bot: true,
+        first_name: String::new(),
+        last_name: None,
+        username: None,
+        language_code: None,
+        is_premium: None,
+        added_to_attachment_menu: None,
+        can_join_groups: None,
+        can_read_all_group_messages: None,
+        supports_inline_queries: None,
+        can_connect_to_business: None,
+        has_main_web_app: None,
+        has_topics_enabled: None,
+        allows_users_to_create_topics: None,
+        can_manage_bots: None,
+    }
+}
+
 impl Bot {
-    /// Create a new Bot and verify the token by calling getMe.
+    /// Create a new Bot and verify the token by calling `getMe`.
     pub async fn new(token: impl Into<String>) -> Result<Self, BotError> {
         Self::with_api_url(token, DEFAULT_API_URL).await
     }
 
-    /// Create a Bot with a custom API server URL (e.g., for local Bot API server).
+    /// Create a Bot pointing at a custom API server (e.g. local Bot API).
     pub async fn with_api_url(
         token: impl Into<String>,
         api_url: impl Into<String>,
@@ -77,7 +96,6 @@ impl Bot {
         let token = token.into();
         let api_url = api_url.into();
 
-        // Validate token format
         if !token.contains(':') {
             return Err(BotError::InvalidToken);
         }
@@ -89,68 +107,32 @@ impl Bot {
 
         let mut bot = Bot {
             token,
-            me: User {
-                id: 0,
-                is_bot: true,
-                first_name: String::new(),
-                last_name: None,
-                username: None,
-                language_code: None,
-                is_premium: None,
-                added_to_attachment_menu: None,
-                can_join_groups: None,
-                can_read_all_group_messages: None,
-                supports_inline_queries: None,
-                can_connect_to_business: None,
-                has_main_web_app: None,
-                has_topics_enabled: None,
-                allows_users_to_create_topics: None,
-                can_manage_bots: None,
-            },
+            me: empty_user(),
             api_url,
             client,
         };
 
-        // Call getMe to verify and populate bot info
-        let me: User = bot.call_api("getMe", &serde_json::json!({})).await?;
-        bot.me = me;
+        bot.me = bot.call_api("getMe", &serde_json::json!({})).await?;
 
         Ok(bot)
     }
 
-    /// Create a Bot without verifying the token (skips getMe call).
+    /// Create a Bot without calling `getMe` (skips token verification).
     pub fn new_unverified(token: impl Into<String>) -> Self {
         Bot {
             token: token.into(),
-            me: User {
-                id: 0,
-                is_bot: true,
-                first_name: String::new(),
-                last_name: None,
-                username: None,
-                language_code: None,
-                is_premium: None,
-                added_to_attachment_menu: None,
-                can_join_groups: None,
-                can_read_all_group_messages: None,
-                supports_inline_queries: None,
-                can_connect_to_business: None,
-                has_main_web_app: None,
-                has_topics_enabled: None,
-                allows_users_to_create_topics: None,
-                can_manage_bots: None,
-            },
+            me: empty_user(),
             api_url: DEFAULT_API_URL.to_string(),
             client: Client::new(),
         }
     }
 
-    /// Get the full API endpoint URL for a method.
+    /// Build the full endpoint URL for a method name.
     pub fn endpoint(&self, method: &str) -> String {
         format!("{}/bot{}/{}", self.api_url, self.token, method)
     }
 
-    /// Make a raw API call with a JSON body.
+    /// Make a JSON API call and deserialize the result.
     pub async fn call_api<T>(&self, method: &str, body: &serde_json::Value) -> Result<T, BotError>
     where
         T: for<'de> Deserialize<'de>,
@@ -165,31 +147,14 @@ impl Bot {
             .await
             .map_err(BotError::Http)?;
 
-        let tg_response: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
+        let tg: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
 
-        if tg_response.ok {
-            tg_response
-                .result
-                .ok_or_else(|| BotError::Other("ok=true but result is null".into()))
-        } else {
-            Err(BotError::Api {
-                code: tg_response.error_code.unwrap_or(0),
-                description: tg_response
-                    .description
-                    .unwrap_or_else(|| "Unknown error".into()),
-                retry_after: tg_response.parameters.as_ref().and_then(|p| p.retry_after),
-                migrate_to_chat_id: tg_response
-                    .parameters
-                    .as_ref()
-                    .and_then(|p| p.migrate_to_chat_id),
-            })
-        }
+        self.unwrap_response(tg)
     }
 
-    /// Smart API call: uses multipart when a Memory file is present, JSON otherwise.
-    /// `body` should contain all params EXCEPT the file field.
-    /// `file_field` is the field name (e.g. "photo", "audio").
-    /// `file` is the InputFileOrString to send.
+    /// Make an API call using multipart when a `Memory` file is present, JSON otherwise.
+    ///
+    /// `body` holds all params except the file field.
     pub async fn call_api_with_file<T>(
         &self,
         method: &str,
@@ -203,7 +168,6 @@ impl Bot {
         match file {
             InputFileOrString::File(InputFile::Memory { filename, data }) => {
                 let mut form = reqwest::multipart::Form::new();
-                // Serialize all non-file params as text parts
                 for (k, v) in &body {
                     if !v.is_null() {
                         let s = match v {
@@ -222,7 +186,7 @@ impl Bot {
                 self.call_api_multipart(method, form).await
             }
             other => {
-                // file_id, URL, or plain String — stay with JSON
+                // file_id or URL - send as JSON
                 let mut req = body;
                 req.insert(
                     file_field.into(),
@@ -233,7 +197,7 @@ impl Bot {
         }
     }
 
-    /// Make a raw API call using multipart/form-data (for file uploads).
+    /// Make a multipart/form-data API call (for file uploads).
     pub async fn call_api_multipart<T>(
         &self,
         method: &str,
@@ -252,23 +216,21 @@ impl Bot {
             .await
             .map_err(BotError::Http)?;
 
-        let tg_response: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
+        let tg: TelegramResponse<T> = response.json().await.map_err(BotError::Http)?;
 
-        if tg_response.ok {
-            tg_response
-                .result
+        self.unwrap_response(tg)
+    }
+
+    fn unwrap_response<T>(&self, tg: TelegramResponse<T>) -> Result<T, BotError> {
+        if tg.ok {
+            tg.result
                 .ok_or_else(|| BotError::Other("ok=true but result is null".into()))
         } else {
             Err(BotError::Api {
-                code: tg_response.error_code.unwrap_or(0),
-                description: tg_response
-                    .description
-                    .unwrap_or_else(|| "Unknown error".into()),
-                retry_after: tg_response.parameters.as_ref().and_then(|p| p.retry_after),
-                migrate_to_chat_id: tg_response
-                    .parameters
-                    .as_ref()
-                    .and_then(|p| p.migrate_to_chat_id),
+                code: tg.error_code.unwrap_or(0),
+                description: tg.description.unwrap_or_else(|| "Unknown error".into()),
+                retry_after: tg.parameters.as_ref().and_then(|p| p.retry_after),
+                migrate_to_chat_id: tg.parameters.as_ref().and_then(|p| p.migrate_to_chat_id),
             })
         }
     }
