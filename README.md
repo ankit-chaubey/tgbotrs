@@ -13,15 +13,13 @@
 
 [![Bot API](https://img.shields.io/badge/Telegram%20Bot%20API-9.4-0088cc?style=flat-square&logo=telegram&logoColor=white)](https://core.telegram.org/bots/api)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-f74c00?style=flat-square&logo=rust)](https://www.rust-lang.org)
-[![Types](https://img.shields.io/badge/Types-285-7c3aed?style=flat-square)](https://docs.rs/tgbotrs)
-[![Methods](https://img.shields.io/badge/Methods-165-16a34a?style=flat-square)](https://docs.rs/tgbotrs)
 [![Coverage](https://img.shields.io/badge/API%20Coverage-100%25-22c55e?style=flat-square)](https://github.com/ankit-chaubey/tgbotrs/actions)
 [![Downloads](https://img.shields.io/crates/d/tgbotrs?style=flat-square&color=f97316&label=Downloads)](https://crates.io/crates/tgbotrs)
 [![License](https://img.shields.io/badge/License-MIT-eab308?style=flat-square)](LICENSE)
 
 <br/>
 
-> All **285 types** and **165 methods** of the Telegram Bot API,
+> All **types** and **methods** of the Telegram Bot API,
 > strongly typed, fully async, automatically kept in sync with every official release.
 
 <br/>
@@ -34,72 +32,52 @@
 
 ## ✨ Features
 
-<table>
-<tr>
-<td width="50%">
+### 🤖 Complete API Coverage
+- All Telegram Bot API **types and methods**
+- Fully **async implementations**
+- All **union types represented as Rust enums**
+- Builder structs for **optional parameters**
 
-**🤖 Complete API Coverage**
-- All **285 types** — structs, enums, markers
-- All **165 methods** — fully async
-- All **21 union types** as Rust enums
-- **100 optional params structs** with builder pattern
+---
 
-</td>
-<td width="50%">
+### 🔄 Auto Generated
+- Code generated from **official API specification**
+- **Automatic updates** when Telegram releases new API versions
+- CI pipeline regenerates and opens **update pull requests**
+- Always stays **in sync with Telegram**
 
-**🔄 Auto-Generated & Always Fresh**
-- Spec sourced from [tgapis/x](https://github.com/tgapis/x/tree/data), auto-updated every 6 hours
-- Pipeline dispatches regeneration on every new API version
-- PR auto-opened with full semantic diff on every change
-- Zero manual work to stay up-to-date
+---
 
-</td>
-</tr>
-<tr>
-<td>
+### 🦀 Idiomatic Rust
+- Built with **async/await using Tokio**
+- Accepts `i64` or `@username` for **ChatId**
+- Uses `Option<T>` for optional fields
+- Recursive types handled safely with `Box<T>`
 
-**🦀 Idiomatic Rust**
-- Fully `async/await` with **Tokio**
-- `Into<ChatId>` accepts `i64` or `"@username"`
-- `Into<String>` on all text params
-- `Option<T>` for all optional fields
-- `Box<T>` to break recursive type cycles
+---
 
-</td>
-<td>
+### 🛡️ Type Safety
+- Strong **compile-time guarantees**
+- Typed `InputFile` for file uploads
+- Unified `ReplyMarkup` enum for keyboards
+- Typed `InputMedia` enum for media groups
 
-**🛡️ Fully Type-Safe**
-- `ChatId` — integer or username, no stringly typing
-- `InputFile` — file_id, URL, or raw bytes
-- `ReplyMarkup` — unified enum for all 4 keyboard types
-- `InputMedia` — typed enum for media groups
-- Compile-time guarantees on every API call
+---
 
-</td>
-</tr>
-<tr>
-<td>
+### 📡 Flexible HTTP Layer
+- Uses **reqwest** HTTP backend
+- Supports **custom Bot API servers**
+- Built-in **multipart file uploads**
+- Configurable **timeouts**
 
-**📡 Flexible HTTP Layer**
-- Custom API server support (local Bot API)
-- Multipart file uploads built-in
-- Configurable timeout
-- Flood-wait aware error handling
-- `reqwest` backend
+---
 
-</td>
-<td>
-
-**📬 Built-in Polling**
-- Long-polling dispatcher included
-- Spawns a Tokio task per update
-- Configurable timeout, limit, allowed\_updates
-- Clean concurrent update processing
-
-</td>
-</tr>
-</table>
-
+### 📬 Built-in Polling
+- Long polling **dispatcher included**
+- Spawns **Tokio task per update**
+- Configurable **limit and timeout**
+- Clean **concurrent update handling**
+  
 ---
 
 ## 📦 Installation
@@ -138,7 +116,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## 📖 Examples
 
-### 🔁 Echo Bot — Long Polling
+### 🔁 Echo Bot Long Polling
 
 ```rust
 use tgbotrs::{Bot, Poller, UpdateHandler};
@@ -614,54 +592,9 @@ let params = SendMessageParams::new()
 
 ---
 
-## 📊 Coverage
-
-| Category | Count | Status |
-|:---|:---:|:---:|
-| **Total Types** | **285** | ✅ 100% |
-| Struct types | 257 | ✅ |
-| Union / Enum types | 21 | ✅ |
-| Marker types | 7 | ✅ |
-| **Total Methods** | **165** | ✅ 100% |
-| `set*` methods | 30 | ✅ |
-| `get*` methods | 29 | ✅ |
-| `send*` methods | 22 | ✅ |
-| `edit*` methods | 12 | ✅ |
-| `delete*` methods | 11 | ✅ |
-| Other methods | 61 | ✅ |
-| **Optional params structs** | 100 | ✅ |
-| **Lines auto-generated** | ~11,258 | - |
-
----
-
 ## 🔄 Auto-Codegen
 
 tgbotrs automatically stays in sync with the official API. The spec is sourced from **[tgapis/x](https://github.com/tgapis/x/tree/data)**, which scrapes the official Telegram Bot API page every 6 hours. When a new version is detected, regeneration kicks off immediately.
-
-```
-tgapis/x detects new API version
-        |
-        v
-  Fetch latest botapi.json
-        |
-        v
-  Compare with pinned api.json --> No change? Stop
-        |
-        v
-  diff_spec.py  (semantic diff)
-        |
-        v
-  codegen.py    (generates gen_types.rs + gen_methods.rs)
-        |
-        v
-  validate.py   (verify 100% coverage)
-        |
-        v
-  Open PR with full diff report
-        |
-        v
-  On merge: bump semver, tag, GitHub Release, crates.io
-```
 
 ### Regenerate Manually
 
@@ -675,15 +608,6 @@ python3 codegen/codegen.py api.json tgbotrs/src/
 # Rebuild
 cargo build
 ```
-
-### GitHub Actions Workflows
-
-| Workflow | Trigger | Purpose |
-|:---|:---|:---|
-| `auto-regenerate.yml` | Pipeline dispatch from `tgapis/x` + manual | Spec sync, diff, codegen, PR |
-| `ci.yml` | Every push / PR | Build, test, lint on 3 OS x 2 Rust versions |
-| `release.yml` | PR merged to main | Semver bump, tag, crates.io publish |
-| `notify.yml` | After regen | GitHub Issue with change summary |
 
 ---
 
@@ -766,7 +690,7 @@ Started as a personal tool in 2024 to address limitations in existing Rust Teleg
 
 ## 🙏 Credits
 
-Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** — the auto-generation approach was directly inspired by his Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**.
+Special thanks to **[Paul / PaulSonOfLars](https://github.com/PaulSonOfLars)** for the auto-generation approach was directly inspired by his Go library **[gotgbot](https://github.com/PaulSonOfLars/gotgbot)**.
 
 | | |
 |:---|:---|
