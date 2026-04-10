@@ -9,11 +9,13 @@
 //! };
 //! use tgbotrs::{CommandHandler, MessageHandler};
 //!
+//! fn any_message(_: &tgbotrs::Message) -> bool { true }
+//!
 //! let handler = ConversationHandler::new(
 //!     vec![Box::new(CommandHandler::new("start", |bot, ctx| Box::pin(async move { Ok(()) })))],
 //!     std::collections::HashMap::from([
 //!         ("ask_name".to_string(), vec![
-//!             Box::new(MessageHandler::new("ask_name_handler", |_| true, |bot, ctx| Box::pin(async move { Ok(()) }))) as Box<dyn tgbotrs::Handler>,
+//!             Box::new(MessageHandler::new("ask_name_handler", any_message, |bot, ctx| Box::pin(async move { Ok(()) }))) as Box<dyn tgbotrs::Handler>,
 //!         ]),
 //!     ]),
 //!     ConversationOpts::default(),
