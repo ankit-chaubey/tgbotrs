@@ -26,6 +26,9 @@ mod serde_roundtrip {
             supports_inline_queries: None,
             can_connect_to_business: None,
             has_main_web_app: None,
+            has_topics_enabled: None,
+            allows_users_to_create_topics: None,
+            can_manage_bots: None,
         };
         rt(&u);
     }
@@ -40,6 +43,7 @@ mod serde_roundtrip {
             first_name: None,
             last_name: None,
             is_forum: None,
+            is_direct_messages: None,
         };
         rt(&c);
     }
@@ -68,6 +72,8 @@ mod serde_roundtrip {
             user: None,
             language: None,
             custom_emoji_id: None,
+            unix_time: None,
+            date_time_format: None,
         };
         rt(&e);
     }
@@ -154,7 +160,7 @@ mod dispatcher_tests {
             5,
         );
 
-        let fake_bot = unsafe { std::mem::zeroed::<Bot>() };
+        let fake_bot = Bot::new_unverified("123456789:fake_token_for_testing").unwrap();
         dp.process_update(&fake_bot, make_update(1)).await;
 
         // Groups 0, 5, 10 - first match in each group fires
@@ -187,7 +193,7 @@ mod dispatcher_tests {
         let removed = dp.remove_handler("a", 0);
         assert!(removed);
 
-        let fake_bot = unsafe { std::mem::zeroed::<Bot>() };
+        let fake_bot = Bot::new_unverified("123456789:fake_token_for_testing").unwrap();
         dp.process_update(&fake_bot, make_update(2)).await;
 
         let got = order.lock().unwrap().clone();
@@ -256,7 +262,7 @@ mod conversation_tests {
         let s = InMemoryStorage::new();
         assert!(s.get("k1").is_err());
         s.set("k1", "state_a");
-        assert_eq!(s.get("k1").unwrap(), "state_a");
+        assert_eq!(s.get("k1").unwrap(), "state_a".into());
         s.delete("k1");
         assert!(s.get("k1").is_err());
     }
