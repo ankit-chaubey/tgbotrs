@@ -68,7 +68,7 @@
 //! Enable the `webhook` feature in `Cargo.toml`:
 //!
 //! ```toml
-//! tgbotrs = { version = "0.3", features = ["webhook"] }
+//! tgbotrs = { version = "0.2", features = ["webhook"] }
 //! ```
 //!
 //! ```rust,ignore

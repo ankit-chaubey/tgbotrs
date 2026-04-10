@@ -250,15 +250,11 @@ mod filter_tests {
 
 #[cfg(test)]
 mod conversation_tests {
-    use crate::framework::handlers::conversation::{
-        ConversationHandler, ConversationOpts, EndConversation, InMemoryStorage, KeyStrategy,
-        NextState,
-    };
-    use std::collections::HashMap;
+    use crate::framework::handlers::conversation::{EndConversation, InMemoryStorage, NextState};
 
     #[test]
     fn in_memory_storage_set_get_delete() {
-        use crate::framework::handlers::conversation::{ConversationStorage, KeyNotFound};
+        use crate::framework::handlers::conversation::ConversationStorage;
         let s = InMemoryStorage::new();
         assert!(s.get("k1").is_err());
         s.set("k1", "state_a");
