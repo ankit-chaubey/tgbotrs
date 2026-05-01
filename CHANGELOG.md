@@ -1,5 +1,21 @@
 # Changelog
 
+All notable changes to **tgbotrs** are documented here.
+
+Format: [Semantic Versioning](https://semver.org/)  
+Auto-generated API updates use the [Telegram Bot API spec](https://github.com/PaulSonOfLars/telegram-bot-api-spec).
+
+---
+
+## [0.2.1] - 2026-05-01
+
+### Telegram Bot API: `Bot API 9.6`
+
+Auto-generated from latest Telegram Bot API spec.
+
+---
+# Changelog
+
 All notable changes to tgbotrs are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/).

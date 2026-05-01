@@ -1,6 +1,6 @@
 [package]
 name = "tgbotrs"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 workspace = ".."
 description = "A fully-featured, auto-generated Telegram Bot API library for Rust. All 285 types and 165 methods - strongly typed, fully async."
