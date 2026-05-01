@@ -289,6 +289,12 @@ def generate_methods(spec):
     for method_name in sorted(methods_map.keys()):
         method = methods_map[method_name]
         fn_name = method_fn_name(method_name)
+        # Methods in FLUENT_METHODS get a _with_params suffix on the raw impl;
+        # a fluent IntoFuture builder is emitted after the loop under the bare name.
+        FLUENT_METHODS = {'setWebhook'}
+        is_fluent = method_name in FLUENT_METHODS
+        if is_fluent:
+            fn_name = fn_name + '_with_params'
         params_name = method_params_struct(method_name)
         docs = method.get('description', [])
         href = method.get('href', '')
@@ -411,6 +417,66 @@ def generate_methods(spec):
         lines.append(f'    }}')
         lines.append(f'}}')
         lines.append(f'')
+
+        # Immediately after the raw impl, emit the fluent builder for FLUENT_METHODS
+        if is_fluent:
+            bare_fn = method_fn_name(method_name)   # e.g. set_webhook (without _with_params)
+            struct   = method_params_struct(method_name).replace('Params', 'Request')  # SetWebhookRequest
+            fluent_opt_fields = [
+                ('certificate',          'InputFile',    'impl Into<InputFile>'),
+                ('ip_address',           'String',       'impl Into<String>'),
+                ('max_connections',      'i64',          'i64'),
+                ('allowed_updates',      'Vec<String>',  'Vec<String>'),
+                ('drop_pending_updates', 'bool',         'bool'),
+                ('secret_token',         'String',       'impl Into<String>'),
+            ]
+            ret = return_rust_type(method.get('returns', []), types_map)
+
+            lines.append(f'/// Fluent builder for [`Bot::{bare_fn}`]. Implements [`std::future::IntoFuture`].')
+            lines.append(f'///')
+            lines.append(f'/// See: {method.get("href", "")}')
+            lines.append(f'pub struct {struct}<\'bot> {{')
+            lines.append(f'    bot: &\'bot Bot,')
+            lines.append(f'    url: String,')
+            lines.append(f'    params: {params_name},')
+            lines.append(f'}}')
+            lines.append(f'')
+            lines.append(f'impl<\'bot> {struct}<\'bot> {{')
+            lines.append(f'    pub(crate) fn new(bot: &\'bot Bot, url: impl Into<String>) -> Self {{')
+            lines.append(f'        Self {{')
+            lines.append(f'            bot,')
+            lines.append(f'            url: url.into(),')
+            lines.append(f'            params: Default::default(),')
+            lines.append(f'        }}')
+            lines.append(f'    }}')
+            lines.append(f'')
+            for fname, ftype, arg_type in fluent_opt_fields:
+                if 'Into' in arg_type:
+                    lines.append(f'    pub fn {fname}(mut self, v: {arg_type}) -> Self {{ self.params.{fname} = Some(v.into()); self }}')
+                else:
+                    lines.append(f'    pub fn {fname}(mut self, v: {ftype}) -> Self {{ self.params.{fname} = Some(v); self }}')
+            lines.append(f'}}')
+            lines.append(f'')
+            lines.append(f'impl<\'bot> std::future::IntoFuture for {struct}<\'bot> {{')
+            lines.append(f'    type Output = Result<{ret}, BotError>;')
+            lines.append(f'    type IntoFuture = std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + Send + \'bot>>;')
+            lines.append(f'')
+            lines.append(f'    fn into_future(self) -> Self::IntoFuture {{')
+            lines.append(f'        Box::pin(async move {{')
+            lines.append(f'            self.bot.{fn_name}(self.url, Some(self.params)).await')
+            lines.append(f'        }})')
+            lines.append(f'    }}')
+            lines.append(f'}}')
+            lines.append(f'')
+            lines.append(f'impl Bot {{')
+            lines.append(f'    /// Use this method to specify a URL and receive incoming updates via an outgoing webhook.')
+            lines.append(f'    /// Returns a fluent [`{struct}`] builder that resolves to `Result<{ret}, BotError>`.')
+            lines.append(f'    /// See: {method.get("href", "")}')
+            lines.append(f'    pub fn {bare_fn}(&self, url: impl Into<String>) -> {struct}<\'_> {{')
+            lines.append(f'        {struct}::new(self, url)')
+            lines.append(f'    }}')
+            lines.append(f'}}')
+            lines.append(f'')
 
     return '\n'.join(lines)
 
