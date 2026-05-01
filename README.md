@@ -30,6 +30,11 @@
 
 ---
 
+> [!NOTE]
+> This project is no longer maintained or supported.
+> 
+> Instead, please use [ferobot](https://github.com/ankit-chaubey/ferobot), which will receive future development and updates.
+
 ## ✨ Features
 
 ### 🤖 Complete API Coverage
