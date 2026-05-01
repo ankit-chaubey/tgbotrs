@@ -174,7 +174,7 @@ impl Updater {
         if let Some(s) = secret {
             server = server.secret_token(s);
         }
-        server.start(webhook_url).await
+        server.start(&webhook_url.into()).await
     }
 }
 

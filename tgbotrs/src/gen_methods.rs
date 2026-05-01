@@ -8773,7 +8773,7 @@ impl Bot {
     }
 }
 
-/// Optional parameters for [`Bot::set_webhook`]
+/// Optional parameters for [`Bot::set_webhook_with_params`]
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SetWebhookParams {
     /// Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
@@ -8830,7 +8830,7 @@ impl Bot {
     /// Use this method to specify a URL and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL, containing a JSON-serialized Update. In case of an unsuccessful request (a request with response HTTP status code different from 2XY), we will repeat the request and give up after a reasonable amount of attempts. Returns True on success.
     /// If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter secret_token. If specified, the request will contain a header "X-Telegram-Bot-Api-Secret-Token" with the secret token as content.
     /// See: https://core.telegram.org/bots/api#setwebhook
-    pub async fn set_webhook(
+    pub async fn set_webhook_with_params(
         &self,
         url: impl Into<String>,
         params: Option<SetWebhookParams>,
@@ -8852,6 +8852,73 @@ impl Bot {
         }
         self.call_api("setWebhook", serde_json::Value::Object(req))
             .await
+    }
+}
+
+/// Fluent builder for [`Bot::set_webhook`]. Implements [`std::future::IntoFuture`].
+///
+/// See: https://core.telegram.org/bots/api#setwebhook
+pub struct SetWebhookRequest<'bot> {
+    bot: &'bot Bot,
+    url: String,
+    params: SetWebhookParams,
+}
+
+impl<'bot> SetWebhookRequest<'bot> {
+    pub(crate) fn new(bot: &'bot Bot, url: impl Into<String>) -> Self {
+        Self {
+            bot,
+            url: url.into(),
+            params: Default::default(),
+        }
+    }
+
+    pub fn certificate(mut self, v: impl Into<InputFile>) -> Self {
+        self.params.certificate = Some(v.into());
+        self
+    }
+    pub fn ip_address(mut self, v: impl Into<String>) -> Self {
+        self.params.ip_address = Some(v.into());
+        self
+    }
+    pub fn max_connections(mut self, v: i64) -> Self {
+        self.params.max_connections = Some(v);
+        self
+    }
+    pub fn allowed_updates(mut self, v: Vec<String>) -> Self {
+        self.params.allowed_updates = Some(v);
+        self
+    }
+    pub fn drop_pending_updates(mut self, v: bool) -> Self {
+        self.params.drop_pending_updates = Some(v);
+        self
+    }
+    pub fn secret_token(mut self, v: impl Into<String>) -> Self {
+        self.params.secret_token = Some(v.into());
+        self
+    }
+}
+
+impl<'bot> std::future::IntoFuture for SetWebhookRequest<'bot> {
+    type Output = Result<bool, BotError>;
+    type IntoFuture =
+        std::pin::Pin<Box<dyn std::future::Future<Output = Self::Output> + Send + 'bot>>;
+
+    fn into_future(self) -> Self::IntoFuture {
+        Box::pin(async move {
+            self.bot
+                .set_webhook_with_params(self.url, Some(self.params))
+                .await
+        })
+    }
+}
+
+impl Bot {
+    /// Use this method to specify a URL and receive incoming updates via an outgoing webhook.
+    /// Returns a fluent [`SetWebhookRequest`] builder that resolves to `Result<bool, BotError>`.
+    /// See: https://core.telegram.org/bots/api#setwebhook
+    pub fn set_webhook(&self, url: impl Into<String>) -> SetWebhookRequest<'_> {
+        SetWebhookRequest::new(self, url)
     }
 }
 

@@ -37,7 +37,6 @@
 //! }
 //! ```
 
-use crate::gen_methods::SetWebhookParams;
 use crate::polling::UpdateHandler;
 use crate::types::Update;
 use crate::{Bot, BotError};
@@ -142,21 +141,20 @@ impl WebhookServer {
     pub async fn start(self, webhook_url: &str) -> Result<(), BotError> {
         let full_url = format!("{}{}", webhook_url.trim_end_matches('/'), self.path);
 
-        let mut params = SetWebhookParams::new();
+        let mut req = self.bot.set_webhook(full_url.clone());
         if let Some(ref token) = self.secret_token {
-            params = params.secret_token(token.clone());
+            req = req.secret_token(token.clone());
         }
         if let Some(n) = self.max_connections {
-            params = params.max_connections(n);
+            req = req.max_connections(n);
         }
         if !self.allowed_updates.is_empty() {
-            params = params.allowed_updates(self.allowed_updates.clone());
+            req = req.allowed_updates(self.allowed_updates.clone());
         }
         if self.drop_pending_updates {
-            params = params.drop_pending_updates(true);
+            req = req.drop_pending_updates(true);
         }
-
-        self.bot.set_webhook(full_url.clone(), Some(params)).await?;
+        req.await?;
         info!(url = %full_url, "webhook registered");
 
         let state = Arc::new(AppState {
